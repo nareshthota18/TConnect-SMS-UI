@@ -5,27 +5,38 @@ const { defaultAlgorithm, darkAlgorithm } = theme
 
 export const lightTheme: ThemeConfig = {
   token: {
-    colorPrimary: '#5b201a',
+    colorPrimary: '#1F2937',
     borderRadius: 8
   },
   components: {
     Layout: {
-      headerBg: '#878672',
-      footerBg: '#878672',
+      headerBg: '#1F2937',
+      footerBg: '#1F2937',
       footerPadding: '16px 50px',
       headerPadding: '0 20px',
       },
-    Menu: {
-      // itemColor: '#ffffff',
-    }
+      Segmented: {
+        itemSelectedBg: '#1F2937',
+        itemSelectedColor: '#fff',
+        trackPadding: -4,
+        trackBg: '#fff'
+      },
   },
   algorithm: defaultAlgorithm
 }
 
 export const darkTheme: ThemeConfig = {
   token: {
-    colorPrimary: '#13c2c2',
+    colorPrimary: '#111827',
     borderRadius: 8
+  },
+  components: {
+    Layout: {
+      headerBg: '#111827',
+      footerBg: '#111827',
+      footerPadding: '16px 50px',
+      headerPadding: '0 20px',
+      },
   },
   algorithm: darkAlgorithm
 }

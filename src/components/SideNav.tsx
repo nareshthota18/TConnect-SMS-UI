@@ -1,45 +1,86 @@
-import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import type { MenuProps } from 'antd';
-import { Layout, Menu, theme } from 'antd';
+import React, { useState } from "react";
+import {
+  UserOutlined,
+  TeamOutlined,
+  AppstoreOutlined,
+  ShoppingCartOutlined,
+  CheckSquareOutlined,
+  DeploymentUnitOutlined,
+  BarChartOutlined,
+  SettingOutlined,
+  DashboardOutlined,
+  LogoutOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
+import { Layout, Menu, theme, Drawer, Button } from "antd";
+import type { MenuProps } from "antd";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const { Sider } = Layout;
 
+type SideNavProps = {
+  isMobile: boolean;
+  collapsed: boolean;
+  onClose: () => void;
+  open: boolean;
+};
 
-const items2: MenuProps['items'] = [UserOutlined, LaptopOutlined, NotificationOutlined].map(
-    (icon, index) => {
-      const key = String(index + 1);
-  
-      return {
-        key: `sub${key}`,
-        icon: React.createElement(icon),
-        label: `subnav ${key}`,
-        children: Array.from({ length: 4 }).map((_, j) => {
-          const subKey = index * 4 + j + 1;
-          return {
-            key: subKey,
-            label: `option${subKey}`,
-          };
-        }),
-      };
-    },
-  );
+const SideNav: React.FC<SideNavProps> = ({ isMobile, collapsed, onClose, open }) => {
 
-const SideNav = () => {
-    const {
-        token: { colorBgContainer },
-      } = theme.useToken();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
+
+  const items: MenuProps["items"] = [
+    { key: "/dashboard", icon: <DashboardOutlined />, label: <Link to="/dashboard">Dashboard</Link> },
+    { key: "/student", icon: <UserOutlined />, label: <Link to="/student">Student</Link> },
+    { key: "/staff", icon: <TeamOutlined />, label: <Link to="/staff">Staff</Link> },
+    { key: "/inventory", icon: <AppstoreOutlined />, label: "Inventory" },
+    { key: "/grocery", icon: <ShoppingCartOutlined />, label: "Grocery" },
+    { key: "/attendance", icon: <CheckSquareOutlined />, label: "Attendance" },
+    { key: "/asset", icon: <DeploymentUnitOutlined />, label: "Asset" },
+    { key: "/reports", icon: <BarChartOutlined />, label: "Reports" },
+    { key: "/user", icon: <SettingOutlined />, label: "User" },
+    { key: "logout", icon: <LogoutOutlined />, label: "Logout", onClick: handleLogout },
+  ];
+
+  if (isMobile) {
+    return (
+      <Drawer
+        title="Menu"
+        placement="left"
+        onClose={onClose}
+        open={open}
+        bodyStyle={{ padding: 0 }}
+      >
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          style={{ height: "100%", borderInlineEnd: 0 }}
+          items={items}
+        />
+      </Drawer>
+    );
+  }
+
   return (
-    <Sider width={200} style={{ background: colorBgContainer }}>
-          <Menu
-            mode="inline"
-            defaultSelectedKeys={['1']}
-            defaultOpenKeys={['sub1']}
-            style={{ height: '100%', borderInlineEnd: 0 }}
-            items={items2}
-          />
-        </Sider>
-  )
-}
+    <Sider
+      width={200}
+      style={{ height: "calc(100vh - 64px)", position: "sticky", top: 64 }}
+      collapsed={collapsed}
+    >
+      <Menu
+        mode="inline"
+        selectedKeys={[location.pathname]}
+        style={{ height: "100%", borderInlineEnd: 0 }}
+        items={items}
+      />
+    </Sider>
+  );
+};
 
-export default SideNav
+export default SideNav;

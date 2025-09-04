@@ -8,6 +8,7 @@ const Footer = () => {
     <AntFooter
       style={{
         textAlign: 'center',
+        color: '#fff'
       }}
     >
       © {new Date().getFullYear()} Your Company Name. All Rights Reserved.

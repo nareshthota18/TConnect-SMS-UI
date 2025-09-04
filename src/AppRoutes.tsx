@@ -2,7 +2,9 @@ import { Route, Routes } from 'react-router-dom'
 import Login from './pages/authentication/Login'
 import Registration from './pages/authentication/Registration'
 import Forgot from './pages/authentication/Forgot'
-import AdminDashboard from './pages/admin/AdminDashboard'
+import Dashboard from './pages/dashboard/Dashboard'
+import Student from './pages/student/Student'
+import Staff from './pages/staff/Staff'
 
 const AppRoutes = () => {
   return (
@@ -10,7 +12,9 @@ const AppRoutes = () => {
       <Route path="/" element={<Login />} />
       <Route path="/registration" element={<Registration />} />
       <Route path="/forgot" element={<Forgot />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/student" element={<Student />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/staff" element={<Staff />} />
     </Routes>
   )
 }

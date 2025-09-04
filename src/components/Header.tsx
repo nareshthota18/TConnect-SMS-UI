@@ -1,18 +1,13 @@
-import { Button, Drawer, Layout, Menu, Grid, Badge, Row, Col, Flex, Typography } from 'antd';
-import {
-  BellOutlined,
-  MenuOutlined,
-  MoonOutlined,
-  SunOutlined,
-} from '@ant-design/icons';
-import logo from '../assets/logo.png';
-import { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import type { MenuProps } from 'antd';
+import React, { useState } from "react";
+import { Button, Layout, Grid, Badge, Avatar, Flex, Typography } from "antd";
+import { BellOutlined, MoonOutlined, SunOutlined, MenuOutlined } from "@ant-design/icons";
+import logo from "../assets/logo-hms.png";
+import { useNavigate } from "react-router-dom";
+import SideNav from "./SideNav";
 
-const { Header, Content } = Layout;
+const { Header } = Layout;
 const { useBreakpoint } = Grid;
-// const { Title, Text } = Typography;
+const { Text } = Typography;
 
 type HeaderProps = {
   darkMode: boolean;
@@ -21,58 +16,63 @@ type HeaderProps = {
 
 const HeaderComponent = ({ darkMode, toggleTheme }: HeaderProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const screens = useBreakpoint();
-  const [drawerVisible, setDrawerVisible] = useState(false);
-
   const isMobile = !screens.md;
 
-  const onClick: MenuProps['onClick'] = (e) => {
-    navigate(e.key);
-    setDrawerVisible(false);
-  };
-
-  const items: MenuProps['items'] = [
-    { key: '0', label: 'Dashboard' },
-    { key: '1', label: 'Admin' },
-    { key: '2', label: 'Employee', 
-      children: [
-        { label: 'Option 1', key: 'setting:1' },
-        { type: 'divider' },
-        { label: 'Option 2', key: 'setting:2' },
-      ],
-    },
-    { key: '3', label: 'Leave' },
-    { key: '4', label: 'Payroll' },
-    { key: '5', label: 'Attendance' },
-    { key: '6', label: 'Settings' },
-    { key: '7', label: 'Reports' },
-    { key: '8', label: 'Help' },
-  ];
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
     <>
-    <Header style={{ display: 'flex', alignItems: 'center' }}>
-      <img
-        src={logo}
-        alt="Logo"
-        style={{ height: 18, marginRight: 32, cursor: 'pointer' }}
-        onClick={() => navigate('/')}
-      />
+      <Header style={{ position: 'sticky', top: 0, zIndex: 999 }}>
+        <Flex justify="space-between" align="center" style={{ height: 64 }}>
+          <img
+            src={logo}
+            alt="Logo"
+            style={{ height: 32, marginRight: 32, cursor: "pointer" }}
+            onClick={() => navigate("/")}
+          />
 
-      <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 16 }}>
-        {/* Theme Toggle Button */}
-        <Badge count={5} style={{ fontSize: 10 }} size='small'>
-        <BellOutlined style={{ color: 'white' }} />
-        </Badge>
-        <Button
-          type="text"
-          icon={darkMode ? <SunOutlined style={{ color: 'white' }} /> : <MoonOutlined style={{ color: 'white' }} />}
-          onClick={toggleTheme}
-          style={{ fontSize: 14 }}
+          <Flex align="center" gap="middle">
+            
+            <Badge count={5} style={{ fontSize: 10 }} size="small">
+              <BellOutlined style={{ color: "white" }} />
+            </Badge>
+            <Button
+              type="text"
+              icon={
+                darkMode ? (
+                  <SunOutlined style={{ color: "white" }} />
+                ) : (
+                  <MoonOutlined style={{ color: "white" }} />
+                )
+              }
+              onClick={toggleTheme}
+              style={{ fontSize: 14 }}
+            />
+            <Flex align="center" gap="small">
+              <Avatar>N</Avatar>
+              {!isMobile && <Text strong style={{ color: "white" }}>NARESH</Text>}
+            </Flex>
+          </Flex>
+          {isMobile && (
+              <Button
+                type="text"
+                icon={<MenuOutlined style={{ color: "white", fontSize: 18 }} />}
+                onClick={() => setDrawerOpen(true)}
+              />
+            )}
+        </Flex>
+      </Header>
+
+      {/* Drawer for mobile menu */}
+      {isMobile && (
+        <SideNav
+          isMobile={isMobile}
+          collapsed={false}
+          onClose={() => setDrawerOpen(false)}
+          open={drawerOpen}
         />
-      </div>
-    </Header>
+      )}
     </>
   );
 };
