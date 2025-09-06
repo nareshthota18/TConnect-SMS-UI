@@ -40,6 +40,15 @@ const items = [
   },
 ];
 
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+const drawerHeaderStyle = {
+  backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
+  color: isDarkMode ? "#fff" : "#000",
+  fontWeight: 700,
+};
+
+
 const Staff = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
@@ -89,6 +98,7 @@ const Staff = () => {
             onClose={onCloseDrawer}
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}
+            headerStyle={drawerHeaderStyle}
           >
             <AddStaff />
           </Drawer>

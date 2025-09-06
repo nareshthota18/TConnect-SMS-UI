@@ -40,7 +40,6 @@ const columns: TableProps<DataType>["columns"] = [
     title: "Name",
     dataIndex: "name",
     key: "name",
-    // render: (text) => <a>{text}</a>,
   },
   {
     title: "Age",
@@ -112,6 +111,17 @@ const Dashboard = () => {
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
 
+  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const cardStyle = {
+    border: `1px solid ${isDarkMode ? "#ff4d4f" : "#ffbe91"}`,
+    // backgroundColor: isDarkMode ? "#1F2937" : "#fff",
+  };
+  
+    const cardHeaderStyle = {
+    borderBottom: `1px solid #ffbe91`,
+  };
+
   return (
     <Layout>
       {!isMobile && (
@@ -160,7 +170,7 @@ const Dashboard = () => {
                   },
                 ].map((item, index) => (
                   <Col xs={24} sm={12} md={8} key={index}>
-                    <Card title={item.icon} extra={<Link>View More</Link>}>
+                    <Card title={item.icon} extra={<Link>View More</Link>} style={cardStyle} headStyle={cardHeaderStyle}>
                       <Space direction="vertical" style={{ width: "100%" }}>
                         <Text strong>{item.account}</Text>
                         <Text type="secondary">{item.name}</Text>
@@ -172,7 +182,7 @@ const Dashboard = () => {
             </Col>
 
             <Col xs={24} md={6}>
-              <Card title="Overview">
+              <Card title="Overview" style={cardStyle} headStyle={cardHeaderStyle}>
                 <Flex vertical gap="middle">
                   <Flex vertical>
                     <Text strong>Attendance:</Text>
