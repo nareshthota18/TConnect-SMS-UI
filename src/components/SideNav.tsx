@@ -39,12 +39,12 @@ const SideNav: React.FC<SideNavProps> = ({ isMobile, collapsed, onClose, open })
     { key: "/dashboard", icon: <DashboardOutlined />, label: <Link to="/dashboard">Dashboard</Link> },
     { key: "/student", icon: <UserOutlined />, label: <Link to="/student">Student</Link> },
     { key: "/staff", icon: <TeamOutlined />, label: <Link to="/staff">Staff</Link> },
-    { key: "/inventory", icon: <AppstoreOutlined />, label: "Inventory" },
-    { key: "/grocery", icon: <ShoppingCartOutlined />, label: "Grocery" },
-    { key: "/attendance", icon: <CheckSquareOutlined />, label: "Attendance" },
-    { key: "/asset", icon: <DeploymentUnitOutlined />, label: "Asset" },
-    { key: "/reports", icon: <BarChartOutlined />, label: "Reports" },
-    { key: "/user", icon: <SettingOutlined />, label: "User" },
+    { key: "/inventory", icon: <AppstoreOutlined />, label: <Link to="/inventory">Inventory</Link> },
+    { key: "/grocery", icon: <ShoppingCartOutlined />, label: <Link to="/grocery">Grocery</Link> },
+    { key: "/attendance", icon: <CheckSquareOutlined />, label: <Link to="/attendance">Attendance</Link> },
+    { key: "/asset", icon: <DeploymentUnitOutlined />, label: <Link to="/asset">Asset</Link> },
+    { key: "/reports", icon: <BarChartOutlined />, label: <Link to="/reports">Reports</Link> },
+    { key: "/user", icon: <SettingOutlined />, label: <Link to="/user">User</Link> },
     { key: "logout", icon: <LogoutOutlined />, label: "Logout", onClick: handleLogout },
   ];
 

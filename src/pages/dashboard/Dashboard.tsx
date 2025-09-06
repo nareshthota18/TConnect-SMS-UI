@@ -9,8 +9,6 @@ import {
   Space,
   Flex,
   Progress,
-  Table,
-  Tag,
 } from "antd";
 import {
   AppstoreOutlined,
@@ -21,90 +19,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import SideNav from "../../components/SideNav";
-import type { TableProps } from "antd";
+import { Link } from "react-router-dom";
+import AllStudents from "../student/AllStudents";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
-const { Text, Link } = Typography;
-
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
-}
-
-const columns: TableProps<DataType>["columns"] = [
-  {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-  {
-    title: "Class",
-    key: "tags",
-    dataIndex: "tags",
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? "geekblue" : "green";
-          if (tag === "loser") {
-            color = "volcano";
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
-  },
-  {
-    title: "Action",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>View More</a>
-      </Space>
-    ),
-  },
-];
-
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["First"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["Fifth"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sydney No. 1 Lake Park",
-    tags: ["10th"],
-  },
-];
+const { Text } = Typography;
 
 const Dashboard = () => {
   const screens = useBreakpoint();
@@ -115,7 +35,6 @@ const Dashboard = () => {
 
   const cardStyle = {
     border: `1px solid ${isDarkMode ? "#ff4d4f" : "#ffbe91"}`,
-    // backgroundColor: isDarkMode ? "#1F2937" : "#fff",
   };
   
     const cardHeaderStyle = {
@@ -141,36 +60,42 @@ const Dashboard = () => {
                   {
                     name: "Total Hostels",
                     account: "230",
-                    icon: <HomeOutlined style={{ fontSize: 18 }} />,
+                    icon: <HomeOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/hostels",
                   },
                   {
                     name: "Total Students",
                     account: "16700",
-                    icon: <UserOutlined style={{ fontSize: 18 }} />,
+                    icon: <UserOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/student",
                   },
                   {
                     name: "Inventory",
                     account: "564",
-                    icon: <AppstoreOutlined style={{ fontSize: 18 }} />,
+                    icon: <AppstoreOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/students",
                   },
                   {
                     name: "Grocery",
                     account: "122",
-                    icon: <ShoppingCartOutlined style={{ fontSize: 18 }} />,
+                    icon: <ShoppingCartOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/students",
                   },
                   {
                     name: "Asset",
                     account: "234",
-                    icon: <DeploymentUnitOutlined style={{ fontSize: 18 }} />,
+                    icon: <DeploymentUnitOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/students",
                   },
                   {
                     name: "Staff",
                     account: "135",
-                    icon: <TeamOutlined style={{ fontSize: 18 }} />,
+                    icon: <TeamOutlined style={{ fontSize: 18, color: '#FF9145' }} />,
+                    link: "/staff",
                   },
                 ].map((item, index) => (
                   <Col xs={24} sm={12} md={8} key={index}>
-                    <Card title={item.icon} extra={<Link>View More</Link>} style={cardStyle} headStyle={cardHeaderStyle}>
+                    <Card title={item.icon} extra={<Link to={item.link}>View More</Link>} style={cardStyle} headStyle={cardHeaderStyle}>
                       <Space direction="vertical" style={{ width: "100%" }}>
                         <Text strong>{item.account}</Text>
                         <Text type="secondary">{item.name}</Text>
@@ -204,12 +129,7 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col xs={24} md={24}>
-              <Table<DataType>
-                columns={columns}
-                dataSource={data}
-                bordered
-                pagination={false}
-              />
+                <AllStudents />
             </Col>
           </Row>
         </Content>

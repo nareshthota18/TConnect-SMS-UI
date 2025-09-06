@@ -7,39 +7,28 @@ import {
   Button,
   Flex,
   Drawer,
-  Form,
-  Input,
 } from "antd";
-import SideNav from "../../components/SideNav";
-import AllStudents from "./AllStudents";
-import AddStudent from "./AddStudent";
 import { CloseOutlined } from "@ant-design/icons";
-import StudentHealth from "./StudentHealth";
+import SideNav from "../../components/SideNav";
+import StudentAttendance from "./StudentAttendance";
+import StaffAttendance from "./StaffAttendance";
+import AddAttendance from "./AddAttendance";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
+// Tabs for Attendance
 const items = [
   {
-    label: "All Students",
+    label: "Student Attendance",
     key: "1",
-    children: <AllStudents />,
+    children: <StudentAttendance />,
   },
   {
-    label: "Student Health",
+    label: "Staff Attendance",
     key: "2",
-    children: <StudentHealth />,
-  },
-  {
-    label: "Profile",
-    key: "3",
-    children: "Profile information will go here.",
-  },
-  {
-    label: "Student Assets",
-    key: "4",
-    children: "Student Assets will go here.",
+    children: <StaffAttendance />
   },
 ];
 
@@ -51,7 +40,7 @@ const drawerHeaderStyle = {
   fontWeight: 700,
 };
 
-const Student = () => {
+const Attendance = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
@@ -84,28 +73,29 @@ const Student = () => {
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Student
+              Attendance
             </Title>
             <Button type="primary" onClick={showDrawer}>
-              Add Student
+              Add Attendance
             </Button>
           </Flex>
 
+          {/* Tabs for Attendance */}
           <Tabs items={items} />
 
           {/* Drawer Component */}
           <Drawer
-            title="Add New Student"
+            title="Add Attendance"
             width="80%"
             onClose={onCloseDrawer}
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}
             headerStyle={drawerHeaderStyle}
             maskClosable={false}
-            keyboard={false} 
+            keyboard={false}
             closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
           >
-           <AddStudent />
+            <AddAttendance />
           </Drawer>
         </Content>
       </Layout>
@@ -113,4 +103,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Attendance;

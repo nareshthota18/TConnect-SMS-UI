@@ -7,39 +7,37 @@ import {
   Button,
   Flex,
   Drawer,
-  Form,
-  Input,
 } from "antd";
-import SideNav from "../../components/SideNav";
-import AllStudents from "./AllStudents";
-import AddStudent from "./AddStudent";
 import { CloseOutlined } from "@ant-design/icons";
-import StudentHealth from "./StudentHealth";
+import SideNav from "../../components/SideNav";
+import AddGrocery from "./AddGrocery";
+import AllGrocery from "./AllGrocery";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
+// Tabs for Grocery
 const items = [
   {
-    label: "All Students",
+    label: "All Groceries",
     key: "1",
-    children: <AllStudents />,
+    children: <AllGrocery />
   },
   {
-    label: "Student Health",
+    label: "Stock Management",
     key: "2",
-    children: <StudentHealth />,
+    children: "Stock management details will go here.",
   },
   {
-    label: "Profile",
+    label: "Suppliers",
     key: "3",
-    children: "Profile information will go here.",
+    children: "Supplier details will go here.",
   },
   {
-    label: "Student Assets",
+    label: "Reports",
     key: "4",
-    children: "Student Assets will go here.",
+    children: "Reports and analytics will go here.",
   },
 ];
 
@@ -51,7 +49,7 @@ const drawerHeaderStyle = {
   fontWeight: 700,
 };
 
-const Student = () => {
+const Grocery = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
@@ -84,10 +82,10 @@ const Student = () => {
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Student
+              Grocery Management
             </Title>
             <Button type="primary" onClick={showDrawer}>
-              Add Student
+              Add Grocery
             </Button>
           </Flex>
 
@@ -95,17 +93,17 @@ const Student = () => {
 
           {/* Drawer Component */}
           <Drawer
-            title="Add New Student"
+            title="Add New Grocery Item"
             width="80%"
             onClose={onCloseDrawer}
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}
             headerStyle={drawerHeaderStyle}
             maskClosable={false}
-            keyboard={false} 
+            keyboard={false}
             closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
           >
-           <AddStudent />
+           <AddGrocery />
           </Drawer>
         </Content>
       </Layout>
@@ -113,4 +111,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Grocery;

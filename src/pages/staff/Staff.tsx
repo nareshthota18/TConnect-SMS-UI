@@ -11,6 +11,7 @@ import {
 import SideNav from "../../components/SideNav";
 import AddStaff from "./AddStaff";
 import AllStaff from "./AllStaff";
+import { CloseOutlined } from "@ant-design/icons";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -99,6 +100,9 @@ const Staff = () => {
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}
             headerStyle={drawerHeaderStyle}
+            maskClosable={false}
+            keyboard={false} 
+            closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
           >
             <AddStaff />
           </Drawer>

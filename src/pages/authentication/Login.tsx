@@ -2,12 +2,16 @@ import React from "react";
 import { Row, Col, Form, Input, Button, Typography, Flex } from "antd";
 import real from "../../assets/real-time.svg";
 import AuthLayout from "./AuthLayout";
+import { useNavigate } from "react-router-dom";
+
 
 const { Title, Text, Link } = Typography;
 
 const Login = () => {
+  const navigate = useNavigate();
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    navigate("/dashboard");
   };
 
   return (

@@ -7,39 +7,37 @@ import {
   Button,
   Flex,
   Drawer,
-  Form,
-  Input,
 } from "antd";
-import SideNav from "../../components/SideNav";
-import AllStudents from "./AllStudents";
-import AddStudent from "./AddStudent";
 import { CloseOutlined } from "@ant-design/icons";
-import StudentHealth from "./StudentHealth";
+import SideNav from "../../components/SideNav";
+import AddInventory from "./AddInventory";
+import AllInventory from "./AllInventory";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
+// Tabs for Inventory
 const items = [
   {
-    label: "All Students",
+    label: "All Inventory",
     key: "1",
-    children: <AllStudents />,
+    children: <AllInventory />
   },
   {
-    label: "Student Health",
+    label: "Inventory Reports",
     key: "2",
-    children: <StudentHealth />,
+    children: "Inventory reports will go here.",
   },
   {
-    label: "Profile",
+    label: "Categories",
     key: "3",
-    children: "Profile information will go here.",
+    children: "Inventory categories will go here.",
   },
   {
-    label: "Student Assets",
+    label: "Suppliers",
     key: "4",
-    children: "Student Assets will go here.",
+    children: "Inventory suppliers will go here.",
   },
 ];
 
@@ -51,7 +49,7 @@ const drawerHeaderStyle = {
   fontWeight: 700,
 };
 
-const Student = () => {
+const Inventory = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
@@ -84,10 +82,10 @@ const Student = () => {
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Student
+              Inventory Management
             </Title>
             <Button type="primary" onClick={showDrawer}>
-              Add Student
+              Add Inventory
             </Button>
           </Flex>
 
@@ -95,17 +93,17 @@ const Student = () => {
 
           {/* Drawer Component */}
           <Drawer
-            title="Add New Student"
+            title="Add New Inventory Item"
             width="80%"
             onClose={onCloseDrawer}
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}
             headerStyle={drawerHeaderStyle}
             maskClosable={false}
-            keyboard={false} 
+            keyboard={false}
             closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
           >
-           <AddStudent />
+            <AddInventory />
           </Drawer>
         </Content>
       </Layout>
@@ -113,4 +111,4 @@ const Student = () => {
   );
 };
 
-export default Student;
+export default Inventory;
