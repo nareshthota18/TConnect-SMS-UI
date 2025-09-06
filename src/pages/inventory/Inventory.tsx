@@ -12,6 +12,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import SideNav from "../../components/SideNav";
 import AddInventory from "./AddInventory";
 import AllInventory from "./AllInventory";
+import InventoryDashboard from "./InventoryDashboard";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -20,23 +21,28 @@ const { Title } = Typography;
 // Tabs for Inventory
 const items = [
   {
-    label: "All Inventory",
+    label: "Inventory Dashboard",
     key: "1",
+    children: <InventoryDashboard  />
+  },
+  {
+    label: "All Inventory",
+    key: "2",
     children: <AllInventory />
   },
   {
     label: "Inventory Reports",
-    key: "2",
+    key: "3",
     children: "Inventory reports will go here.",
   },
   {
     label: "Categories",
-    key: "3",
+    key: "4",
     children: "Inventory categories will go here.",
   },
   {
     label: "Suppliers",
-    key: "4",
+    key: "5",
     children: "Inventory suppliers will go here.",
   },
 ];

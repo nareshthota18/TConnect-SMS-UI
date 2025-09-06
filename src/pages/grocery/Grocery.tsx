@@ -12,6 +12,7 @@ import { CloseOutlined } from "@ant-design/icons";
 import SideNav from "../../components/SideNav";
 import AddGrocery from "./AddGrocery";
 import AllGrocery from "./AllGrocery";
+import GroceriesDashboard from "./GroceriesDashboard";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -20,23 +21,28 @@ const { Title } = Typography;
 // Tabs for Grocery
 const items = [
   {
-    label: "All Groceries",
+    label: "Groceries Dashboard",
     key: "1",
+    children: <GroceriesDashboard />
+  },
+  {
+    label: "All Groceries",
+    key: "2",
     children: <AllGrocery />
   },
   {
     label: "Stock Management",
-    key: "2",
+    key: "3",
     children: "Stock management details will go here.",
   },
   {
     label: "Suppliers",
-    key: "3",
+    key: "4",
     children: "Supplier details will go here.",
   },
   {
     label: "Reports",
-    key: "4",
+    key: "5",
     children: "Reports and analytics will go here.",
   },
 ];
