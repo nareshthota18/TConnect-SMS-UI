@@ -1,0 +1,1 @@
+export const studentdataurl = `https://jsonplaceholder.typicode.com/users`;

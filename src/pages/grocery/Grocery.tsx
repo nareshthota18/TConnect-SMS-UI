@@ -88,7 +88,7 @@ const Grocery = () => {
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Grocery Management
+              Grocery
             </Title>
             <Button type="primary" onClick={showDrawer}>
               Add Grocery

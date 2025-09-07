@@ -88,7 +88,7 @@ const Inventory = () => {
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Inventory Management
+              Inventory
             </Title>
             <Button type="primary" onClick={showDrawer}>
               Add Inventory

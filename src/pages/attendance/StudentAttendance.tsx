@@ -16,10 +16,10 @@ const StudentAttendance: React.FC = () => {
   useEffect(() => {
     const attendanceData: Attendance[] = [
       { id: 1, name: "John Doe", date: "2025-09-05", status: "Present" },
-      { id: 2, name: "Jane Smith", date: "2025-09-05", status: "Absent" },
-      { id: 3, name: "Sam Wilson", date: "2025-09-05", status: "Late" },
-      { id: 4, name: "Alice Brown", date: "2025-09-05", status: "Present" },
-      { id: 5, name: "David Lee", date: "2025-09-05", status: "Present" },
+      { id: 2, name: "Jane Smith", date: "2025-09-04", status: "Absent" },
+      { id: 3, name: "Sam Wilson", date: "2025-09-03", status: "Late" },
+      { id: 4, name: "Alice Brown", date: "2025-08-30", status: "Present" },
+      { id: 5, name: "David Lee", date: "2025-09-01", status: "Present" },
     ];
     setData(attendanceData);
   }, []);
@@ -35,10 +35,10 @@ const StudentAttendance: React.FC = () => {
           onChange={(e) => {
             const value = e.target.value;
             setSelectedKeys(value ? [value] : []);
-            confirm({ closeDropdown: false }); // live filtering
+            confirm({ closeDropdown: false });
           }}
-          onSearch={() => confirm()} // Press Enter triggers search
-          style={{display: "block" }}
+          onSearch={() => confirm()}
+          style={{ display: "block" }}
         />
       </div>
     ),
@@ -48,6 +48,19 @@ const StudentAttendance: React.FC = () => {
     onFilter: (value, record) =>
       record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
   });
+
+  // Generate last 7 days filters
+  const getLast7DaysFilters = () => {
+    const filters = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i);
+      const formattedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD
+      filters.push({ text: formattedDate, value: formattedDate });
+    }
+    return filters;
+  };
 
   const columns: ColumnsType<Attendance> = [
     {
@@ -67,6 +80,8 @@ const StudentAttendance: React.FC = () => {
       dataIndex: "date",
       key: "date",
       sorter: (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      filters: getLast7DaysFilters(),
+      onFilter: (value, record) => record.date === value,
     },
     {
       title: "Status",
@@ -77,8 +92,7 @@ const StudentAttendance: React.FC = () => {
         { text: "Absent", value: "Absent" },
         { text: "Late", value: "Late" },
       ],
-      filterMultiple: true, // allow multiple selections
-      filterMode: "menu", // standard menu mode
+      filterMultiple: true,
       onFilter: (value, record) => record.status === value,
       render: (status: Attendance["status"]) => {
         let color = "blue";
