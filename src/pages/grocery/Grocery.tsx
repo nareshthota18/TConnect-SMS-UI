@@ -13,6 +13,7 @@ import SideNav from "../../components/SideNav";
 import AddGrocery from "./AddGrocery";
 import AllGrocery from "./AllGrocery";
 import GroceriesDashboard from "./GroceriesDashboard";
+import GroceryConsumptionConfig from "./GroceryConsumptionConfig";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -41,9 +42,9 @@ const items = [
     children: "Supplier details will go here.",
   },
   {
-    label: "Reports",
+    label: "Grocery Consumption Config",
     key: "5",
-    children: "Reports and analytics will go here.",
+    children: <GroceryConsumptionConfig />
   },
 ];
 
