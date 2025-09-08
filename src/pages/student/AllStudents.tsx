@@ -92,6 +92,7 @@ const AllStudents = () => {
         pagination={false}
         loading={studentDataLoading}
         rowKey="key"
+        scroll={{ x: "max-content" }}
       />
 
       <Modal

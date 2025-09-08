@@ -77,7 +77,7 @@ const Staff = () => {
         />
       )}
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: "18px 24px", minHeight: 360 }}>
+        <Content style={{ padding: isMobile? "12px" : "18px 24px", minHeight: 360 }}>
           <Flex justify="space-between">
             <Title
               level={3}
@@ -95,7 +95,7 @@ const Staff = () => {
           {/* Drawer Component */}
           <Drawer
             title="Add New Staff"
-            width="80%"
+            width= {isMobile ? '100%' : '80%' }
             onClose={onCloseDrawer}
             open={openDrawer}
             bodyStyle={{ paddingBottom: 80 }}

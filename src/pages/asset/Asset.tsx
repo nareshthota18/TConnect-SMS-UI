@@ -56,7 +56,7 @@ const Asset: React.FC = () => {
         <SideNav isMobile={false} collapsed={collapsed} onClose={() => {}} open={false} />
       )}
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: "18px 24px", minHeight: 360 }}>
+        <Content style={{ padding: isMobile ? "12px" : "18px 24px", minHeight: 360 }}>
           <Flex justify="space-between">
             <Title level={3} style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}>
               Assets
@@ -76,7 +76,7 @@ const Asset: React.FC = () => {
           {/* Add Asset Drawer */}
           <Drawer
             title="Add New Asset"
-            width="80%"
+            width= {isMobile ? '100%' : '80%' }
             onClose={closeAddDrawer}
             open={openAddDrawer}
             bodyStyle={{ paddingBottom: 80 }}
@@ -91,7 +91,7 @@ const Asset: React.FC = () => {
           {/* Submit Asset Drawer */}
           <Drawer
             title="Submit Asset"
-            width="80%"
+            width= {isMobile ? '100%' : '80%' }
             onClose={closeSubmitDrawer}
             open={openSubmitDrawer}
             bodyStyle={{ paddingBottom: 80 }}

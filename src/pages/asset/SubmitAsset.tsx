@@ -19,7 +19,7 @@ const SubmitAsset: React.FC = () => {
     >
       <Row gutter={16}>
         {/* Asset ID */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="assetId"
             label="Asset ID"
@@ -30,7 +30,7 @@ const SubmitAsset: React.FC = () => {
         </Col>
 
         {/* Submitted By */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="submittedBy"
             label="Submitted By"
@@ -41,7 +41,7 @@ const SubmitAsset: React.FC = () => {
         </Col>
 
         {/* Submission Date */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="submissionDate"
             label="Submission Date"
@@ -54,7 +54,7 @@ const SubmitAsset: React.FC = () => {
 
       <Row gutter={16}>
         {/* Status Dropdown */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="status"
             label="Status"
@@ -68,7 +68,7 @@ const SubmitAsset: React.FC = () => {
         </Col>
 
         {/* Reason */}
-        <Col span={16}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="reason"
             label="Reason"

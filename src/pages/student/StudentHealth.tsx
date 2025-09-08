@@ -74,6 +74,7 @@ const StudentHealth = () => {
       columns={columns}
       bordered
       pagination={false}
+      scroll={{ x: "max-content" }}
     />
   );
 };

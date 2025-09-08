@@ -81,7 +81,7 @@ const Dashboard = () => {
           open={false}
         />
       )}
-      <Layout style={{ padding: "16px" }}>
+      <Layout style={{ padding: isMobile ? "8px" : "16px" }}>
         <Content style={{ padding: "8px", minHeight: 360 }}>
           <Row gutter={[16, 16]}>
             <Col xs={24} md={24}>

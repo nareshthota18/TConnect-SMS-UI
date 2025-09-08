@@ -121,6 +121,7 @@ const StaffReports: React.FC = () => {
         rowKey="id"
         pagination={{ pageSize: 5 }}
         bordered
+        scroll={{ x: "max-content" }}
       />
     </div>
   );

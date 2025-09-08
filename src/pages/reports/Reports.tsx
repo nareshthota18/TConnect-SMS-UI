@@ -62,7 +62,7 @@ const Reports: React.FC = () => {
         />
       )}
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: "18px 24px", minHeight: 360 }}>
+        <Content style={{ padding: isMobile ? "12px" : "18px 24px", minHeight: 360 }}>
           <Flex justify="space-between">
             <Title
               level={3}

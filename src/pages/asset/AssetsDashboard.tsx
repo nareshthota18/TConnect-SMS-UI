@@ -71,7 +71,7 @@ const AssetsDashboard = () => {
       <Col xs={24} md={24}>
         <Row gutter={[16, 16]}>
           {assetItems.map((item, index) => (
-            <Col xs={24} sm={12} md={4} key={index}>
+            <Col xs={12} sm={12} md={4} key={index}>
               <Card
                 title={item.icon}
                 style={cardStyle}

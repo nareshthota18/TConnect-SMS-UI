@@ -65,6 +65,7 @@ const AllStaff = () => {
       columns={columns}
       bordered
       pagination={false}
+      scroll={{ x: "max-content" }}
     />
   );
 };

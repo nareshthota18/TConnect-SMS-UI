@@ -19,7 +19,7 @@ const AddInventory = () => {
     >
       {/* Row 1 */}
       <Row gutter={16}>
-        <Col span={8}>
+      <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="itemName"
             label="Item Name"
@@ -28,7 +28,7 @@ const AddInventory = () => {
             <Input placeholder="Enter inventory item name" />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="category"
             label="Category"
@@ -42,7 +42,7 @@ const AddInventory = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="quantity"
             label="Quantity"
@@ -55,7 +55,7 @@ const AddInventory = () => {
 
       {/* Row 2 */}
       <Row gutter={16}>
-        <Col span={8}>
+      <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="unitPrice"
             label="Unit Price"
@@ -69,7 +69,7 @@ const AddInventory = () => {
             />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="location"
             label="Location"
@@ -78,7 +78,7 @@ const AddInventory = () => {
             <Input placeholder="Enter storage location" />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="supplier"
             label="Supplier"
@@ -91,7 +91,7 @@ const AddInventory = () => {
 
       {/* Row 3 */}
       <Row gutter={16}>
-        <Col span={8}>
+      <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="purchaseDate"
             label="Purchase Date"
@@ -100,7 +100,7 @@ const AddInventory = () => {
             <Input type="date" />
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="status"
             label="Status"
@@ -114,7 +114,7 @@ const AddInventory = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="remarks"
             label="Remarks"

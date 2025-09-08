@@ -105,6 +105,7 @@ const GroceryConsumptionConfig: React.FC = () => {
         rowKey="item"
         pagination={false}
         bordered
+        scroll={{ x: "max-content" }}
       />
 
       {/* Modal for Add/Edit */}

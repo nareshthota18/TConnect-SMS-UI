@@ -17,7 +17,7 @@ const AddStaff = () => {
         layout="vertical"
         onFinish={handleFinish}
       >
-        <Row gutter={[16, 16]}>
+        <Row gutter={[16, 0]}>
           {/* Full Name */}
           <Col xs={24} sm={12} lg={8}>
             <Form.Item

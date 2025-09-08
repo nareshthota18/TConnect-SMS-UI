@@ -19,7 +19,7 @@ const AddAsset: React.FC = () => {
     >
       <Row gutter={16}>
         {/* Asset Name */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="assetName"
             label="Asset Name"
@@ -30,7 +30,7 @@ const AddAsset: React.FC = () => {
         </Col>
 
         {/* Asset Type */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="assetType"
             label="Asset Type"
@@ -46,7 +46,7 @@ const AddAsset: React.FC = () => {
         </Col>
 
         {/* Purchase Date */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="purchaseDate"
             label="Purchase Date"
@@ -59,7 +59,7 @@ const AddAsset: React.FC = () => {
 
       <Row gutter={16}>
         {/* Asset Value */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="assetValue"
             label="Asset Value"
@@ -70,14 +70,14 @@ const AddAsset: React.FC = () => {
         </Col>
 
         {/* Assigned To */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item name="assignedTo" label="Assigned To">
             <Input placeholder="Enter person or department name" />
           </Form.Item>
         </Col>
 
         {/* Status */}
-        <Col span={8}>
+        <Col xs={24} sm={12} md={8} lg={8} >
           <Form.Item
             name="status"
             label="Status"
