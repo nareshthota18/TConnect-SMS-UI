@@ -126,7 +126,7 @@ const GroceriesDashboard = () => {
       <Col xs={24} md={24}>
         <Row gutter={[16, 16]}>
           {groceryStats.map((item, index) => (
-            <Col xs={12} sm={12} md={6} lg={4} key={index}>
+            <Col xs={12} sm={12} md={8} lg={4} key={index}>
               <Card
                 title={item.icon}
                 style={cardStyle}

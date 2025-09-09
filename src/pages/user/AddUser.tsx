@@ -18,7 +18,7 @@ const AddUser = () => {
       style={{ padding: 24 }}
     >
       <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+      <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Full Name"
             name="name"
@@ -28,7 +28,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Email"
             name="email"
@@ -41,7 +41,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Phone"
             name="phone"
@@ -50,10 +50,7 @@ const AddUser = () => {
             <Input placeholder="Enter Phone Number" />
           </Form.Item>
         </Col>
-      </Row>
-
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Role"
             name="role"
@@ -68,7 +65,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Status"
             name="status"
@@ -82,7 +79,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Joining Date"
             name="joiningDate"
@@ -91,10 +88,8 @@ const AddUser = () => {
             <DatePicker style={{ width: "100%" }} />
           </Form.Item>
         </Col>
-      </Row>
 
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Password"
             name="password"
@@ -104,7 +99,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item label="Confirm Password" name="confirmPassword" dependencies={["password"]}
             rules={[
               { required: true, message: "Please confirm password" },
@@ -122,7 +117,7 @@ const AddUser = () => {
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             label="Two Factor Authentication"
             name="twoFA"

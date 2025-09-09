@@ -19,7 +19,7 @@ const AddInventory = () => {
     >
       {/* Row 1 */}
       <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+      <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="itemName"
             label="Item Name"
@@ -28,7 +28,7 @@ const AddInventory = () => {
             <Input placeholder="Enter inventory item name" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="category"
             label="Category"
@@ -42,7 +42,7 @@ const AddInventory = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="quantity"
             label="Quantity"
@@ -51,11 +51,7 @@ const AddInventory = () => {
             <InputNumber min={1} style={{ width: "100%" }} placeholder="Enter quantity" />
           </Form.Item>
         </Col>
-      </Row>
-
-      {/* Row 2 */}
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="unitPrice"
             label="Unit Price"
@@ -69,7 +65,7 @@ const AddInventory = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="location"
             label="Location"
@@ -78,7 +74,7 @@ const AddInventory = () => {
             <Input placeholder="Enter storage location" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="supplier"
             label="Supplier"
@@ -87,11 +83,7 @@ const AddInventory = () => {
             <Input placeholder="Enter supplier name" />
           </Form.Item>
         </Col>
-      </Row>
-
-      {/* Row 3 */}
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="purchaseDate"
             label="Purchase Date"
@@ -100,7 +92,7 @@ const AddInventory = () => {
             <Input type="date" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="status"
             label="Status"
@@ -114,7 +106,7 @@ const AddInventory = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="remarks"
             label="Remarks"

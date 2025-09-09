@@ -93,7 +93,7 @@ const AddAttendance = () => {
         {/* Select Class if Student Attendance */}
         {attendanceType === "student" && (
         <Row gutter={[16, 16]}>
-            <Col xs={24} sm={12} md={8}>
+            <Col xs={24} sm={12} md={8} lg={8}>
           <Select
             placeholder="Select Class"
             style={{ width: 200 }}
@@ -112,7 +112,7 @@ const AddAttendance = () => {
         {attendanceType === "student" && selectedClass && (
           <Row gutter={[16, 16]}>
             {students.map((student) => (
-              <Col key={student.id} xs={24} sm={12} md={8}>
+              <Col key={student.id} xs={24} sm={12} md={12} lg={8}>
                 <Checkbox
                   checked={checkedStudentIds.includes(student.id)}
                   onChange={() => toggleStudentCheck(student.id)}

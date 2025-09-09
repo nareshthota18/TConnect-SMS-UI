@@ -19,7 +19,7 @@ const AddGrocery = () => {
     >
       {/* Row 1 */}
       <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="itemName"
             label="Item Name"
@@ -28,7 +28,7 @@ const AddGrocery = () => {
             <Input placeholder="Enter grocery item name" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="category"
             label="Category"
@@ -42,7 +42,7 @@ const AddGrocery = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="quantity"
             label="Quantity"
@@ -51,11 +51,7 @@ const AddGrocery = () => {
             <InputNumber min={1} style={{ width: "100%" }} placeholder="Enter quantity" />
           </Form.Item>
         </Col>
-      </Row>
-
-      {/* Row 2 */}
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="price"
             label="Price"
@@ -69,7 +65,7 @@ const AddGrocery = () => {
             />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="unit"
             label="Unit"
@@ -82,7 +78,7 @@ const AddGrocery = () => {
             </Select>
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="supplier"
             label="Supplier"
@@ -91,11 +87,7 @@ const AddGrocery = () => {
             <Input placeholder="Enter supplier name" />
           </Form.Item>
         </Col>
-      </Row>
-
-      {/* Row 3 */}
-      <Row gutter={16}>
-      <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="expiryDate"
             label="Expiry Date"
@@ -104,7 +96,7 @@ const AddGrocery = () => {
             <Input type="date" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="brand"
             label="Brand"
@@ -113,7 +105,7 @@ const AddGrocery = () => {
             <Input placeholder="Enter brand name" />
           </Form.Item>
         </Col>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
             name="remarks"
             label="Remarks"

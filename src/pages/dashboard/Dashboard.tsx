@@ -84,7 +84,7 @@ const Dashboard = () => {
       <Layout style={{ padding: isMobile ? "8px" : "16px" }}>
         <Content style={{ padding: "8px", minHeight: 360 }}>
           <Row gutter={[16, 16]}>
-            <Col xs={24} md={24}>
+            <Col xs={24} sm={24} md={24} lg={24}>
               <Card
                 style={{
                   borderRadius: "16px",
@@ -179,7 +179,7 @@ const Dashboard = () => {
                     link: "/grocery",
                   }
                 ].map((item, index) => (
-                  <Col xs={24} sm={12} md={6} key={index}>
+                  <Col xs={24} sm={12} md={12} lg={6} key={index}>
                     <Card
                       style={cardStyle(index)}
                       headStyle={cardHeaderStyle}
@@ -238,11 +238,11 @@ const Dashboard = () => {
               </Row>
             </Col>
 
-            <Col xs={24} md={18}>
+            <Col xs={24} sm={24} md={24} lg={18}>
               <SimpleBarChart />
             </Col>
             
-            <Col xs={24} md={6}>
+            <Col xs={24} sm={24} md={24} lg={6}>
               <Card
                 title={
                   <Text strong style={{ color: "#5a4a42" }}>

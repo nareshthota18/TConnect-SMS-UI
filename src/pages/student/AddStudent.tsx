@@ -19,7 +19,7 @@ const AddStudent = () => {
       >
         {/* Row 1 */}
         <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+        <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="admissionNumber"
               label="Admission Number"
@@ -28,7 +28,7 @@ const AddStudent = () => {
               <Input placeholder="Enter admission number" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="name"
               label="Student Name"
@@ -37,7 +37,7 @@ const AddStudent = () => {
               <Input placeholder="Enter student name" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="rollNumber"
               label="Roll Number"
@@ -46,11 +46,7 @@ const AddStudent = () => {
               <Input placeholder="Enter roll number" />
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* Row 2 */}
-        <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="dob"
               label="Date of Birth"
@@ -59,7 +55,7 @@ const AddStudent = () => {
               <DatePicker style={{ width: "100%" }} placeholder="Select date" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="age"
               label="Age"
@@ -71,7 +67,7 @@ const AddStudent = () => {
               <Input placeholder="Enter age" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="gender"
               label="Gender"
@@ -84,11 +80,7 @@ const AddStudent = () => {
               </Select>
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* Row 3 */}
-        <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="class"
               label="Class"
@@ -97,7 +89,7 @@ const AddStudent = () => {
               <Input placeholder="Enter class" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="section"
               label="Section"
@@ -106,7 +98,7 @@ const AddStudent = () => {
               <Input placeholder="Enter section" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="bloodGroup"
               label="Blood Group"
@@ -115,11 +107,7 @@ const AddStudent = () => {
               <Input placeholder="Enter blood group" />
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* Row 4 */}
-        <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="address"
               label="Address"
@@ -128,7 +116,7 @@ const AddStudent = () => {
               <Input placeholder="Enter address" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="email"
               label="Email"
@@ -140,7 +128,7 @@ const AddStudent = () => {
               <Input placeholder="Enter email" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="phone"
               label="Phone Number"
@@ -152,11 +140,7 @@ const AddStudent = () => {
               <Input placeholder="Enter phone number" />
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* Row 5 */}
-        <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="fatherName"
               label="Father Name"
@@ -165,7 +149,7 @@ const AddStudent = () => {
               <Input placeholder="Enter father name" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="motherName"
               label="Mother Name"
@@ -174,7 +158,7 @@ const AddStudent = () => {
               <Input placeholder="Enter mother name" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="guardianName"
               label="Guardian Name"
@@ -182,11 +166,7 @@ const AddStudent = () => {
               <Input placeholder="Enter guardian name" />
             </Form.Item>
           </Col>
-        </Row>
-
-        {/* Row 6 */}
-        <Row gutter={16}>
-        <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="guardianPhone"
               label="Guardian Contact Number"
@@ -194,7 +174,7 @@ const AddStudent = () => {
               <Input placeholder="Enter guardian phone" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="caste"
               label="Caste"
@@ -202,7 +182,7 @@ const AddStudent = () => {
               <Input placeholder="Enter caste" />
             </Form.Item>
           </Col>
-          <Col xs={24} sm={12} md={8} lg={8} >
+          <Col xs={24} sm={12} md={12} lg={8} >
             <Form.Item
               name="aadhar"
               label="Aadhar Number"
