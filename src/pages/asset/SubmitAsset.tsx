@@ -72,7 +72,7 @@ const SubmitAsset: React.FC = () => {
       <Form form={form} layout="vertical" onFinish={onFinish} style={{ padding: 24 }}>
         <Row gutter={16}>
           {/* Class Dropdown */}
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={12} md={12} lg={8}>
             <Form.Item
               name="classId"
               label="Class"
@@ -89,7 +89,7 @@ const SubmitAsset: React.FC = () => {
           </Col>
 
           {/* Student Dropdown */}
-          <Col xs={24} sm={12}>
+          <Col xs={24} sm={12} md={12} lg={8}>
             <Form.Item
               name="studentId"
               label="Student"
@@ -139,7 +139,7 @@ const SubmitAsset: React.FC = () => {
         {/* Status Dropdown */}
         {selectedAssets.length > 0 && (
           <Row gutter={16} style={{ marginTop: 20 }}>
-            <Col xs={24} sm={12}>
+             <Col xs={24} sm={12} md={12} lg={8}>
               <Form.Item
                 name="status"
                 label="Status"

@@ -1,12 +1,5 @@
 import { useState } from "react";
-import {
-  Grid,
-  Row,
-  Col,
-  Card,
-  Typography,
-  Space,
-} from "antd";
+import { Layout, Grid, Row, Col, Card, Typography, Space } from "antd";
 import {
   DesktopOutlined,
   LaptopOutlined,
@@ -30,6 +23,7 @@ import {
 } from "@ant-design/icons";
 
 const { useBreakpoint } = Grid;
+const { Content } = Layout;
 const { Text } = Typography;
 
 const AssetsDashboard = () => {
@@ -37,56 +31,101 @@ const AssetsDashboard = () => {
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
 
-  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-  const cardStyle = {
-    border: `1px solid ${isDarkMode ? "#ff4d4f" : "#ffbe91"}`,
-    textAlign: "center" as const,
-  };
-
-  const cardHeaderStyle = {
-    borderBottom: `1px solid #ffbe91`,
-    textAlign: "center" as const,
+  // ✅ Dynamic card color logic
+  const getCardColors = (count: number) => {
+    if (count === 0) {
+      return {
+        background: "rgba(255, 77, 79, 0.2)",
+        border: "#ff4d4f",
+        icon: "#ff4d4f", // red
+      };
+    }
+    if (count < 50) {
+      return {
+        background: "rgba(255, 255, 102, 0.3)",
+        border: "#d4b106",
+        icon: "#d4b106", // yellow
+      };
+    }
+    return {
+      background: "rgba(82, 196, 26, 0.2)",
+      border: "#389e0d",
+      icon: "#389e0d", // green
+    };
   };
 
   const assetItems = [
-    { name: "Total Assets", count: "500", icon: <DatabaseOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Desktops", count: "120", icon: <DesktopOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Laptops", count: "150", icon: <LaptopOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Mobile Devices", count: "80", icon: <MobileOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Printers & Scanners", count: "40", icon: <PrinterOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Storage Devices", count: "60", icon: <HddOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
+    { name: "Total Assets", count: 500, icon: DatabaseOutlined },
+    { name: "Desktops", count: 120, icon: DesktopOutlined },
+    { name: "Laptops", count: 150, icon: LaptopOutlined },
+    { name: "Mobile Devices", count: 80, icon: MobileOutlined },
+    { name: "Printers & Scanners", count: 40, icon: PrinterOutlined },
+    { name: "Storage Devices", count: 60, icon: HddOutlined },
 
-    // Additional 12 items
-    { name: "Servers", count: "30", icon: <CloudServerOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Cloud Accounts", count: "25", icon: <CloudOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "APIs", count: "18", icon: <ApiOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Network Devices", count: "50", icon: <WifiOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "USB Devices", count: "75", icon: <UsbOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
-    { name: "Power Equipment", count: "40", icon: <ThunderboltOutlined style={{ fontSize: 18, color: "#FF9145" }} /> },
+    // Additional items
+    { name: "Servers", count: 30, icon: CloudServerOutlined },
+    { name: "Cloud Accounts", count: 25, icon: CloudOutlined },
+    { name: "APIs", count: 18, icon: ApiOutlined },
+    { name: "Network Devices", count: 0, icon: WifiOutlined },
+    { name: "USB Devices", count: 75, icon: UsbOutlined },
+    { name: "Power Equipment", count: 40, icon: ThunderboltOutlined },
   ];
 
   return (
-    <Row gutter={[16, 16]}>
-      <Col xs={24} md={24}>
-        <Row gutter={[16, 16]}>
-          {assetItems.map((item, index) => (
+    <div>
+      {/* ✅ Legend */}
+      <Row justify="end" style={{ marginBottom: 16 }}>
+        <Space size="large">
+          <Space>
+            <span style={{ width: 14, height: 14, background: "rgba(82,196,26,0.6)", border: "1px solid #389e0d", display: "inline-block", borderRadius: 4 }} />
+            <Text>Full Stock</Text>
+          </Space>
+          <Space>
+            <span style={{ width: 14, height: 14, background: "rgba(255,255,102,0.6)", border: "1px solid #d4b106", display: "inline-block", borderRadius: 4 }} />
+            <Text>Low Stock</Text>
+          </Space>
+          <Space>
+            <span style={{ width: 14, height: 14, background: "rgba(255,77,79,0.4)", border: "1px solid #ff4d4f", display: "inline-block", borderRadius: 4 }} />
+            <Text>Out of Stock</Text>
+          </Space>
+        </Space>
+      </Row>
+
+      {/* ✅ Asset Cards */}
+      <Row gutter={[16, 16]}>
+        {assetItems.map((item, index) => {
+          const { background, border, icon } = getCardColors(item.count);
+          const IconComponent = item.icon;
+
+          return (
             <Col xs={12} sm={12} md={8} lg={4} key={index}>
               <Card
-                title={item.icon}
-                style={cardStyle}
-                headStyle={cardHeaderStyle}
+                title={<IconComponent style={{ fontSize: 18, color: icon }} />}
+                style={{
+                  textAlign: "center",
+                  backgroundColor: background,
+                  border: `1px solid ${border}`,
+                }}
+                headStyle={{
+                  borderBottom: `1px solid ${border}`,
+                  textAlign: "center",
+                }}
               >
-                <Space direction="vertical" style={{ width: "100%" }}>
-                  <Text strong style={{ fontSize: 18 }}>{item.count}</Text>
+                <Space
+                  direction="vertical"
+                  style={{ width: "100%", textAlign: "center" }}
+                >
+                  <Text strong style={{ fontSize: 18 }}>
+                    {item.count}
+                  </Text>
                   <Text type="secondary">{item.name}</Text>
                 </Space>
               </Card>
             </Col>
-          ))}
-        </Row>
-      </Col>
-    </Row>
+          );
+        })}
+      </Row>
+    </div>
   );
 };
 

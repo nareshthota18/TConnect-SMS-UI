@@ -15,6 +15,8 @@ import AllStudents from "./AllStudents";
 import AddStudent from "./AddStudent";
 import { CloseOutlined } from "@ant-design/icons";
 import StudentHealth from "./StudentHealth";
+import Activities from "./Activities";
+import AddStudentHealth from "./AddStudentHealth";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -41,6 +43,11 @@ const items = [
     key: "4",
     children: "Student Assets will go here.",
   },
+  {
+    label: "Student Activities",
+    key: "5",
+    children: <Activities />
+  },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -58,6 +65,9 @@ const Student = () => {
 
   // Drawer State
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [openHealthDrawer, setOpenHealthDrawer] = useState(false);
+  const [activeKey, setActiveKey] = useState("1");
+
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -86,12 +96,21 @@ const Student = () => {
             >
               Student
             </Title>
-            <Button type="primary" onClick={showDrawer}>
+            <Flex gap='middle'>
+            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "1"}>
               Add Student
             </Button>
+            <Button type="primary" onClick={() => setOpenHealthDrawer(true)} disabled={activeKey !== "2"} >
+              Add Student Health
+            </Button>
+            <Button type="primary" disabled={activeKey !== "5"} >
+              Add Activity
+            </Button>
+            </Flex>
           </Flex>
 
-          <Tabs items={items} />
+          <Tabs items={items} activeKey={activeKey}
+            onChange={(key) => setActiveKey(key)} />
 
           {/* Drawer Component */}
           <Drawer
@@ -107,6 +126,25 @@ const Student = () => {
           >
            <AddStudent />
           </Drawer>
+
+          {/* Drawer: Add Student Health */}
+          <Drawer
+            title="Add Student Health"
+            width={isMobile ? "100%" : "80%"}
+            onClose={() => setOpenHealthDrawer(false)}
+            open={openHealthDrawer}
+            bodyStyle={{ paddingBottom: 80 }}
+            headerStyle={drawerHeaderStyle}
+            maskClosable={false}
+            keyboard={false}
+            closeIcon={
+              <CloseOutlined style={{ color: "#000", fontSize: "18px" }} />
+            }
+          >
+            {/* Replace this with your AddStudentHealth form */}
+            <AddStudentHealth />
+          </Drawer>
+
         </Content>
       </Layout>
     </Layout>
