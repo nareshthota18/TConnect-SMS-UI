@@ -4,6 +4,7 @@ import type { ColumnsType } from "antd/es/table";
 import { fetchStudentsApi } from "../../store/Student/StudentActions";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
+import { LoadingOutlined } from "@ant-design/icons";
 
 // Match JSONPlaceholder structure
 interface Student {
@@ -110,7 +111,10 @@ const AllStudents = () => {
         columns={columns}
         bordered
         pagination={false}
-        loading={studentDataLoading}
+        loading={{
+          spinning: studentDataLoading,
+          indicator: <LoadingOutlined style={{ fontSize: 24 }} spin />,
+        }}
         rowKey={(record) => record.id}
         scroll={{ x: "max-content" }}
       />

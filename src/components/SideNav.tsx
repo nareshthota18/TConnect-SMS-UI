@@ -11,6 +11,7 @@ import {
   DashboardOutlined,
   LogoutOutlined,
   MenuOutlined,
+  CalendarOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Drawer, Button } from "antd";
 import type { MenuProps } from "antd";
@@ -38,6 +39,7 @@ const SideNav: React.FC<SideNavProps> = ({ isMobile, collapsed, onClose, open })
   const items: MenuProps["items"] = [
     { key: "/dashboard", icon: <DashboardOutlined />, label: <Link to="/dashboard">Dashboard</Link> },
     { key: "/student", icon: <UserOutlined />, label: <Link to="/student">Student</Link> },
+    { key: "/activities", icon: <CalendarOutlined />, label: <Link to="/activities">Activities</Link> },
     { key: "/staff", icon: <TeamOutlined />, label: <Link to="/staff">Staff</Link> },
     { key: "/inventory", icon: <AppstoreOutlined />, label: <Link to="/inventory">Inventory</Link> },
     { key: "/grocery", icon: <ShoppingCartOutlined />, label: <Link to="/grocery">Grocery</Link> },

@@ -25,18 +25,13 @@ const items = [
     children: <AllStaff />,
   },
   {
-    label: "Staff Attendance",
-    key: "2",
-    children: "Staff attendance details will go here.",
-  },
-  {
     label: "Profile",
-    key: "3",
+    key: "2",
     children: "Profile information will go here.",
   },
   {
     label: "Staff Assets",
-    key: "4",
+    key: "3",
     children: "Staff assets will go here.",
   },
 ];

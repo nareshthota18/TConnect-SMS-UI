@@ -11,6 +11,7 @@ import Asset from './pages/asset/Asset'
 import Grocery from './pages/grocery/Grocery'
 import Inventory from './pages/inventory/Inventory'
 import User from './pages/user/User'
+import Activities from './pages/activities/Activities'
 
 const AppRoutes = () => {
   return (
@@ -27,6 +28,7 @@ const AppRoutes = () => {
       <Route path="/grocery" element={<Grocery />} />
       <Route path="/inventory" element={<Inventory />} />
       <Route path="/user" element={<User />} />
+      <Route path="/activities" element={<Activities />} />
     </Routes>
   )
 }

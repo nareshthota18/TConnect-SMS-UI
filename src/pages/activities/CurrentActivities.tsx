@@ -1,19 +1,19 @@
 import React, { useState } from "react";
-import {
-  Button,
-  Table,
-  Tag,
-  Modal,
-  Form,
-  Input,
-  DatePicker,
-  Select,
-} from "antd";
+import { Table, Tag } from "antd";
+import type { ColumnsType } from "antd/es/table";
 
-const { Option } = Select;
+// Define the type for each activity row
+interface Activity {
+  key: string;
+  title: string;
+  type: string;
+  date: string;
+  description: string;
+  status: "Upcoming" | "Completed";
+}
 
-const Activities = () => {
-  const [activities, setActivities] = useState([
+const CurrentActivities: React.FC = () => {
+  const [activities] = useState<Activity[]>([
     {
       key: "1",
       title: "Sports Day",
@@ -48,7 +48,10 @@ const Activities = () => {
     },
   ]);
 
-  const columns = [
+  // Filter only Completed
+  const currentActivities = activities.filter((a) => a.status === "Completed");
+
+  const columns: ColumnsType<Activity> = [
     {
       title: "Activity Title",
       dataIndex: "title",
@@ -58,7 +61,7 @@ const Activities = () => {
       title: "Type",
       dataIndex: "type",
       key: "type",
-      render: (type) => <Tag color="blue">{type}</Tag>,
+      render: (type: string) => <Tag color="blue">{type}</Tag>,
     },
     {
       title: "Date",
@@ -74,13 +77,13 @@ const Activities = () => {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      render: (status) => (
+      render: (status: Activity["status"]) => (
         <Tag color={status === "Upcoming" ? "green" : "volcano"}>{status}</Tag>
       ),
     },
   ];
 
-  return <Table bordered columns={columns} dataSource={activities} />;
+  return <Table bordered columns={columns} dataSource={currentActivities} />;
 };
 
-export default Activities;
+export default CurrentActivities;

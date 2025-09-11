@@ -15,7 +15,6 @@ import AllStudents from "./AllStudents";
 import AddStudent from "./AddStudent";
 import { CloseOutlined } from "@ant-design/icons";
 import StudentHealth from "./StudentHealth";
-import Activities from "./Activities";
 import AddStudentHealth from "./AddStudentHealth";
 
 const { useBreakpoint } = Grid;
@@ -42,11 +41,6 @@ const items = [
     label: "Student Assets",
     key: "4",
     children: "Student Assets will go here.",
-  },
-  {
-    label: "Student Activities",
-    key: "5",
-    children: <Activities />
   },
 ];
 
@@ -102,9 +96,6 @@ const Student = () => {
             </Button>
             <Button type="primary" onClick={() => setOpenHealthDrawer(true)} disabled={activeKey !== "2"} >
               Add Student Health
-            </Button>
-            <Button type="primary" disabled={activeKey !== "5"} >
-              Add Activity
             </Button>
             </Flex>
           </Flex>
