@@ -8,6 +8,7 @@ import {
   Select,
   InputNumber,
   Space,
+  DatePicker,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -122,7 +123,7 @@ const AddGrocery: React.FC = () => {
                       label="Expiry Date"
                       rules={[{ required: true, message: "Please select expiry date" }]}
                     >
-                      <Input type="date" />
+                      <DatePicker style={{ width: '100%'}} />
                     </Form.Item>
                   </Col>
                 </Row>

@@ -139,14 +139,14 @@ const Dashboard = () => {
               <Row gutter={[16, 16]}>
                 {[
                   {
-                    name: "Total Hostels",
+                    name: "Total Schools",
                     account: "230",
                     icon: (
                       <HomeOutlined
                         style={{ fontSize: 22, color: "#fff" }}
                       />
                     ),
-                    link: "/hostels",
+                    link: "/schools",
                   },
                   {
                     name: "Total Students",

@@ -33,7 +33,6 @@ const ActivitiesDashboard: React.FC = () => {
 
           return (
             <Col xs={12} sm={12} md={8} lg={4} key={index}>
-              <Link to={item.link}>
                 <Card
                   title={<IconComponent style={{ fontSize: 18, color: lightPrimary }} />}
                   style={{
@@ -45,7 +44,7 @@ const ActivitiesDashboard: React.FC = () => {
                     borderBottom: `1px solid ${lightPrimary}`,
                     textAlign: "center",
                   }}
-                  hoverable
+                  // hoverable
                 >
                   <Space
                     direction="vertical"
@@ -57,7 +56,6 @@ const ActivitiesDashboard: React.FC = () => {
                     <Text type="secondary">{item.name}</Text>
                   </Space>
                 </Card>
-              </Link>
             </Col>
           );
         })}

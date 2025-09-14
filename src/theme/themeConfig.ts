@@ -37,7 +37,8 @@ export const lightTheme: ThemeConfig = {
     Table: {
       headerBg: withOpacity(lightPrimary, 0.15),
       headerColor: '#1F2937',
-      headerSplitColor: withOpacity(lightPrimary, 0.15)
+      headerSplitColor: withOpacity(lightPrimary, 0.15),
+      cellPaddingBlock: 10
     },
     Segmented: {
       itemSelectedBg: lightPrimary,
@@ -70,7 +71,8 @@ export const darkTheme: ThemeConfig = {
     Table: {
       headerBg: withOpacity(darkPrimary, 0.05),
       headerColor: '#fff',
-      headerSplitColor: withOpacity(darkPrimary, 0.15)
+      headerSplitColor: withOpacity(darkPrimary, 0.15),
+      cellPaddingBlock: 10
     },
     Segmented: {
       itemSelectedBg: darkPrimary,

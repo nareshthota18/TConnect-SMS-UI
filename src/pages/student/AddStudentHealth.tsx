@@ -65,12 +65,6 @@ const AddStudentHealth = ({   }) => {
         </Col>
 
         <Col xs={24} sm={12} md={12} lg={8}>
-          <Form.Item label="Medications" name="medications">
-            <Input />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} sm={12} md={12} lg={8}>
           <Form.Item label="Emergency Contact Name" name="emergency_contact_name">
             <Input />
           </Form.Item>
@@ -90,7 +84,7 @@ const AddStudentHealth = ({   }) => {
 
         <Col xs={24} sm={24} md={24} lg={24}>
           <Form.Item label="Doctor Notes" name="doctor_notes">
-            <TextArea rows={3} />
+            <TextArea rows={4} />
           </Form.Item>
         </Col>
       </Row>

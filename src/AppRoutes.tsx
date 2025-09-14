@@ -12,6 +12,7 @@ import Grocery from './pages/grocery/Grocery'
 import Inventory from './pages/inventory/Inventory'
 import User from './pages/user/User'
 import Activities from './pages/activities/Activities'
+import Schools from './pages/schools/Schools'
 
 const AppRoutes = () => {
   return (
@@ -29,6 +30,7 @@ const AppRoutes = () => {
       <Route path="/inventory" element={<Inventory />} />
       <Route path="/user" element={<User />} />
       <Route path="/activities" element={<Activities />} />
+      <Route path="/schools" element={<Schools />} />
     </Routes>
   )
 }

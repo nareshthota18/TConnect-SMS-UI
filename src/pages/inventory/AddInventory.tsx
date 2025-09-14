@@ -8,6 +8,7 @@ import {
   Select,
   InputNumber,
   Space,
+  DatePicker,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -129,7 +130,7 @@ const AddInventory: React.FC = () => {
                       label="Purchase Date"
                       rules={[{ required: true, message: "Please select purchase date" }]}
                     >
-                      <Input type="date" />
+                      <DatePicker style={{ width: '100%'}} />
                     </Form.Item>
                   </Col>
 

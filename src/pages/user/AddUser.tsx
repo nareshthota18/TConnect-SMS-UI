@@ -129,7 +129,7 @@ const AddUser = () => {
       </Row>
 
       <Row>
-        <Col span={24} style={{ textAlign: "right" }}>
+        <Col span={24} style={{ textAlign: "left" }}>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
