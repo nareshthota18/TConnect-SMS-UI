@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Table } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchStaffApi } from "../../store/Staff/StaffActions";
 
 const AllStaff = () => {
+
+  const dispatch = useDispatch<AppDispatch>();
+
+interface StaffState {
+  staffData: any;
+  staffDataLoading: boolean;
+  staffDataError: boolean;
+}
+
+const { staffData, staffDataLoading } = useSelector(
+  (state: RootState) => state.staff as StaffState
+);
+
+useEffect(() => {
+  dispatch(fetchStaffApi());
+}, [dispatch]);
+
   // Sample staff data
   const dataSource = [
     {

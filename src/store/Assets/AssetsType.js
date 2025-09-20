@@ -1,0 +1,7 @@
+// src/redux/types/assetsTypes.js
+export const ASSETS_LIST = {
+    ASSETS_LIST_START: "ASSETS_LIST_START",
+    ASSETS_LIST_SUCCESS: "ASSETS_LIST_SUCCESS",
+    ASSETS_LIST_FAIL: "ASSETS_LIST_FAIL",
+  };
+  

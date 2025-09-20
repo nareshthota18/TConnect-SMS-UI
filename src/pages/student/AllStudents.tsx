@@ -65,11 +65,6 @@ const AllStudents = () => {
       dataIndex: "name",
       key: "name",
     },
-    // {
-    //   title: "Username",
-    //   dataIndex: "username",
-    //   key: "username",
-    // },
     {
       title: "Email",
       dataIndex: "email",
@@ -88,11 +83,6 @@ const AllStudents = () => {
         );
       },
     },
-    // {
-    //   title: "Company",
-    //   key: "company",
-    //   render: (_, record) => record.company?.name,
-    // },
     {
       title: "Action",
       key: "action",

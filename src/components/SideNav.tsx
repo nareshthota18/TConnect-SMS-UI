@@ -13,6 +13,7 @@ import {
   MenuOutlined,
   CalendarOutlined,
   BankOutlined,
+  ApartmentOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Drawer, Button } from "antd";
 import type { MenuProps } from "antd";
@@ -44,6 +45,7 @@ const SideNav: React.FC<SideNavProps> = ({ isMobile, collapsed, onClose, open })
     { key: "/activities", icon: <CalendarOutlined />, label: <Link to="/activities">Activities</Link> },
     { key: "/staff", icon: <TeamOutlined />, label: <Link to="/staff">Staff</Link> },
     { key: "/inventory", icon: <AppstoreOutlined />, label: <Link to="/inventory">Inventory</Link> },
+    { key: "/suppliers", icon: <ApartmentOutlined />, label: <Link to="/suppliers">Suppliers</Link> },
     { key: "/grocery", icon: <ShoppingCartOutlined />, label: <Link to="/grocery">Grocery</Link> },
     { key: "/attendance", icon: <CheckSquareOutlined />, label: <Link to="/attendance">Attendance</Link> },
     { key: "/asset", icon: <DeploymentUnitOutlined />, label: <Link to="/asset">Asset</Link> },

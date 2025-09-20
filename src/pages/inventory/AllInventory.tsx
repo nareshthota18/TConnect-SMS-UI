@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Tag, Input } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
 
 interface Inventory {
   id: number;
@@ -14,19 +17,67 @@ interface Inventory {
 const AllInventory: React.FC = () => {
   const [data, setData] = useState<Inventory[]>([]);
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  interface InventoryState {
+    inventoryData: any;
+    inventoryDataLoading: boolean;
+    inventoryDataError: boolean;
+  }
+
+  const { inventoryData, inventoryDataLoading } = useSelector(
+    (state: RootState) => state.inventory as InventoryState
+  );
+
+  useEffect(() => {
+    dispatch(fetchInventoryApi());
+  }, [dispatch]);
+
   useEffect(() => {
     const inventoryData: Inventory[] = [
-      { id: 1, itemName: "Rice", category: "Grains", quantity: 50, status: "In Stock" },
-      { id: 2, itemName: "Sugar", category: "Grocery", quantity: 10, status: "Low Stock" },
-      { id: 3, itemName: "Milk", category: "Dairy", quantity: 0, status: "Out of Stock" },
-      { id: 4, itemName: "Bread", category: "Bakery", quantity: 15, status: "Low Stock" },
-      { id: 5, itemName: "Salt", category: "Grocery", quantity: 100, status: "In Stock" },
+      {
+        id: 1,
+        itemName: "Rice",
+        category: "Grains",
+        quantity: 50,
+        status: "In Stock",
+      },
+      {
+        id: 2,
+        itemName: "Sugar",
+        category: "Grocery",
+        quantity: 10,
+        status: "Low Stock",
+      },
+      {
+        id: 3,
+        itemName: "Milk",
+        category: "Dairy",
+        quantity: 0,
+        status: "Out of Stock",
+      },
+      {
+        id: 4,
+        itemName: "Bread",
+        category: "Bakery",
+        quantity: 15,
+        status: "Low Stock",
+      },
+      {
+        id: 5,
+        itemName: "Salt",
+        category: "Grocery",
+        quantity: 100,
+        status: "In Stock",
+      },
     ];
     setData(inventoryData);
   }, []);
 
   // Search functionality
-  const getColumnSearchProps = (dataIndex: keyof Inventory): ColumnType<Inventory> => ({
+  const getColumnSearchProps = (
+    dataIndex: keyof Inventory
+  ): ColumnType<Inventory> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
@@ -47,7 +98,10 @@ const AllInventory: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
   });
 
   const columns: ColumnsType<Inventory> = [

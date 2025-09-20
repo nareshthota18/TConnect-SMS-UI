@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Table, Tag, Input } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchAssetsApi } from "../../store/Assets/AssetsActions";
 
 interface Asset {
   id: number;
@@ -14,13 +17,59 @@ interface Asset {
 const AllAssets: React.FC = () => {
   const [data, setData] = useState<Asset[]>([]);
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  interface AssetsState {
+    assetsData: any;
+    assetsDataLoading: boolean;
+    assetsDataError: boolean;
+  }
+
+  const { assetsData, assetsDataLoading } = useSelector(
+    (state: RootState) => state.asset as AssetsState
+  );
+
+  useEffect(() => {
+    dispatch(fetchAssetsApi());
+  }, [dispatch]);
+
   useEffect(() => {
     const assetData: Asset[] = [
-      { id: 1, name: "Laptop Dell XPS", category: "Electronics", purchaseDate: "2024-01-15", status: "Active" },
-      { id: 2, name: "Office Chair", category: "Furniture", purchaseDate: "2023-12-05", status: "Damaged" },
-      { id: 3, name: "Projector Epson", category: "Electronics", purchaseDate: "2024-02-10", status: "Active" },
-      { id: 4, name: "AC Unit", category: "Appliances", purchaseDate: "2023-11-20", status: "Theft" },
-      { id: 5, name: "Printer HP", category: "Electronics", purchaseDate: "2024-03-01", status: "Active" },
+      {
+        id: 1,
+        name: "Laptop Dell XPS",
+        category: "Electronics",
+        purchaseDate: "2024-01-15",
+        status: "Active",
+      },
+      {
+        id: 2,
+        name: "Office Chair",
+        category: "Furniture",
+        purchaseDate: "2023-12-05",
+        status: "Damaged",
+      },
+      {
+        id: 3,
+        name: "Projector Epson",
+        category: "Electronics",
+        purchaseDate: "2024-02-10",
+        status: "Active",
+      },
+      {
+        id: 4,
+        name: "AC Unit",
+        category: "Appliances",
+        purchaseDate: "2023-11-20",
+        status: "Theft",
+      },
+      {
+        id: 5,
+        name: "Printer HP",
+        category: "Electronics",
+        purchaseDate: "2024-03-01",
+        status: "Active",
+      },
     ];
     setData(assetData);
   }, []);
@@ -47,7 +96,10 @@ const AllAssets: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
   });
 
   const columns: ColumnsType<Asset> = [
@@ -78,7 +130,8 @@ const AllAssets: React.FC = () => {
       title: "Purchase Date",
       dataIndex: "purchaseDate",
       key: "purchaseDate",
-      sorter: (a, b) => new Date(a.purchaseDate).getTime() - new Date(b.purchaseDate).getTime(),
+      sorter: (a, b) =>
+        new Date(a.purchaseDate).getTime() - new Date(b.purchaseDate).getTime(),
     },
     {
       title: "Status",
