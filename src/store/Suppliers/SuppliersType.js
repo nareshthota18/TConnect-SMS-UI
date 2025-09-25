@@ -1,0 +1,7 @@
+// src/redux/types/supplierTypes.js
+export const SUPPLIER_LIST = {
+    SUPPLIER_LIST_START: "SUPPLIER_LIST_START",
+    SUPPLIER_LIST_SUCCESS: "SUPPLIER_LIST_SUCCESS",
+    SUPPLIER_LIST_FAIL: "SUPPLIER_LIST_FAIL",
+  };
+  

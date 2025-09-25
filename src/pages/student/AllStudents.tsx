@@ -6,26 +6,22 @@ import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
 import { LoadingOutlined } from "@ant-design/icons";
 
-// Match JSONPlaceholder structure
 interface Student {
-  id: number;
-  name: string;
-  username: string;
-  email: string;
-  address: {
-    street: string;
-    suite: string;
-    city: string;
-    zipcode: string;
-    geo: { lat: string; lng: string };
-  };
-  phone: string;
-  website: string;
-  company: {
-    name: string;
-    catchPhrase: string;
-    bs: string;
-  };
+  id: string;
+  admissionNumber: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  categoryId: string;
+  rsHostelId: string;
+  gradeId: string;
+  status: string;
+  parentName: string;
+  parentContact: string;
+  healthInfo: string | null;
+  categoryName: string | null;
+  rsHostelName: string;
+  gradeName: string;
 }
 
 const AllStudents = () => {
@@ -35,7 +31,7 @@ const AllStudents = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   interface StudentState {
-    studentData: any;
+    studentData: Student[];
     studentDataLoading: boolean;
     studentDataError: boolean;
   }
@@ -58,30 +54,42 @@ const AllStudents = () => {
     setSelectedStudent(null);
   };
 
-  // Flatten nested fields for table
+  // Updated columns for new API structure
   const columns: ColumnsType<Student> = [
     {
+      title: "Admission Number",
+      dataIndex: "admissionNumber",
+      key: "admissionNumber",
+    },
+    {
       title: "Name",
-      dataIndex: "name",
       key: "name",
+      render: (_, record) => `${record.firstName} ${record.lastName}`,
     },
     {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
+      title: "Grade",
+      dataIndex: "gradeName",
+      key: "gradeName",
     },
     {
-      title: "City",
-      key: "city",
-      render: (_, record) => {
-        const fullAddress = `${record.address.street}, ${record.address.suite}, ${record.address.city}, ${record.address.zipcode}`;
-        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
-        return (
-          <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
-            {record.address.city}
-          </a>
-        );
-      },
+      title: "Hostel",
+      dataIndex: "rsHostelName",
+      key: "rsHostelName",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
+      title: "Parent Name",
+      dataIndex: "parentName",
+      key: "parentName",
+    },
+    {
+      title: "Parent Contact",
+      dataIndex: "parentContact",
+      key: "parentContact",
     },
     {
       title: "Action",
@@ -97,7 +105,7 @@ const AllStudents = () => {
   return (
     <>
       <Table<Student>
-        dataSource={studentData?.data || studentData || []}
+        dataSource={studentData || []}
         columns={columns}
         bordered
         pagination={false}
@@ -119,28 +127,35 @@ const AllStudents = () => {
       >
         {selectedStudent && (
           <Descriptions bordered column={3} size="middle" layout="vertical">
-            <Descriptions.Item label="Name">{selectedStudent.name}</Descriptions.Item>
-            <Descriptions.Item label="Username">{selectedStudent.username}</Descriptions.Item>
-            <Descriptions.Item label="Email">{selectedStudent.email}</Descriptions.Item>
-            <Descriptions.Item label="Phone">{selectedStudent.phone}</Descriptions.Item>
-            <Descriptions.Item label="Website">{selectedStudent.website}</Descriptions.Item>
-
-            <Descriptions.Item label="Address">
-              {`${selectedStudent.address.street}, ${selectedStudent.address.suite}, ${selectedStudent.address.city}, ${selectedStudent.address.zipcode}`}
+            <Descriptions.Item label="Admission Number">
+              {selectedStudent.admissionNumber}
             </Descriptions.Item>
-
-            <Descriptions.Item label="Geo Location">
-              {`Lat: ${selectedStudent.address.geo.lat}, Lng: ${selectedStudent.address.geo.lng}`}
+            <Descriptions.Item label="Name">
+              {`${selectedStudent.firstName} ${selectedStudent.lastName}`}
             </Descriptions.Item>
-
-            <Descriptions.Item label="Company Name">
-              {selectedStudent.company.name}
+            <Descriptions.Item label="Date of Birth">
+              {new Date(selectedStudent.dateOfBirth).toLocaleDateString()}
             </Descriptions.Item>
-            <Descriptions.Item label="Catch Phrase">
-              {selectedStudent.company.catchPhrase}
+            <Descriptions.Item label="Grade">
+              {selectedStudent.gradeName}
             </Descriptions.Item>
-            <Descriptions.Item label="Business">
-              {selectedStudent.company.bs}
+            <Descriptions.Item label="Hostel">
+              {selectedStudent.rsHostelName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Status">
+              {selectedStudent.status}
+            </Descriptions.Item>
+            <Descriptions.Item label="Parent Name">
+              {selectedStudent.parentName}
+            </Descriptions.Item>
+            <Descriptions.Item label="Parent Contact">
+              {selectedStudent.parentContact}
+            </Descriptions.Item>
+            <Descriptions.Item label="Category">
+              {selectedStudent.categoryName || "-"}
+            </Descriptions.Item>
+            <Descriptions.Item label="Health Info">
+              {selectedStudent.healthInfo || "-"}
             </Descriptions.Item>
           </Descriptions>
         )}

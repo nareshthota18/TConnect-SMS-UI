@@ -3,6 +3,7 @@ import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchStaffApi } from "../../store/Staff/StaffActions";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const AllStaff = () => {
 
@@ -22,69 +23,53 @@ useEffect(() => {
   dispatch(fetchStaffApi());
 }, [dispatch]);
 
-  // Sample staff data
-  const dataSource = [
-    {
-      key: "1",
-      name: "John Carter",
-      role: "Teacher",
-      department: "Mathematics",
-      email: "john.carter@example.com",
-      phone: "9876543210",
-    },
-    {
-      key: "2",
-      name: "Emily Smith",
-      role: "Administrator",
-      department: "Administration",
-      email: "emily.smith@example.com",
-      phone: "9123456789",
-    },
-    {
-      key: "3",
-      name: "Michael Brown",
-      role: "Accountant",
-      department: "Finance",
-      email: "michael.brown@example.com",
-      phone: "9012345678",
-    },
-  ];
+const dataSource = staffData?.map((staff: any, index: number) => ({
+  key: staff.id || staff.staffId || index, // ✅ unique key
+  name: staff.fullName,
+  role: staff.designationName || "N/A",
+  department: staff.departmentName || "N/A",
+  email: staff.email,
+  phone: staff.phone,
+}));
 
-  // Table columns
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Role",
-      dataIndex: "role",
-      key: "role",
-    },
-    {
-      title: "Department",
-      dataIndex: "department",
-      key: "department",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      key: "email",
-    },
-    {
-      title: "Phone",
-      dataIndex: "phone",
-      key: "phone",
-    },
-  ];
+ // Table columns
+ const columns = [
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Role",
+    dataIndex: "role",
+    key: "role",
+  },
+  {
+    title: "Department",
+    dataIndex: "department",
+    key: "department",
+  },
+  {
+    title: "Email",
+    dataIndex: "email",
+    key: "email",
+  },
+  {
+    title: "Phone",
+    dataIndex: "phone",
+    key: "phone",
+  },
+];
 
   return (
     <Table
       dataSource={dataSource}
+      loading={{
+        spinning: staffDataLoading,
+        indicator: <LoadingOutlined style={{ fontSize: 24 }} spin />,
+      }}
       columns={columns}
       bordered
-      pagination={false}
       scroll={{ x: "max-content" }}
     />
   );

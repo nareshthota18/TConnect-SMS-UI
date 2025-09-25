@@ -268,7 +268,7 @@ const Dashboard = () => {
                     />
                   </Flex>
                   <Flex vertical>
-                    <Text strong style={{ color: "#5a4a42" }}>Meal:</Text>
+                    <Text strong style={{ color: "#5a4a42" }}>Staff:</Text>
                     <Progress 
                       percent={100} 
                       strokeColor={{

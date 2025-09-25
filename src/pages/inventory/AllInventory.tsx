@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Table, Tag, Input } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
@@ -7,20 +7,21 @@ import { AppDispatch, RootState } from "../../store/store";
 import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
 
 interface Inventory {
-  id: number;
-  itemName: string;
-  category: string;
-  quantity: number;
-  status: "In Stock" | "Low Stock" | "Out of Stock";
+  id: string;
+  itemCode: string;
+  name: string;
+  itemTypeId: string;
+  uom: string;
+  reorderLevel: number;
+  isActive: boolean;
+  itemTypeName: string;
 }
 
 const AllInventory: React.FC = () => {
-  const [data, setData] = useState<Inventory[]>([]);
-
   const dispatch = useDispatch<AppDispatch>();
 
   interface InventoryState {
-    inventoryData: any;
+    inventoryData: Inventory[];
     inventoryDataLoading: boolean;
     inventoryDataError: boolean;
   }
@@ -33,48 +34,7 @@ const AllInventory: React.FC = () => {
     dispatch(fetchInventoryApi());
   }, [dispatch]);
 
-  useEffect(() => {
-    const inventoryData: Inventory[] = [
-      {
-        id: 1,
-        itemName: "Rice",
-        category: "Grains",
-        quantity: 50,
-        status: "In Stock",
-      },
-      {
-        id: 2,
-        itemName: "Sugar",
-        category: "Grocery",
-        quantity: 10,
-        status: "Low Stock",
-      },
-      {
-        id: 3,
-        itemName: "Milk",
-        category: "Dairy",
-        quantity: 0,
-        status: "Out of Stock",
-      },
-      {
-        id: 4,
-        itemName: "Bread",
-        category: "Bakery",
-        quantity: 15,
-        status: "Low Stock",
-      },
-      {
-        id: 5,
-        itemName: "Salt",
-        category: "Grocery",
-        quantity: 100,
-        status: "In Stock",
-      },
-    ];
-    setData(inventoryData);
-  }, []);
-
-  // Search functionality
+  // 🔍 Search functionality
   const getColumnSearchProps = (
     dataIndex: keyof Inventory
   ): ColumnType<Inventory> => ({
@@ -99,69 +59,67 @@ const AllInventory: React.FC = () => {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        .toString()
+        ?.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
   });
 
+  // ✅ Match API fields
   const columns: ColumnsType<Inventory> = [
     {
-      title: "Item ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
+      title: "Item Code",
+      dataIndex: "itemCode",
+      key: "itemCode",
+      ...getColumnSearchProps("itemCode"),
     },
     {
       title: "Item Name",
-      dataIndex: "itemName",
-      key: "itemName",
-      ...getColumnSearchProps("itemName"),
+      dataIndex: "name",
+      key: "name",
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Category",
-      dataIndex: "category",
-      key: "category",
-      filters: [
-        { text: "Grains", value: "Grains" },
-        { text: "Grocery", value: "Grocery" },
-        { text: "Dairy", value: "Dairy" },
-        { text: "Bakery", value: "Bakery" },
-      ],
-      onFilter: (value, record) => record.category === value,
+      dataIndex: "itemTypeName",
+      key: "itemTypeName",
+      filters: Array.from(
+        new Set(inventoryData?.map((item) => item.itemTypeName))
+      ).map((cat) => ({ text: cat, value: cat })),
+      onFilter: (value, record) => record.itemTypeName === value,
     },
     {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      sorter: (a, b) => a.quantity - b.quantity,
+      title: "UOM",
+      dataIndex: "uom",
+      key: "uom",
+    },
+    {
+      title: "Reorder Level",
+      dataIndex: "reorderLevel",
+      key: "reorderLevel",
+      sorter: (a, b) => a.reorderLevel - b.reorderLevel,
     },
     {
       title: "Status",
-      dataIndex: "status",
-      key: "status",
+      dataIndex: "isActive",
+      key: "isActive",
       filters: [
-        { text: "In Stock", value: "In Stock" },
-        { text: "Low Stock", value: "Low Stock" },
-        { text: "Out of Stock", value: "Out of Stock" },
+        { text: "Active", value: true },
+        { text: "Inactive", value: false },
       ],
-      onFilter: (value, record) => record.status === value,
-      render: (status: Inventory["status"]) => {
-        let color = "blue";
-        if (status === "In Stock") color = "green";
-        else if (status === "Low Stock") color = "orange";
-        else if (status === "Out of Stock") color = "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      render: (isActive: boolean) =>
+        isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>,
     },
   ];
 
   return (
     <Table<Inventory>
       columns={columns}
-      dataSource={data}
+      dataSource={inventoryData || []} // ✅ API data
       rowKey="id"
       pagination={{ pageSize: 5 }}
       bordered
+      loading={inventoryDataLoading}
       scroll={{ x: "max-content" }}
     />
   );

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import { Table, Tag, Input, Spin } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,8 +15,6 @@ interface Asset {
 }
 
 const AllAssets: React.FC = () => {
-  const [data, setData] = useState<Asset[]>([]);
-
   const dispatch = useDispatch<AppDispatch>();
 
   interface AssetsState {
@@ -33,48 +31,7 @@ const AllAssets: React.FC = () => {
     dispatch(fetchAssetsApi());
   }, [dispatch]);
 
-  useEffect(() => {
-    const assetData: Asset[] = [
-      {
-        id: 1,
-        name: "Laptop Dell XPS",
-        category: "Electronics",
-        purchaseDate: "2024-01-15",
-        status: "Active",
-      },
-      {
-        id: 2,
-        name: "Office Chair",
-        category: "Furniture",
-        purchaseDate: "2023-12-05",
-        status: "Damaged",
-      },
-      {
-        id: 3,
-        name: "Projector Epson",
-        category: "Electronics",
-        purchaseDate: "2024-02-10",
-        status: "Active",
-      },
-      {
-        id: 4,
-        name: "AC Unit",
-        category: "Appliances",
-        purchaseDate: "2023-11-20",
-        status: "Theft",
-      },
-      {
-        id: 5,
-        name: "Printer HP",
-        category: "Electronics",
-        purchaseDate: "2024-03-01",
-        status: "Active",
-      },
-    ];
-    setData(assetData);
-  }, []);
-
-  // Search for Asset Name
+  // 🔎 Column search for Asset Name
   const getColumnSearchProps = (dataIndex: keyof Asset): ColumnType<Asset> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
@@ -97,7 +54,7 @@ const AllAssets: React.FC = () => {
     ),
     onFilter: (value, record) =>
       record[dataIndex]
-        .toString()
+        ?.toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
   });
@@ -131,7 +88,8 @@ const AllAssets: React.FC = () => {
       dataIndex: "purchaseDate",
       key: "purchaseDate",
       sorter: (a, b) =>
-        new Date(a.purchaseDate).getTime() - new Date(b.purchaseDate).getTime(),
+        new Date(a.purchaseDate).getTime() -
+        new Date(b.purchaseDate).getTime(),
     },
     {
       title: "Status",
@@ -154,14 +112,15 @@ const AllAssets: React.FC = () => {
   ];
 
   return (
-    <Table<Asset>
-      columns={columns}
-      dataSource={data}
-      rowKey="id"
-      pagination={{ pageSize: 5 }}
-      bordered
-      scroll={{ x: "max-content" }}
-    />
+      <Table<Asset>
+        columns={columns}
+        dataSource={assetsData || []} // ✅ API data here
+        rowKey="id"
+        pagination={{ pageSize: 5 }}
+        bordered
+        scroll={{ x: "max-content" }}
+        loading={assetsDataLoading}
+      />
   );
 };
 

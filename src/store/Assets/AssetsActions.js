@@ -20,7 +20,15 @@ export const assetsFail = (payload) => ({
 export const fetchAssetsApi = () => async (dispatch) => {
   dispatch(assetsStart());
   try {
-    const response = await axios.get(assetUrl);
+    const token = localStorage.getItem("authToken");
+    const response = await axios.get(assetUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
     dispatch(assetsSuccess(response.data));
     console.log(response.data, "assets response");
     return response.data;
