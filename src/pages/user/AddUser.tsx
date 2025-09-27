@@ -1,14 +1,94 @@
-import React from "react";
-import { Form, Input, Select, Row, Col, Button, DatePicker, Switch } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Select, Row, Col, Button, DatePicker, Switch, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchStaffApi } from "../../store/Staff/StaffActions";
+import { fetchRolesApi } from "../../store/Roles/RoleActions";
+import { addUserApi, fetchUserApi } from "../../store/Users/UserActions";
 
 const { Option } = Select;
 
 const AddUser = () => {
   const [form] = Form.useForm();
+  const [staffOptions, setStaffOptions] = useState<{ label: string; value: string }[]>([]);
+  const [rollOptions, setRollOptions] = useState<{ label: string; value: string }[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const handleSubmit = (values: any) => {
-    console.log("User Data Submitted:", values);
+interface StaffState {
+  staffData: any;
+  staffDataLoading: boolean;
+  staffDataError: boolean;
+}
+
+interface RolesState {
+  rolesData: [];
+  rolesDataLoading: boolean;
+  rolesDataError: boolean;
+}
+
+interface UserState {
+  addUserData: [],
+  addUserLoading: false,
+  addUserError: false,
+}
+
+const { addUserData, addUserLoading } = useSelector(
+  (state: RootState) => state.user as UserState
+);
+
+const { rolesData, rolesDataLoading } = useSelector(
+  (state: RootState) => state.roles as RolesState
+);
+
+const { staffData, staffDataLoading } = useSelector(
+  (state: RootState) => state.staff as StaffState
+);
+
+useEffect(() => {
+  dispatch(fetchStaffApi());
+  dispatch(fetchRolesApi());
+}, [dispatch]);
+
+useEffect(() => {
+  if (staffData?.length) {
+    const options = staffData.map((item: { id: string; fullName: string }) => ({
+      label: item.fullName,
+      value: item.id,
+    }));
+    setStaffOptions(options);
+  }
+}, [staffData]);
+
+useEffect(() => {
+  if (rolesData?.length) {
+    const options = rolesData.map((item: { id: string; name: string }) => ({
+      label: item.name,
+      value: item.id,
+    }));
+    setRollOptions(options);
+  }
+}, [rolesData]);
+
+const handleSubmit = async (values: any) => {
+  const payload = {
+    username: values.username,
+    email: values.email,
+    phone: values.phone,
+    staffId: values.staff,
+    roleId: values.role,
+    externalId: values.externalId || "",
+    isActive: values.isActive ?? true,
   };
+
+  try {
+    await dispatch(addUserApi(payload));
+    message.success("User added successfully!");
+    dispatch(fetchUserApi());
+    form.resetFields();
+  } catch (error: any) {
+    message.error(error?.message || "Failed to add user");
+  }
+};
 
   return (
     <Form
@@ -20,11 +100,11 @@ const AddUser = () => {
       <Row gutter={16}>
       <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
-            label="Full Name"
-            name="name"
-            rules={[{ required: true, message: "Please enter full name" }]}
+            label="User Name"
+            name="username"
+            rules={[{ required: true, message: "Please enter username" }]}
           >
-            <Input placeholder="Enter Full Name" />
+            <Input placeholder="Enter User Name" />
           </Form.Item>
         </Col>
 
@@ -56,76 +136,30 @@ const AddUser = () => {
             name="role"
             rules={[{ required: true, message: "Please select a role" }]}
           >
-            <Select placeholder="Select Role">
-              <Option value="admin">Admin</Option>
-              <Option value="manager">Manager</Option>
-              <Option value="staff">Staff</Option>
-              <Option value="user">User</Option>
-            </Select>
+            <Select
+                        placeholder="Select Item Type"
+                        loading={rolesDataLoading}
+                        options={rollOptions}
+                        allowClear
+                      />
           </Form.Item>
         </Col>
 
         <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
-            label="Status"
-            name="status"
-            rules={[{ required: true, message: "Please select status" }]}
+            label="Staff"
+            name="staff"
+            rules={[{ required: true, message: "Please select Staff" }]}
           >
-            <Select placeholder="Select Status">
-              <Option value="active">Active</Option>
-              <Option value="inactive">Inactive</Option>
-              <Option value="blocked">Blocked</Option>
-            </Select>
+             <Select
+                        placeholder="Select Item Type"
+                        loading={staffDataLoading}
+                        options={staffOptions}
+                        allowClear
+                      />
           </Form.Item>
         </Col>
 
-        <Col xs={24} sm={12} md={12} lg={8} >
-          <Form.Item
-            label="Joining Date"
-            name="joiningDate"
-            rules={[{ required: true, message: "Please select joining date" }]}
-          >
-            <DatePicker style={{ width: "100%" }} />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} sm={12} md={12} lg={8} >
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[{ required: true, message: "Please enter password" }]}
-          >
-            <Input.Password placeholder="Enter Password" />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} sm={12} md={12} lg={8} >
-          <Form.Item label="Confirm Password" name="confirmPassword" dependencies={["password"]}
-            rules={[
-              { required: true, message: "Please confirm password" },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue("password") === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(new Error("Passwords do not match!"));
-                },
-              }),
-            ]}
-          >
-            <Input.Password placeholder="Confirm Password" />
-          </Form.Item>
-        </Col>
-
-        <Col xs={24} sm={12} md={12} lg={8} >
-          <Form.Item
-            label="Two Factor Authentication"
-            name="twoFA"
-            valuePropName="checked"
-          >
-            <Switch />
-          </Form.Item>
-        </Col>
       </Row>
 
       <Row>

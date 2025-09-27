@@ -1,11 +1,15 @@
 // src/redux/reducers/supplierReducer.js
 import { produce } from "immer";
-import { SUPPLIER_LIST } from "./SuppliersType";
+import { ADD_SUPPLIER, SUPPLIER_LIST } from "./SuppliersType";
 
 const initialState = {
   supplierData: [],
   supplierDataLoading: false,
   supplierDataError: false,
+
+  addSupplierData: [],
+  addSupplierLoading: false,
+  addSupplierError: false,
 };
 
 export const supplierReducer = produce((draft, action) => {
@@ -25,6 +29,25 @@ export const supplierReducer = produce((draft, action) => {
       draft.supplierDataLoading = false;
       draft.supplierData = [];
       draft.supplierDataError = action.payload;
+      break;
+
+    
+    // 🔹 Add Supplier Cases
+    case ADD_SUPPLIER.ADD_SUPPLIER_START:
+      draft.addSupplierLoading = true;
+      draft.addSupplierError = false;
+      break;
+
+    case ADD_SUPPLIER.ADD_SUPPLIER_SUCCESS:
+      draft.addSupplierLoading = false;
+      draft.addSupplierData = action.payload;
+      draft.addSupplierError = false;
+      break;
+
+    case ADD_SUPPLIER.ADD_SUPPLIER_FAIL:
+      draft.addSupplierLoading = false;
+      draft.addSupplierData = null;
+      draft.addSupplierError = action.payload;
       break;
 
     default:

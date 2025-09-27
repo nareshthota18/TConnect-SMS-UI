@@ -100,8 +100,7 @@ const Student = () => {
             </Flex>
           </Flex>
 
-          <Tabs items={items} activeKey={activeKey}
-            onChange={(key) => setActiveKey(key)} />
+          <Tabs items={items} activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
 
           {/* Drawer Component */}
           <Drawer

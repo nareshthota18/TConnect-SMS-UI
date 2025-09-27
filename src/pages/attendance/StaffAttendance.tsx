@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import React, { useEffect } from "react";
+import { Table, Tag, Input, Spin } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import type { ColumnsType, ColumnType } from "antd/es/table";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchAttendanceStaffApi } from "../../store/Attendance/AttendanceActions";
 
 interface StaffAttendanceType {
   id: number;
@@ -12,27 +15,39 @@ interface StaffAttendanceType {
 }
 
 const StaffAttendance: React.FC = () => {
-  const [data, setData] = useState<StaffAttendanceType[]>([]);
-  const [searchText, setSearchText] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
 
+  // Redux state type
+  interface AttendanceStaffState {
+    attendanceStaffData: StaffAttendanceType[];
+    attendanceStaffDataLoading: boolean;
+    attendanceStaffDataError: boolean;
+  }
+
+  const {
+    attendanceStaffData,
+    attendanceStaffDataLoading,
+    attendanceStaffDataError,
+  } = useSelector(
+    (state: RootState) => state.attendanceStudent as AttendanceStaffState
+  );
+
+  // Fetch staff attendance data on mount
   useEffect(() => {
-    const attendanceData: StaffAttendanceType[] = [
-      { id: 1, name: "Robert Brown", department: "Admin", date: "2025-09-05", status: "Present" },
-      { id: 2, name: "Emily Johnson", department: "Finance", date: "2025-09-05", status: "Absent" },
-      { id: 3, name: "Michael Smith", department: "HR", date: "2025-09-05", status: "Late" },
-      { id: 4, name: "Sarah Davis", department: "Teaching", date: "2025-09-05", status: "Present" },
-      { id: 5, name: "Daniel Wilson", department: "Support", date: "2025-09-05", status: "Present" },
-    ];
-    setData(attendanceData);
-  }, []);
+    dispatch(fetchAttendanceStaffApi());
+  }, [dispatch]);
 
-  const getColumnSearchProps = (dataIndex: keyof StaffAttendanceType): ColumnType<StaffAttendanceType> => ({
+  // Search for staff
+  const getColumnSearchProps = (
+    dataIndex: keyof StaffAttendanceType
+  ): ColumnType<StaffAttendanceType> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={e => {
+          autoFocus
+          onChange={(e) => {
             const value = e.target.value;
             setSelectedKeys(value ? [value] : []);
             confirm({ closeDropdown: false }); // live search
@@ -101,10 +116,22 @@ const StaffAttendance: React.FC = () => {
     },
   ];
 
+  if (attendanceStaffDataLoading) {
+    return (
+      <div style={{ textAlign: "center", padding: "50px" }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (attendanceStaffDataError) {
+    return <p style={{ color: "red" }}>Error: {attendanceStaffDataError}</p>;
+  }
+
   return (
     <Table<StaffAttendanceType>
       columns={columns}
-      dataSource={data}
+      dataSource={attendanceStaffData}
       rowKey="id"
       pagination={{ pageSize: 5 }}
       bordered

@@ -5,6 +5,9 @@ import { inventoryReducer } from './Inventory/InventoryReducer';
 import { staffReducer } from './Staff/StaffReducer';
 import { loginReducer } from './Login/LoginReducer';
 import { supplierReducer } from './Suppliers/SuppliersReducer';
+import { attendanceStudentReducer } from './Attendance/AttendanceReducer';
+import { userReducer } from './Users/UserReducer';
+import { rolesReducer } from './Roles/RoleReducer';
 
 // Create the store
 const store = configureStore({
@@ -15,6 +18,9 @@ const store = configureStore({
     inventory: inventoryReducer,
     staff: staffReducer,
     supplier: supplierReducer,
+    attendanceStudent: attendanceStudentReducer,
+    user: userReducer,
+    roles: rolesReducer,
   },
 });
 

@@ -12,6 +12,7 @@ import SideNav from "../../components/SideNav";
 import { CloseOutlined } from "@ant-design/icons";
 import AddUser from "./AddUser";
 import AllUsers from "./AllUsers";
+import AllRoles from "./AllRoles";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -27,7 +28,7 @@ const items = [
   {
     label: "User Roles",
     key: "2",
-    children: "User role details will go here.",
+    children: <AllRoles />,
   },
   {
     label: "Permissions",
@@ -53,6 +54,7 @@ const User: React.FC = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
+  const [activeKey, setActiveKey] = useState("1");
 
   // Drawer State
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -84,12 +86,17 @@ const User: React.FC = () => {
             >
               User Management
             </Title>
-            <Button type="primary" onClick={showDrawer}>
+            <Flex gap='middle'>
+            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "1"}>
               Add User
             </Button>
+            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "2"}>
+              Add Role
+            </Button>
+            </Flex>
           </Flex>
 
-          <Tabs items={items} />
+          <Tabs items={items} activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
 
           {/* Drawer Component */}
           <Drawer

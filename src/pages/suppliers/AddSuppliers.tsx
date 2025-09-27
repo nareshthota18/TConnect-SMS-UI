@@ -1,13 +1,32 @@
 import React from "react";
-import { Form, Input, Button, Row, Col, Select, DatePicker, Flex } from "antd";
-
-const { Option } = Select;
+import { Form, Input, Button, Row, Col, Flex, message } from "antd";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { addSupplierApi, fetchSupplierApi } from "../../store/Suppliers/SuppliersActions";
 
 const AddSuppliers: React.FC = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onFinish = (values: any) => {
-    console.log("Supplier Form Values:", values);
+  const onFinish = async (values: any) => {
+    // Map form data to API schema
+    const payload = {
+      name: values.supplierName,
+      gstNumber: values.gstnumber,
+      email: values.email,
+      phone: values.phone,
+      address: values.address,
+      isActive: true, // default active
+    };
+
+    try {
+      await dispatch(addSupplierApi(payload));
+      message.success("Supplier added successfully!");
+      dispatch(fetchSupplierApi());
+      form.resetFields();
+    } catch (error: any) {
+      message.error(error.message || "Failed to add supplier");
+    }
   };
 
   return (
@@ -30,40 +49,14 @@ const AddSuppliers: React.FC = () => {
             </Form.Item>
           </Col>
 
-          {/* Supplier Code */}
+          {/* GST Number */}
           <Col xs={24} sm={12} md={12} lg={8}>
             <Form.Item
-              name="supplierCode"
-              label="Supplier Code"
-              rules={[{ required: true, message: "Please enter supplier code" }]}
+              name="gstnumber"
+              label="GST Number"
+              rules={[{ required: true, message: "Please enter GST Number" }]}
             >
-              <Input placeholder="Enter supplier code" />
-            </Form.Item>
-          </Col>
-
-          {/* Category */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="category"
-              label="Category"
-              rules={[{ required: true, message: "Please select category" }]}
-            >
-              <Select placeholder="Select category">
-                <Option value="Raw Material">Raw Material</Option>
-                <Option value="Services">Services</Option>
-                <Option value="Equipment">Equipment</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          {/* Contact Person */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="contactPerson"
-              label="Contact Person"
-              rules={[{ required: true, message: "Please enter contact person" }]}
-            >
-              <Input placeholder="Enter contact person name" />
+              <Input placeholder="Enter GST Number" />
             </Form.Item>
           </Col>
 
@@ -95,13 +88,6 @@ const AddSuppliers: React.FC = () => {
             </Form.Item>
           </Col>
 
-           {/* Website */}
-           <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item name="website" label="Website">
-              <Input placeholder="Enter website URL" />
-            </Form.Item>
-          </Col>
-
           {/* Address */}
           <Col xs={24} sm={12} md={12} lg={16}>
             <Form.Item
@@ -112,12 +98,11 @@ const AddSuppliers: React.FC = () => {
               <Input placeholder="Enter address" />
             </Form.Item>
           </Col>
-
         </Row>
 
         <Flex justify="end">
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit">
               Add Supplier
             </Button>
           </Form.Item>

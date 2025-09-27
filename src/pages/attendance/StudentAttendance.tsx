@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import React, { useEffect } from "react";
+import { Table, Tag, Input, Spin } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchAttendanceStudentApi } from "../../store/Attendance/AttendanceActions";
 
 interface Attendance {
   id: number;
@@ -11,21 +14,32 @@ interface Attendance {
 }
 
 const StudentAttendance: React.FC = () => {
-  const [data, setData] = useState<Attendance[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
 
+  // Redux state type
+  interface AttendanceState {
+    attendanceStudentData: Attendance[];
+    attendanceStudentDataLoading: boolean;
+    attendanceStudentDataError: boolean;
+  }
+
+  const {
+    attendanceStudentData,
+    attendanceStudentDataLoading,
+    attendanceStudentDataError,
+  } = useSelector(
+    (state: RootState) => state.attendanceStudent as AttendanceState
+  );
+
+  // Fetch attendance list on component mount
   useEffect(() => {
-    const attendanceData: Attendance[] = [
-      { id: 1, name: "John Doe", date: "2025-09-05", status: "Present" },
-      { id: 2, name: "Jane Smith", date: "2025-09-04", status: "Absent" },
-      { id: 3, name: "Sam Wilson", date: "2025-09-03", status: "Late" },
-      { id: 4, name: "Alice Brown", date: "2025-08-30", status: "Present" },
-      { id: 5, name: "David Lee", date: "2025-09-01", status: "Present" },
-    ];
-    setData(attendanceData);
-  }, []);
+    dispatch(fetchAttendanceStudentApi());
+  }, [dispatch]);
 
   // Search for Student Name
-  const getColumnSearchProps = (dataIndex: keyof Attendance): ColumnType<Attendance> => ({
+  const getColumnSearchProps = (
+    dataIndex: keyof Attendance
+  ): ColumnType<Attendance> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
@@ -104,10 +118,22 @@ const StudentAttendance: React.FC = () => {
     },
   ];
 
+  if (attendanceStudentDataLoading) {
+    return (
+      <div style={{ textAlign: "center", padding: "50px" }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (attendanceStudentDataError) {
+    return <p style={{ color: "red" }}>Error: {attendanceStudentDataError}</p>;
+  }
+
   return (
     <Table<Attendance>
       columns={columns}
-      dataSource={data}
+      dataSource={attendanceStudentData}
       rowKey="id"
       pagination={{ pageSize: 5 }}
       bordered

@@ -80,7 +80,6 @@ const AllSuppliers: React.FC = () => {
   });
 
   const columns: ColumnsType<Supplier> = [
-    { title: "Supplier ID", dataIndex: "id", key: "id" },
     { title: "Supplier Name", dataIndex: "name", key: "name", ...getColumnSearchProps("name") },
     { title: "Supplier Code", dataIndex: "code", key: "code", ...getColumnSearchProps("code") },
     { title: "Category", dataIndex: "category", key: "category" },
