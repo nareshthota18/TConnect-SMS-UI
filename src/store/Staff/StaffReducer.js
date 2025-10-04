@@ -1,6 +1,6 @@
 // src/redux/reducers/staffReducer.js
 import { produce } from "immer";
-import { ADD_STAFF, STAFF_LIST } from "./StaffType";
+import { ADD_STAFF, DELETE_STAFF, STAFF_LIST } from "./StaffType";
 
 const initialState = {
   staffData: [],
@@ -10,6 +10,10 @@ const initialState = {
   addStaffData: [],
   addStaffLoading: false,
   addStaffError: false,
+
+  deleteStaffData: [],
+  deleteStaffLoading: false,
+  deleteStaffError: false,
 };
 
 export const staffReducer = produce((draft, action) => {
@@ -48,6 +52,24 @@ export const staffReducer = produce((draft, action) => {
       draft.addStaffLoading = false;
       draft.addStaffData = null;
       draft.addStaffError = action.payload;
+      break;
+    
+    // Delete Staff Cases
+    case DELETE_STAFF.DELETE_STAFF_START:
+      draft.deleteStaffLoading = true;
+      draft.deleteStaffError = false;
+      break;
+
+    case DELETE_STAFF.DELETE_STAFF_SUCCESS:
+      draft.deleteStaffLoading = false;
+      draft.deleteStaffData = action.payload;
+      draft.deleteStaffError = false;
+      break;
+
+    case DELETE_STAFF.DELETE_STAFF_FAIL:
+      draft.deleteStaffLoading = false;
+      draft.deleteStaffData = null;
+      draft.deleteStaffError = action.payload;
       break;
 
     default:

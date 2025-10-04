@@ -1,6 +1,6 @@
 // src/redux/reducers/rolesReducer.js
 import { produce } from "immer";
-import { ADD_ROLE, ROLES_LIST } from "./RoleType";
+import { ADD_ROLE, DELETE_ROLE, ROLES_LIST } from "./RoleType";
 
 const initialState = {
   rolesData: [],
@@ -10,6 +10,10 @@ const initialState = {
   addRoleData: [],
   addRoleLoading: false,
   addRoleError: false,
+
+  deleteRoleData: [],
+  deleteRoleLoading: false,
+  deleteRoleError: false,
 };
 
 export const rolesReducer = produce((draft, action) => {
@@ -48,6 +52,24 @@ export const rolesReducer = produce((draft, action) => {
       draft.addRoleLoading = false;
       draft.addRoleData = null;
       draft.addRoleError = action.payload;
+      break;
+
+     // Delete Role
+     case DELETE_ROLE.DELETE_ROLE_START:
+      draft.deleteRoleLoading = true;
+      draft.deleteRoleError = false;
+      break;
+
+    case DELETE_ROLE.DELETE_ROLE_SUCCESS:
+      draft.deleteRoleLoading = false;
+      draft.deleteRoleData = action.payload;
+      draft.deleteRoleError = false;
+      break;
+
+    case DELETE_ROLE.DELETE_ROLE_FAIL:
+      draft.deleteRoleLoading = false;
+      draft.deleteRoleData = null;
+      draft.deleteRoleError = action.payload;
       break;
 
     default:

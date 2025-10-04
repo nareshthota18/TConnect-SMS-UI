@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Descriptions } from "antd";
+import { Table, Button, Modal, Descriptions, Popconfirm, message, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { fetchStudentsApi } from "../../store/Student/StudentActions";
+import { fetchStudentsApi, deleteStudentApi } from "../../store/Student/StudentActions";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "../../store/store";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -55,15 +55,25 @@ const AllStudents = () => {
     setSelectedStudent(null);
   };
 
+  const handleDelete = async (id: string) => {
+    try {
+      await dispatch(deleteStudentApi(id));
+      message.success("Student deleted successfully");
+      // Refresh the table data
+      dispatch(fetchStudentsApi());
+    } catch (error) {
+      message.error("Failed to delete student");
+    }
+  };
+
   const modalStyle = {
     backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
     color: isDarkMode ? "#fff" : "#000",
     fontWeight: 700,
-    padding: '16px 24px',
+    padding: "16px 24px",
     margin: 0,
   };
 
-  // Updated columns for new API structure
   const columns: ColumnsType<Student> = [
     {
       title: "Name",
@@ -99,9 +109,22 @@ const AllStudents = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Button type="link" onClick={() => showModal(record)}>
+        <>
+         
+          <Tag color={"green"} style={{ cursor: 'pointer'}} onClick={() => showModal(record)}>
           View More
-        </Button>
+          </Tag>
+          <Popconfirm
+            title="Are you sure you want to delete this student?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+          </Popconfirm>
+        </>
       ),
     },
   ];
@@ -126,9 +149,7 @@ const AllStudents = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        styles={{
-          header: modalStyle,
-        }}
+        styles={{ header: modalStyle }}
         width="80%"
         destroyOnClose
       >

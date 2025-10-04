@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Table, Tag } from "antd";
+import { Table, Tag, Button, Popconfirm, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchRolesApi } from "../../store/Roles/RoleActions";
+import { fetchRolesApi, deleteRoleApi } from "../../store/Roles/RoleActions";
+import { DeleteOutlined } from "@ant-design/icons";
 
 // Match API response shape
 interface Role {
@@ -16,7 +17,7 @@ const AllRoles: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   interface RolesState {
-    rolesData: [];
+    rolesData: Role[];
     rolesDataLoading: boolean;
     rolesDataError: boolean;
   }
@@ -30,7 +31,17 @@ const AllRoles: React.FC = () => {
     dispatch(fetchRolesApi());
   }, [dispatch]);
 
-  // Define columns (plain, no filters or search)
+  // Delete role handler
+  const handleDelete = async (roleId: string) => {
+    try {
+      await dispatch(deleteRoleApi(roleId));
+      message.success("Role deleted successfully");
+      dispatch(fetchRolesApi()); // refresh list after deletion
+    } catch (error) {
+      message.error("Failed to delete role");
+    }
+  };
+
   const columns = [
     {
       title: "Role Name",
@@ -50,6 +61,22 @@ const AllRoles: React.FC = () => {
         <Tag color={isActive ? "green" : "red"}>
           {isActive ? "Active" : "Inactive"}
         </Tag>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: Role) => (
+        <Popconfirm
+          title="Are you sure to delete this role?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+        </Popconfirm>
       ),
     },
   ];

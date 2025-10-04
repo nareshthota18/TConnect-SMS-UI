@@ -1,7 +1,7 @@
 // src/redux/actions/staffActions.js
 import axios from "axios";
-import { ADD_STAFF, STAFF_LIST } from "./StaffType";
-import { staffUrl } from "../utils";
+import { ADD_STAFF, DELETE_STAFF, STAFF_LIST } from "./StaffType";
+import { deleteStaffUrl, staffUrl } from "../utils";
 
 export const staffStart = () => ({
   type: STAFF_LIST.STAFF_LIST_START,
@@ -80,5 +80,47 @@ export const addStaffApi = (staffData) => async (dispatch) => {
   } catch (error) {
     console.error("❌ Add Staff API error:", error.response?.data || error.message);
     dispatch(addStaffFail(error.message));
+  }
+};
+
+
+// Delete Staff Actions
+// =======================================
+export const deleteStaffStart = () => ({
+  type: DELETE_STAFF.DELETE_STAFF_START,
+});
+
+export const deleteStaffSuccess = (data) => ({
+  type: DELETE_STAFF.DELETE_STAFF_SUCCESS,
+  payload: data,
+});
+
+export const deleteStaffFail = (payload) => ({
+  type: DELETE_STAFF.DELETE_STAFF_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload.message || "An error occurred",
+});
+
+export const deleteStaffApi = (staffId) => async (dispatch) => {
+  dispatch(deleteStaffStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    // ✅ Use the provided deleteStaffUrl
+    const response = await axios.delete(deleteStaffUrl(staffId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteStaffSuccess(response.data));
+    console.log("✅ Delete staff response:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Delete Staff API error:", error.response?.data || error.message);
+    dispatch(deleteStaffFail(error.message));
   }
 };

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Table, Tag, Input, Spin } from "antd";
+import { Table, Input, Button, Popconfirm, message, Tag } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchAssetsApi } from "../../store/Assets/AssetsActions";
+import { fetchAssetsApi, deleteAssetApi } from "../../store/Assets/AssetsActions";
 
 interface Asset {
   id: string;
@@ -28,11 +28,12 @@ const AllAssets: React.FC = () => {
     (state: RootState) => state.asset as AssetsState
   );
 
+  // Fetch assets on mount
   useEffect(() => {
     dispatch(fetchAssetsApi());
   }, [dispatch]);
 
-  // 🔎 Column search for Student / Item Name
+  // 🔎 Column search props
   const getColumnSearchProps = (
     dataIndex: keyof Asset
   ): ColumnType<Asset> => ({
@@ -62,7 +63,19 @@ const AllAssets: React.FC = () => {
         .includes((value as string).toLowerCase()),
   });
 
-  // 🟢 Columns to match your API response
+  // 🗑️ Handle delete action
+  const handleDelete = async (id: string) => {
+    try {
+      await dispatch(deleteAssetApi(id));
+      message.success("Asset deleted successfully!");
+      dispatch(fetchAssetsApi()); // Refresh list
+    } catch (error) {
+      console.error("Delete asset failed:", error);
+      message.error("Failed to delete asset.");
+    }
+  };
+
+  // 🟢 Table columns
   const columns: ColumnsType<Asset> = [
     {
       title: "Student Name",
@@ -94,9 +107,25 @@ const AllAssets: React.FC = () => {
       dataIndex: "remarks",
       key: "remarks",
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Popconfirm
+          title="Are you sure you want to delete this asset?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDelete(record.id)}
+        >
+          <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+        </Popconfirm>
+      ),
+    },
   ];
 
-  // ✅ Ensure data from API matches table
+  // ✅ Format API data for table
   const tableData = (assetsData || []).map((item: any) => ({
     id: item.id,
     studentName: item.studentName || "N/A",
@@ -111,7 +140,7 @@ const AllAssets: React.FC = () => {
       columns={columns}
       dataSource={tableData}
       rowKey="id"
-      pagination={{ pageSize: 5 }}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       bordered
       scroll={{ x: "max-content" }}
       loading={assetsDataLoading}

@@ -1,7 +1,7 @@
 // src/redux/actions/rolesActions.js
 import axios from "axios";
-import { ADD_ROLE, ROLES_LIST } from "./RoleType";
-import { addRolesUrl, rolesUrl } from "../utils";
+import { ADD_ROLE, DELETE_ROLE, ROLES_LIST } from "./RoleType";
+import { addRolesUrl, deleteRoleUrl, rolesUrl } from "../utils";
 
 export const rolesStart = () => ({
   type: ROLES_LIST.ROLES_LIST_START,
@@ -73,6 +73,46 @@ export const addRoleApi = (roleData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addRoleFail(error.message));
+    throw error;
+  }
+};
+
+
+// Delete Role Actions
+// ========================
+export const deleteRoleStart = () => ({
+  type: DELETE_ROLE.DELETE_ROLE_START,
+});
+
+export const deleteRoleSuccess = (data) => ({
+  type: DELETE_ROLE.DELETE_ROLE_SUCCESS,
+  payload: data,
+});
+
+export const deleteRoleFail = (payload) => ({
+  type: DELETE_ROLE.DELETE_ROLE_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "Failed to delete role",
+});
+
+export const deleteRoleApi = (roleId) => async (dispatch) => {
+  dispatch(deleteRoleStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    // DELETE request using roleId
+    const response = await axios.delete(deleteRoleUrl(roleId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteRoleSuccess(response.data));
+    console.log("Deleted role:", response.data);
+    return response.data;
+  } catch (error) {
+    dispatch(deleteRoleFail(error.message));
     throw error;
   }
 };

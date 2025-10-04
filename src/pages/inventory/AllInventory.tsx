@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import { Table, Tag, Input, Button, Popconfirm, message } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
+import { fetchInventoryApi, deleteInventoryItemApi } from "../../store/Inventory/InventoryActions";
 
 interface Inventory {
   id: string;
@@ -64,6 +64,17 @@ const AllInventory: React.FC = () => {
         .includes((value as string).toLowerCase()),
   });
 
+  // ✅ Handle Delete
+  const handleDelete = async (id: string) => {
+    try {
+      await dispatch(deleteInventoryItemApi(id));
+      message.success("Inventory item deleted successfully");
+      dispatch(fetchInventoryApi()); // Refresh table after deletion
+    } catch (error) {
+      message.error("Failed to delete inventory item");
+    }
+  };
+
   // ✅ Match API fields
   const columns: ColumnsType<Inventory> = [
     {
@@ -110,12 +121,28 @@ const AllInventory: React.FC = () => {
       render: (isActive: boolean) =>
         isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>,
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Popconfirm
+          title="Are you sure to delete this item?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+           <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+        </Popconfirm>
+      ),
+    },
   ];
 
   return (
     <Table<Inventory>
       columns={columns}
-      dataSource={inventoryData || []} // ✅ API data
+      dataSource={inventoryData || []} 
       rowKey="id"
       pagination={{ pageSize: 5 }}
       bordered

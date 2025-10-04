@@ -1,7 +1,7 @@
 // src/redux/actions/assetsActions.js
 import axios from "axios";
-import { addAssetUrl, assetUrl } from "../utils";
-import { ADD_ASSET, ASSETS_LIST } from "./AssetsType";
+import { addAssetUrl, assetUrl, deleteAssetUrl } from "../utils";
+import { ADD_ASSET, ASSETS_LIST, DELETE_ASSET } from "./AssetsType";
 
 export const assetsStart = () => ({
   type: ASSETS_LIST.ASSETS_LIST_START,
@@ -70,5 +70,43 @@ export const addAssetApi = (assetData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addAssetFail(error.message));
+  }
+};
+
+
+// 👉 Delete Asset
+export const deleteAssetStart = () => ({
+  type: DELETE_ASSET.DELETE_ASSET_START,
+});
+
+export const deleteAssetSuccess = (data) => ({
+  type: DELETE_ASSET.DELETE_ASSET_SUCCESS,
+  payload: data,
+});
+
+export const deleteAssetFail = (payload) => ({
+  type: DELETE_ASSET.DELETE_ASSET_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "An error occurred",
+});
+
+export const deleteAssetApi = (assetId) => async (dispatch) => {
+  dispatch(deleteAssetStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    // ✅ Using the provided dynamic URL
+    const response = await axios.delete(deleteAssetUrl(assetId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteAssetSuccess({ id: assetId, ...response.data }));
+    console.log("Delete asset response:", response.data);
+    return response.data;
+  } catch (error) {
+    dispatch(deleteAssetFail(error.message));
   }
 };

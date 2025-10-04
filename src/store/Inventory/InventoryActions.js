@@ -1,7 +1,7 @@
 // src/redux/actions/inventoryActions.js
 import axios from "axios";
-import { ADD_INVENTORY_ITEM, INVENTORY_LIST, ITEM_TYPE_LIST } from "./InventoryType";
-import { addInventoryItemUrl, inventoryUrl, itemTypeUrl } from "../utils";
+import { ADD_INVENTORY_ITEM, DELETE_INVENTORY_ITEM, INVENTORY_LIST, ITEM_TYPE_LIST } from "./InventoryType";
+import { addInventoryItemUrl, deleteInventoryUrl, inventoryUrl, itemTypeUrl } from "../utils";
 
 export const inventoryStart = () => ({
   type: INVENTORY_LIST.INVENTORY_LIST_START,
@@ -122,3 +122,42 @@ export const addInventoryItemStart = () => ({
       dispatch(addInventoryItemFail(error.message));
     }
   };
+
+// ================= DELETE INVENTORY ITEM =================
+export const deleteInventoryItemStart = () => ({
+  type: DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_START,
+});
+
+export const deleteInventoryItemSuccess = (data) => ({
+  type: DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_SUCCESS,
+  payload: data,
+});
+
+export const deleteInventoryItemFail = (payload) => ({
+  type: DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload.message || "An error occurred",
+});
+
+export const deleteInventoryItemApi = (itemId) => async (dispatch) => {
+  dispatch(deleteInventoryItemStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.delete(deleteInventoryUrl(itemId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteInventoryItemSuccess(response.data));
+    console.log(response.data, "✅ delete inventory item response");
+    return response.data;
+  } catch (error) {
+    console.error("❌ Delete Inventory Item API error:", error.response?.data || error.message);
+    dispatch(deleteInventoryItemFail(error.message));
+  }
+};

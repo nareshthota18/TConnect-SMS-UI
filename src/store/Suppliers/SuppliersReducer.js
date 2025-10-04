@@ -1,6 +1,6 @@
 // src/redux/reducers/supplierReducer.js
 import { produce } from "immer";
-import { ADD_SUPPLIER, SUPPLIER_LIST } from "./SuppliersType";
+import { ADD_SUPPLIER, DELETE_SUPPLIER, SUPPLIER_LIST } from "./SuppliersType";
 
 const initialState = {
   supplierData: [],
@@ -10,6 +10,10 @@ const initialState = {
   addSupplierData: [],
   addSupplierLoading: false,
   addSupplierError: false,
+
+  deleteSupplierData: [],
+  deleteSupplierLoading: false,
+  deleteSupplierError: false,
 };
 
 export const supplierReducer = produce((draft, action) => {
@@ -48,6 +52,24 @@ export const supplierReducer = produce((draft, action) => {
       draft.addSupplierLoading = false;
       draft.addSupplierData = null;
       draft.addSupplierError = action.payload;
+      break;
+
+     // Delete Supplier Cases
+     case DELETE_SUPPLIER.DELETE_SUPPLIER_START:
+      draft.deleteSupplierLoading = true;
+      draft.deleteSupplierError = false;
+      break;
+
+    case DELETE_SUPPLIER.DELETE_SUPPLIER_SUCCESS:
+      draft.deleteSupplierLoading = false;
+      draft.deleteSupplierData = action.payload;
+      draft.deleteSupplierError = false;
+      break;
+
+    case DELETE_SUPPLIER.DELETE_SUPPLIER_FAIL:
+      draft.deleteSupplierLoading = false;
+      draft.deleteSupplierData = null;
+      draft.deleteSupplierError = action.payload;
       break;
 
     default:

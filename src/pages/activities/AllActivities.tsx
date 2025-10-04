@@ -1,8 +1,5 @@
 import React, { useState } from "react";
-import {
-  Table,
-  Tag,
-} from "antd";
+import { Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 
 // Define the type for each activity row
@@ -78,14 +75,12 @@ const AllActivities: React.FC = () => {
       dataIndex: "status",
       key: "status",
       render: (status: Activity["status"]) => (
-        <Tag color={status === "Upcoming" ? "green" : "volcano"}>
-          {status}
-        </Tag>
+        <Tag color={status === "Upcoming" ? "green" : "volcano"}>{status}</Tag>
       ),
     },
   ];
 
-  return <Table bordered columns={columns} dataSource={activities} />;
+  return <Table bordered columns={columns} dataSource={activities} pagination={{ pageSize: 10, hideOnSinglePage: true }} />;
 };
 
 export default AllActivities;

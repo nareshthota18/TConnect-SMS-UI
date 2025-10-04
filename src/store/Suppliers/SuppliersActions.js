@@ -1,7 +1,7 @@
 // src/redux/actions/supplierActions.js
 import axios from "axios";
-import { ADD_SUPPLIER, SUPPLIER_LIST } from "./SuppliersType";
-import { supplierUrl } from "../utils";
+import { ADD_SUPPLIER, DELETE_SUPPLIER, SUPPLIER_LIST } from "./SuppliersType";
+import { deleteSupplierUrl, supplierUrl } from "../utils";
 
 export const supplierStart = () => ({
   type: SUPPLIER_LIST.SUPPLIER_LIST_START,
@@ -81,3 +81,45 @@ export const addSupplierStart = () => ({
       dispatch(addSupplierFail(error.message));
     }
   };
+
+
+// Delete Supplier Actions
+// =======================================
+export const deleteSupplierStart = () => ({
+  type: DELETE_SUPPLIER.DELETE_SUPPLIER_START,
+});
+
+export const deleteSupplierSuccess = (data) => ({
+  type: DELETE_SUPPLIER.DELETE_SUPPLIER_SUCCESS,
+  payload: data,
+});
+
+export const deleteSupplierFail = (payload) => ({
+  type: DELETE_SUPPLIER.DELETE_SUPPLIER_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload.message || "An error occurred",
+});
+
+export const deleteSupplierApi = (supplierId) => async (dispatch) => {
+  dispatch(deleteSupplierStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    // ✅ Use deleteSupplierUrl utility
+    const response = await axios.delete(deleteSupplierUrl(supplierId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteSupplierSuccess(response.data));
+    console.log("✅ Supplier deleted successfully:", response.data);
+    return response.data;
+  } catch (error) {
+    console.error("❌ Delete Supplier API error:", error.response?.data || error.message);
+    dispatch(deleteSupplierFail(error.message));
+  }
+};

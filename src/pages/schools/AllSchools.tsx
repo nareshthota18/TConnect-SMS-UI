@@ -121,7 +121,7 @@ const AllSchools: React.FC = () => {
       dataSource={data}
       loading={schoolsDataLoading}
       rowKey="id"
-      pagination={{ pageSize: 5 }}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       bordered
       scroll={{ x: "max-content" }}
     />

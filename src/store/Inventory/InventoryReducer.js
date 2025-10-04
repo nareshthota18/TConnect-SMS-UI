@@ -1,6 +1,6 @@
 // src/redux/reducers/inventoryReducer.js
 import { produce } from "immer";
-import { ADD_INVENTORY_ITEM, INVENTORY_LIST, ITEM_TYPE_LIST } from "./InventoryType";
+import { ADD_INVENTORY_ITEM, DELETE_INVENTORY_ITEM, INVENTORY_LIST, ITEM_TYPE_LIST } from "./InventoryType";
 
 const initialState = {
   inventoryData: [],
@@ -14,6 +14,10 @@ const initialState = {
   addInventoryItemData: [],
   addInventoryItemLoading: false,
   addInventoryItemError: false,
+
+  deleteInventoryItemData: [],
+  deleteInventoryItemLoading: false,
+  deleteInventoryItemError: false,
 };
 
 export const inventoryReducer = produce((draft, action) => {
@@ -70,6 +74,24 @@ export const inventoryReducer = produce((draft, action) => {
         draft.addInventoryItemData = null;
         draft.addInventoryItemError = action.payload;
         break;
+
+    // ================= DELETE INVENTORY ITEM =================
+    case DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_START:
+      draft.deleteInventoryItemLoading = true;
+      draft.deleteInventoryItemError = false;
+      break;
+
+    case DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_SUCCESS:
+      draft.deleteInventoryItemLoading = false;
+      draft.deleteInventoryItemData = action.payload;
+      draft.deleteInventoryItemError = false;
+      break;
+
+    case DELETE_INVENTORY_ITEM.DELETE_INVENTORY_ITEM_FAIL:
+      draft.deleteInventoryItemLoading = false;
+      draft.deleteInventoryItemData = null;
+      draft.deleteInventoryItemError = action.payload;
+      break;
 
     default:
       return draft;

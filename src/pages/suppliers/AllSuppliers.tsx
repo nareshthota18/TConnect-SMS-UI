@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Table, Tag, Input, Spin } from "antd";
+import { Table, Tag, Input, Button, Popconfirm, message } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
-import { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchSupplierApi } from "../../store/Suppliers/SuppliersActions";
+import { fetchSupplierApi, deleteSupplierApi } from "../../store/Suppliers/SuppliersActions";
 
 interface Supplier {
   id: string;
@@ -42,7 +42,7 @@ const AllSuppliers: React.FC = () => {
         name: item.name,
         code: item.gstNumber || "",
         category: "Raw Material", // default or based on other logic
-        contactPerson: item.email || "", // or any other field
+        contactPerson: item.email || "",
         phone: item.phone || "",
         status: item.isActive ? "Active" : "Inactive",
       }));
@@ -50,9 +50,19 @@ const AllSuppliers: React.FC = () => {
     }
   }, [supplierData]);
 
-  const getColumnSearchProps = (
-    dataIndex: keyof Supplier
-  ): ColumnType<Supplier> => ({
+  // Delete handler
+  const handleDelete = async (supplierId: string) => {
+    try {
+      await dispatch(deleteSupplierApi(supplierId));
+      message.success("Supplier deleted successfully");
+      // Refresh the list
+      dispatch(fetchSupplierApi());
+    } catch (error) {
+      message.error("Failed to delete supplier");
+    }
+  };
+
+  const getColumnSearchProps = (dataIndex: keyof Supplier): ColumnType<Supplier> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
@@ -98,18 +108,34 @@ const AllSuppliers: React.FC = () => {
         <Tag color={status === "Active" ? "green" : "red"}>{status}</Tag>
       ),
     },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: Supplier) => (
+        <Popconfirm
+          title="Are you sure to delete this supplier?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+        </Popconfirm>
+      ),
+    },
   ];
 
   return (
-      <Table<Supplier>
-        columns={columns}
-        dataSource={tableData}
-        rowKey="id"
-        pagination={{ pageSize: 5 }}
-        bordered
-        scroll={{ x: "max-content" }}
-        loading={supplierDataLoading}
-      />
+    <Table<Supplier>
+      columns={columns}
+      dataSource={tableData}
+      rowKey="id"
+      pagination={{ pageSize: 5 }}
+      bordered
+      scroll={{ x: "max-content" }}
+      loading={supplierDataLoading}
+    />
   );
 };
 

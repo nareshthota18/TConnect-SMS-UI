@@ -1,7 +1,7 @@
 // src/redux/actions/studentActions.js
 import axios from "axios";
-import { studenturl } from "../utils";
-import { ADD_STUDENT, STUDENT_LIST } from "./StudentTypes";
+import { deleteStudentUrl, studenturl } from "../utils";
+import { ADD_STUDENT, DELETE_STUDENT, STUDENT_LIST } from "./StudentTypes";
 
 export const studentStart = () => ({
   type: STUDENT_LIST.STUDENT_LIST_START,
@@ -71,5 +71,43 @@ export const addStudentApi = (studentData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addStudentFail(error.message));
+  }
+};
+
+
+// Delete Student
+// ========================
+export const deleteStudentStart = () => ({
+  type: DELETE_STUDENT.DELETE_STUDENT_START,
+});
+
+export const deleteStudentSuccess = (data) => ({
+  type: DELETE_STUDENT.DELETE_STUDENT_SUCCESS,
+  payload: data,
+});
+
+export const deleteStudentFail = (payload) => ({
+  type: DELETE_STUDENT.DELETE_STUDENT_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "Failed to delete student",
+});
+
+export const deleteStudentApi = (studentId) => async (dispatch) => {
+  dispatch(deleteStudentStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.delete(deleteStudentUrl(studentId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteStudentSuccess(response.data));
+    console.log("Deleted student:", response.data);
+    return response.data;
+  } catch (error) {
+    dispatch(deleteStudentFail(error.message));
+    throw error;
   }
 };
