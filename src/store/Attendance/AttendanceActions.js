@@ -1,6 +1,6 @@
 // src/redux/actions/attendanceActions.js
 import axios from "axios";
-import { ATTENDANCE_STAFF_LIST, ATTENDANCE_STUDENT_LIST } from "./AttendanceType";
+import { ADD_STAFF_ATTENDANCE, ATTENDANCE_STAFF_LIST, ATTENDANCE_STUDENT_LIST } from "./AttendanceType";
 import { attendanceStaffUrl, attendanceStudentUrl } from "../utils";
 
 export const attendanceStudentStart = () => ({
@@ -72,3 +72,39 @@ export const attendanceStaffStart = () => ({
       dispatch(attendanceStaffFail(error.message));
     }
   };
+
+
+// ---------- Add Staff Attendance Actions ----------
+export const addStaffAttendanceStart = () => ({
+  type: ADD_STAFF_ATTENDANCE.ADD_STAFF_ATTENDANCE_START,
+});
+
+export const addStaffAttendanceSuccess = (data) => ({
+  type: ADD_STAFF_ATTENDANCE.ADD_STAFF_ATTENDANCE_SUCCESS,
+  payload: data,
+});
+
+export const addStaffAttendanceFail = (payload) => ({
+  type: ADD_STAFF_ATTENDANCE.ADD_STAFF_ATTENDANCE_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "An error occurred",
+});
+
+export const addStaffAttendanceApi = (attendanceData) => async (dispatch) => {
+  dispatch(addStaffAttendanceStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.post(attendanceStaffUrl, attendanceData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(addStaffAttendanceSuccess(response.data));
+    console.log(response.data, "add staff attendance response");
+    return response.data;
+  } catch (error) {
+    dispatch(addStaffAttendanceFail(error.message));
+  }
+};

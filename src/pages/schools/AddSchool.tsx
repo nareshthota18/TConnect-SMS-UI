@@ -1,13 +1,30 @@
 import React from "react";
-import { Form, Input, Button, Row, Col, Select, DatePicker, Flex } from "antd";
-
-const { Option } = Select;
+import { Form, Input, Button, Row, Col, Flex, message } from "antd";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { addSchoolApi, fetchSchoolsApi } from "../../store/Schools/SchoolsActions";
 
 const AddSchool: React.FC = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onFinish = (values: any) => {
-    console.log("School Form Values:", values);
+  const onFinish = async (values: any) => {
+    // Map form data to API schema
+    const payload = {
+      name: values.schoolName,
+      address: values.address,
+      phone: values.phone,
+      isActive: true, // default active
+    };
+
+    try {
+      await dispatch(addSchoolApi(payload));
+      message.success("School added successfully!");
+      dispatch(fetchSchoolsApi()); 
+      form.resetFields();
+    } catch (error: any) {
+      message.error(error.message || "Failed to add school");
+    }
   };
 
   return (
@@ -30,82 +47,7 @@ const AddSchool: React.FC = () => {
             </Form.Item>
           </Col>
 
-          {/* School Code */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="schoolCode"
-              label="School Code"
-              rules={[{ required: true, message: "Please enter school code" }]}
-            >
-              <Input placeholder="Enter school code" />
-            </Form.Item>
-          </Col>
-
-          {/* Affiliation Number */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="affiliationNumber"
-              label="Affiliation Number"
-              rules={[
-                { required: true, message: "Please enter affiliation number" },
-              ]}
-            >
-              <Input placeholder="Enter affiliation number" />
-            </Form.Item>
-          </Col>
-
-          {/* Established Date */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="establishedDate"
-              label="Established Date"
-              rules={[{ required: true, message: "Please select established date" }]}
-            >
-              <DatePicker style={{ width: "100%" }} placeholder="Select date" />
-            </Form.Item>
-          </Col>
-
-          {/* Type of School */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="schoolType"
-              label="School Type"
-              rules={[{ required: true, message: "Please select school type" }]}
-            >
-              <Select placeholder="Select school type">
-                <Option value="public">Public</Option>
-                <Option value="private">Private</Option>
-                <Option value="government">Government</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          {/* Principal Name */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="principalName"
-              label="Principal Name"
-              rules={[{ required: true, message: "Please enter principal name" }]}
-            >
-              <Input placeholder="Enter principal name" />
-            </Form.Item>
-          </Col>
-
-          {/* Contact Email */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item
-              name="email"
-              label="Email"
-              rules={[
-                { required: true, message: "Please enter email" },
-                { type: "email", message: "Please enter a valid email" },
-              ]}
-            >
-              <Input placeholder="Enter email" />
-            </Form.Item>
-          </Col>
-
-          {/* Contact Phone */}
+          {/* Phone */}
           <Col xs={24} sm={12} md={12} lg={8}>
             <Form.Item
               name="phone"
@@ -119,29 +61,21 @@ const AddSchool: React.FC = () => {
             </Form.Item>
           </Col>
 
-          {/* Website */}
-          <Col xs={24} sm={12} md={12} lg={8}>
-            <Form.Item name="website" label="Website">
-              <Input placeholder="Enter website URL" />
-            </Form.Item>
-          </Col>
-
           {/* Address */}
-          <Col xs={24} sm={24} md={24} lg={24}>
+          <Col xs={24} sm={12} md={12} lg={8}>
             <Form.Item
               name="address"
               label="Address"
               rules={[{ required: true, message: "Please enter address" }]}
             >
-              <Input.TextArea rows={3} placeholder="Enter address" />
+              <Input placeholder="Enter address" />
             </Form.Item>
           </Col>
-
         </Row>
 
         <Flex justify="end">
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit">
               Add School
             </Button>
           </Form.Item>

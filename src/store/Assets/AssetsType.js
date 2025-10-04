@@ -4,3 +4,10 @@ export const ASSETS_LIST = {
     ASSETS_LIST_SUCCESS: "ASSETS_LIST_SUCCESS",
     ASSETS_LIST_FAIL: "ASSETS_LIST_FAIL",
   };
+
+// src/redux/types/assetsTypes.js
+export const ADD_ASSET = {
+  ADD_ASSET_START: "ADD_ASSET_START",
+  ADD_ASSET_SUCCESS: "ADD_ASSET_SUCCESS",
+  ADD_ASSET_FAIL: "ADD_ASSET_FAIL",
+};

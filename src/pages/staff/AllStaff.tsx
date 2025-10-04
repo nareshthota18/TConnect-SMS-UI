@@ -26,8 +26,8 @@ useEffect(() => {
 const dataSource = staffData?.map((staff: any, index: number) => ({
   key: staff.id || staff.staffId || index, // ✅ unique key
   name: staff.fullName,
-  role: staff.designationName || "N/A",
-  department: staff.departmentName || "N/A",
+  designation: staff.designationName || "",
+  department: staff.departmentName || "",
   email: staff.email,
   phone: staff.phone,
 }));
@@ -40,9 +40,9 @@ const dataSource = staffData?.map((staff: any, index: number) => ({
     key: "name",
   },
   {
-    title: "Role",
-    dataIndex: "role",
-    key: "role",
+    title: "Designation",
+    dataIndex: "designation",
+    key: "designation",
   },
   {
     title: "Department",
@@ -71,6 +71,7 @@ const dataSource = staffData?.map((staff: any, index: number) => ({
       columns={columns}
       bordered
       scroll={{ x: "max-content" }}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
     />
   );
 };

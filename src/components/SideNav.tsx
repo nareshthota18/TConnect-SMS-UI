@@ -52,7 +52,7 @@ const SideNav: React.FC<SideNavProps> = ({
       icon: <DashboardOutlined />,
       label: <Link to="/dashboard">Dashboard</Link>,
     },
-  ...(role === "SuperAdmin"
+  ...(role === "SuperAdmin" 
   ? [
       {
         key: "/schools",
@@ -71,46 +71,62 @@ const SideNav: React.FC<SideNavProps> = ({
       icon: <CalendarOutlined />,
       label: <Link to="/activities">Activities</Link>,
     },
-    {
-      key: "/staff",
-      icon: <TeamOutlined />,
-      label: <Link to="/staff">Staff</Link>,
-    },
-    {
-      key: "/inventory",
-      icon: <AppstoreOutlined />,
-      label: <Link to="/inventory">Inventory</Link>,
-    },
-    {
-      key: "/suppliers",
-      icon: <ApartmentOutlined />,
-      label: <Link to="/suppliers">Suppliers</Link>,
-    },
-    {
-      key: "/grocery",
-      icon: <ShoppingCartOutlined />,
-      label: <Link to="/grocery">Grocery</Link>,
-    },
+    ...(role === "Admin"
+    ? [
+        {
+          key: "/staff",
+          icon: <TeamOutlined />,
+          label: <Link to="/staff">Staff</Link>,
+        },
+      ]
+    : []),
+    ...(role === "SuperAdmin" || role === "Admin"
+    ? [
+        {
+          key: "/inventory",
+          icon: <AppstoreOutlined />,
+          label: <Link to="/inventory">Inventory</Link>,
+        },
+        {
+          key: "/suppliers",
+          icon: <ApartmentOutlined />,
+          label: <Link to="/suppliers">Suppliers</Link>,
+        },
+        {
+          key: "/grocery",
+          icon: <ShoppingCartOutlined />,
+          label: <Link to="/grocery">Grocery</Link>,
+        },
+        {
+          key: "/asset",
+          icon: <DeploymentUnitOutlined />,
+          label: <Link to="/asset">Asset</Link>,
+        },
+      ]
+    : []),
     {
       key: "/attendance",
       icon: <CheckSquareOutlined />,
       label: <Link to="/attendance">Attendance</Link>,
     },
-    {
-      key: "/asset",
-      icon: <DeploymentUnitOutlined />,
-      label: <Link to="/asset">Asset</Link>,
-    },
-    {
-      key: "/reports",
-      icon: <BarChartOutlined />,
-      label: <Link to="/reports">Reports</Link>,
-    },
-    {
-      key: "/user",
+    ...(role === "SuperAdmin" || role === "Admin"
+  ? [
+      {
+        key: "/reports",
+        icon: <BarChartOutlined />,
+        label: <Link to="/reports">Reports</Link>,
+      },
+    ]
+  : []),
+    ...(role === "SuperAdmin"
+  ? [
+      {
+        key: "/user",
       icon: <SettingOutlined />,
       label: <Link to="/user">User</Link>,
-    },
+      },
+    ]
+  : []),
     {
       key: "logout",
       icon: <LogoutOutlined />,

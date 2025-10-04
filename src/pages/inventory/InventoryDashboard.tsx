@@ -13,10 +13,41 @@ import {
   ShopOutlined,
   BarcodeOutlined,
 } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { useEffect } from "react";
+import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
 
 const { Text } = Typography;
 
+interface Inventory {
+  id: string;
+  itemCode: string;
+  name: string;
+  itemTypeId: string;
+  uom: string;
+  reorderLevel: number;
+  isActive: boolean;
+  itemTypeName: string;
+}
+
 const InventoryDashboard = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  interface InventoryState {
+    inventoryData: Inventory[];
+    inventoryDataLoading: boolean;
+    inventoryDataError: boolean;
+  }
+
+  const { inventoryData, inventoryDataLoading } = useSelector(
+    (state: RootState) => state.inventory as InventoryState
+  );
+
+  useEffect(() => {
+    dispatch(fetchInventoryApi());
+  }, [dispatch]);
+
   // ✅ Function to determine colors based on stock count
   const getCardColors = (count: number) => {
     if (count === 0) {
@@ -41,7 +72,7 @@ const InventoryDashboard = () => {
   };
 
   const inventoryItems = [
-    { name: "Total Inventory Items", account: 1200, icon: AppstoreOutlined, link: "/inventory" },
+    { name: "Total Inventory Items", account: inventoryData?.length, icon: AppstoreOutlined, link: "/inventory" },
     { name: "Electronics", account: 300, icon: HddOutlined, link: "/inventory/electronics" },
     { name: "Furniture", account: 250, icon: DeploymentUnitOutlined, link: "/inventory/furniture" },
     { name: "Tools & Hardware", account: 0, icon: ToolOutlined, link: "/inventory/tools" },

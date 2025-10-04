@@ -4,4 +4,10 @@ export const STAFF_LIST = {
     STAFF_LIST_SUCCESS: "STAFF_LIST_SUCCESS",
     STAFF_LIST_FAIL: "STAFF_LIST_FAIL",
   };
-  
+
+// src/redux/types/staffTypes.js
+export const ADD_STAFF = {
+  ADD_STAFF_START: "ADD_STAFF_START",
+  ADD_STAFF_SUCCESS: "ADD_STAFF_SUCCESS",
+  ADD_STAFF_FAIL: "ADD_STAFF_FAIL",
+};

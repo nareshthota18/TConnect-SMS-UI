@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import { Table, Tag, Input, Popconfirm, message, Button } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchUserApi } from "../../store/Users/UserActions";
+import { deleteUserApi, fetchUserApi } from "../../store/Users/UserActions";
 
 // Match API response shape
 interface User {
+  id: number;
   username: string;
   email: string;
   phone: string;
@@ -98,7 +99,30 @@ const AllUsers: React.FC = () => {
           {isActive ? "Active" : "Inactive"}
         </Tag>
       ),
-    }    
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record: User) => (
+        <Popconfirm
+          title={`Are you sure you want to delete ${record.username}?`}
+          onConfirm={async () => {
+            try {
+              await dispatch(deleteUserApi(record.id)); // Use username or ID as key
+              message.success("User deleted successfully");
+            } catch (err) {
+              message.error("Failed to delete user");
+            }
+          }}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
+        </Popconfirm>
+      ),
+    }, 
   ];
 
   return (
@@ -107,7 +131,7 @@ const AllUsers: React.FC = () => {
       dataSource={userData || []}
       loading={userDataLoading}
       rowKey={(record) => record.username} // Use username as unique key
-      pagination={{ pageSize: 10 }}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       bordered
       scroll={{ x: "max-content" }}
     />

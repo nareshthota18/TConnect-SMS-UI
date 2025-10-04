@@ -18,19 +18,6 @@ const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
-// Tabs for Attendance
-const items = [
-  {
-    label: "Student Attendance",
-    key: "1",
-    children: <StudentAttendance />,
-  },
-  {
-    label: "Staff Attendance",
-    key: "2",
-    children: <StaffAttendance />
-  },
-];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
@@ -44,9 +31,28 @@ const Attendance = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
+  const role = localStorage.getItem("userRole"); 
 
   // Drawer State
   const [openDrawer, setOpenDrawer] = useState(false);
+
+  // Tabs for Attendance
+  const items = [
+    {
+      label: "Student Attendance",
+      key: "1",
+      children: <StudentAttendance />,
+    },
+    ...(role === "SuperAdmin" || role === "Admin"
+      ? [
+          {
+            label: "Staff Attendance",
+            key: "2",
+            children: <StaffAttendance />,
+          },
+        ]
+      : []),
+  ];
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -75,9 +81,11 @@ const Attendance = () => {
             >
               Attendance
             </Title>
-            <Button type="primary" onClick={showDrawer}>
-              Add Attendance
-            </Button>
+            {role !== "SuperAdmin" && (
+              <Button type="primary" onClick={showDrawer}>
+                Add Attendance
+              </Button>
+            )}
           </Flex>
 
           {/* Tabs for Attendance */}

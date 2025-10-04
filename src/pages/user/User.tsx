@@ -6,13 +6,13 @@ import {
   Typography,
   Button,
   Flex,
-  Drawer,
+  Modal,
 } from "antd";
 import SideNav from "../../components/SideNav";
-import { CloseOutlined } from "@ant-design/icons";
 import AddUser from "./AddUser";
 import AllUsers from "./AllUsers";
 import AllRoles from "./AllRoles";
+import AddRole from "./AddRole";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -23,7 +23,7 @@ const items = [
   {
     label: "All Users",
     key: "1",
-    children: <AllUsers />
+    children: <AllUsers />,
   },
   {
     label: "User Roles",
@@ -44,10 +44,11 @@ const items = [
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const drawerHeaderStyle = {
+const modalStyle = {
   backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
   color: isDarkMode ? "#fff" : "#000",
   fontWeight: 700,
+  padding: '16px 24px'
 };
 
 const User: React.FC = () => {
@@ -56,16 +57,16 @@ const User: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [activeKey, setActiveKey] = useState("1");
 
-  // Drawer State
-  const [openDrawer, setOpenDrawer] = useState(false);
+  // Modal States
+  const [openUserModal, setOpenUserModal] = useState(false);
+  const [openRoleModal, setOpenRoleModal] = useState(false);
 
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
+  // Handlers for Modals
+  const showUserModal = () => setOpenUserModal(true);
+  const closeUserModal = () => setOpenUserModal(false);
 
-  const onCloseDrawer = () => {
-    setOpenDrawer(false);
-  };
+  const showRoleModal = () => setOpenRoleModal(true);
+  const closeRoleModal = () => setOpenRoleModal(false);
 
   return (
     <Layout>
@@ -77,43 +78,81 @@ const User: React.FC = () => {
           open={false}
         />
       )}
+
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: isMobile ? "12px" : "18px 24px", minHeight: 360 }}>
-          <Flex justify="space-between" align="center">
+        <Content
+          style={{
+            padding: isMobile ? "12px" : "18px 24px",
+            minHeight: 360,
+          }}
+        >
+          {/* Header */}
+          <Flex justify="space-between" align={isMobile ? 'start' : 'center'} vertical={isMobile} gap='small'>
             <Title
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
               User Management
             </Title>
-            <Flex gap='middle'>
-            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "1"}>
-              Add User
-            </Button>
-            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "2"}>
-              Add Role
-            </Button>
+
+            <Flex gap="middle">
+              {/* Add User Button */}
+              <Button
+                type="primary"
+                onClick={showUserModal}
+                disabled={activeKey !== "1"}
+              >
+                Add User
+              </Button>
+
+              {/* Add Role Button */}
+              <Button
+                type="primary"
+                onClick={showRoleModal}
+                disabled={activeKey !== "2"}
+              >
+                Add Role
+              </Button>
             </Flex>
           </Flex>
 
-          <Tabs items={items} activeKey={activeKey} onChange={(key) => setActiveKey(key)} />
+          {/* Tabs */}
+          <Tabs
+            items={items}
+            activeKey={activeKey}
+            onChange={(key) => setActiveKey(key)}
+          />
 
-          {/* Drawer Component */}
-          <Drawer
+          {/* Modal for Add User */}
+          <Modal
             title="Add New User"
-            width= {isMobile ? '100%' : '80%' }
-            onClose={onCloseDrawer}
-            open={openDrawer}
-            bodyStyle={{ paddingBottom: 80 }}
-            headerStyle={drawerHeaderStyle}
+            open={openUserModal}
+            onCancel={closeUserModal}
+            footer={null}
+            width={isMobile ? "95%" : "60%"}
+            styles={{
+              header: modalStyle,
+            }}
+            bodyStyle={{ padding: 0 }}
             maskClosable={false}
-            keyboard={false}
-            closeIcon={
-              <CloseOutlined style={{ color: "#000", fontSize: "18px" }} />
-            }
           >
             <AddUser />
-          </Drawer>
+          </Modal>
+
+          {/* Modal for Add Role */}
+          <Modal
+            title="Add New Role"
+            open={openRoleModal}
+            onCancel={closeRoleModal}
+            footer={null}
+            width={isMobile ? "95%" : "50%"}
+            styles={{
+              header: modalStyle,
+            }}
+            maskClosable={false}
+          >
+            <AddRole />
+          </Modal>
         </Content>
       </Layout>
     </Layout>

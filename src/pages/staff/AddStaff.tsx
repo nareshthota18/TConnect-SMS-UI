@@ -1,14 +1,102 @@
-import React from "react";
-import { Form, Input, Button, Select, DatePicker, Row, Col, Flex } from "antd";
+import React, { useEffect, useState } from "react";
+import { Form, Input, Button, Select, DatePicker, Row, Col, Flex, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchDepartmentsApi, fetchDesignationsApi } from "../../store/Dropdowns/DropdownActions";
+import { addStaffApi, fetchStaffApi } from "../../store/Staff/StaffActions";
 
 const { Option } = Select;
 
 const AddStaff = () => {
   const [form] = Form.useForm();
+  const [departmentOptions, setdepartmentOptions] = useState<{ label: string; value: string }[]>([]);
+  const [designationsOptions, setdesignationsOptions] = useState<{ label: string; value: string }[]>([]);
 
-  const handleFinish = ( ) => {
-    console.log("Staff Details:",  );
+  const dispatch = useDispatch<AppDispatch>();
+
+  interface DepartmentsState {
+    departmentsData: [];
+    departmentsDataLoading: boolean;
+    departmentsDataError: boolean;
+  }
+
+  interface DesignationsState {
+    designationsData: [];
+    designationsDataLoading: boolean;
+    designationsDataError: boolean;
+  }
+
+  const { designationsData, designationsDataLoading } = useSelector(
+    (state: RootState) => state.departments as DesignationsState
+  );
+
+  const { departmentsData, departmentsDataLoading } = useSelector(
+    (state: RootState) => state.departments as DepartmentsState
+  );
+
+  // Fetch departments on component mount
+  useEffect(() => {
+    dispatch(fetchDepartmentsApi());
+    dispatch(fetchDesignationsApi());
+
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (departmentsData?.length) {
+      const options = departmentsData.map((item: { key: string; value: string }) => ({
+        label: item.value,
+        value: item.key,
+      }));
+      setdepartmentOptions(options);
+    }
+  }, [departmentsData]);
+
+  useEffect(() => {
+    if (designationsData?.length) {
+      const options = designationsData.map((item: { key: string; value: string }) => ({
+        label: item.value,
+        value: item.key,
+      }));
+      setdesignationsOptions(options);
+    }
+  }, [designationsData]);
+  
+
+  const handleFinish = async (values: any) => {
+    try {
+      // Get department and designation labels based on selected IDs
+      const selectedDepartment = departmentOptions.find(
+        (item) => item.value === values.department
+      );
+      const selectedDesignation = designationsOptions.find(
+        (item) => item.value === values.designation
+      );
+  
+      // Prepare payload exactly matching the API schema
+      const payload = {
+        staffCode: values.staffCode, 
+        fullName: values.name,
+        email: values.email,
+        phone: values.phone,
+        departmentId: values.department,
+        designationId: values.designation,
+        departmentName: selectedDepartment?.label || "",
+        designationName: selectedDesignation?.label || "",
+        isTeaching: true, // or dynamic based on form
+        status: "Active",  // default or dynamic
+      };
+  
+      const response = await dispatch(addStaffApi(payload));
+      message.success("Staff added successfully!");
+      dispatch(fetchStaffApi());
+      form.resetFields();
+      console.log("Add staff response:", response);
+    } catch (error) {
+      message.error("Failed to add staff. Please try again.");
+      console.error("Add staff error:", error);
+    }
   };
+  
 
   return (
     <div  style={{ padding: 24}}>
@@ -29,35 +117,8 @@ const AddStaff = () => {
             </Form.Item>
           </Col>
 
-          {/* Role */}
-          <Col xs={24} sm={12} lg={8}>
-            <Form.Item
-              name="role"
-              label="Role"
-              rules={[{ required: true, message: "Please select role" }]}
-            >
-              <Select placeholder="Select staff role">
-                <Option value="Teacher">Teacher</Option>
-                <Option value="Administrator">Administrator</Option>
-                <Option value="Clerk">Clerk</Option>
-                <Option value="Accountant">Accountant</Option>
-              </Select>
-            </Form.Item>
-          </Col>
-
-          {/* Department */}
-          <Col xs={24} sm={12} lg={8}>
-            <Form.Item
-              name="department"
-              label="Department"
-              rules={[{ required: true, message: "Please enter department" }]}
-            >
-              <Input placeholder="Enter department name" />
-            </Form.Item>
-          </Col>
-
-          {/* Email */}
-          <Col xs={24} sm={12} lg={8}>
+            {/* Email */}
+            <Col xs={24} sm={12} lg={8}>
             <Form.Item
               name="email"
               label="Email"
@@ -81,25 +142,46 @@ const AddStaff = () => {
             </Form.Item>
           </Col>
 
-          {/* Joining Date */}
+          {/* Staff Code */}
           <Col xs={24} sm={12} lg={8}>
             <Form.Item
-              name="joiningDate"
-              label="Joining Date"
-              rules={[{ required: true, message: "Please select joining date" }]}
+              name="staffCode"
+              label="Staff Code"
+              rules={[{ required: true, message: "Please enter staff code" }]}
             >
-              <DatePicker style={{ width: "100%" }} />
+              <Input placeholder="Enter staff code" />
             </Form.Item>
           </Col>
 
-          {/* Address - Full Width */}
-          <Col span={24}>
+          {/* Role */}
+          <Col xs={24} sm={12} lg={8}>
             <Form.Item
-              name="address"
-              label="Address"
-              rules={[{ required: true, message: "Please enter address" }]}
+              name="department"
+              label="Department"
+              rules={[{ required: true, message: "Please select department" }]}
             >
-              <Input.TextArea rows={3} placeholder="Enter staff address" />
+              <Select
+                        placeholder="Select Item Type"
+                        loading={departmentsDataLoading}
+                        options={departmentOptions}
+                        allowClear
+                      />
+            </Form.Item>
+          </Col>
+
+          {/* Role */}
+          <Col xs={24} sm={12} lg={8}>
+            <Form.Item
+              name="designation"
+              label="Designation"
+              rules={[{ required: true, message: "Please select designation" }]}
+            >
+              <Select
+                        placeholder="Select Item Type"
+                        loading={designationsDataLoading}
+                        options={designationsOptions}
+                        allowClear
+                      />
             </Form.Item>
           </Col>
 

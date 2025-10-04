@@ -1,11 +1,15 @@
 // src/redux/reducers/assetsReducer.js
 import { produce } from "immer";
-import { ASSETS_LIST } from "./AssetsType";
+import { ADD_ASSET, ASSETS_LIST } from "./AssetsType";
 
 const initialState = {
   assetsData: [],
   assetsDataLoading: false,
   assetsDataError: false,
+
+  addAssetData: [],
+  addAssetLoading: false,
+  addAssetError: false,
 };
 
 export const assetsReducer = produce((draft, action) => {
@@ -26,6 +30,25 @@ export const assetsReducer = produce((draft, action) => {
       draft.assetsData = [];
       draft.assetsDataError = action.payload;
       break;
+
+
+      case ADD_ASSET.ADD_ASSET_START:
+        draft.addAssetLoading = true;
+        draft.addAssetError = false;
+        break;
+  
+      case ADD_ASSET.ADD_ASSET_SUCCESS:
+        draft.addAssetLoading = false;
+        draft.addAssetError = false;
+  
+        // 👉 Store the added asset data separately
+        draft.addAssetData = action.payload;
+        break;
+  
+      case ADD_ASSET.ADD_ASSET_FAIL:
+        draft.addAssetLoading = false;
+        draft.addAssetError = action.payload;
+        break;
 
     default:
       return draft;

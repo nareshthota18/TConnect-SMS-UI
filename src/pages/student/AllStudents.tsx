@@ -27,6 +27,7 @@ interface Student {
 const AllStudents = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
+  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -54,13 +55,16 @@ const AllStudents = () => {
     setSelectedStudent(null);
   };
 
+  const modalStyle = {
+    backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
+    color: isDarkMode ? "#fff" : "#000",
+    fontWeight: 700,
+    padding: '16px 24px',
+    margin: 0,
+  };
+
   // Updated columns for new API structure
   const columns: ColumnsType<Student> = [
-    {
-      title: "Admission Number",
-      dataIndex: "admissionNumber",
-      key: "admissionNumber",
-    },
     {
       title: "Name",
       key: "name",
@@ -108,7 +112,7 @@ const AllStudents = () => {
         dataSource={studentData || []}
         columns={columns}
         bordered
-        pagination={false}
+        pagination={{ pageSize: 10, hideOnSinglePage: true }}
         loading={{
           spinning: studentDataLoading,
           indicator: <LoadingOutlined style={{ fontSize: 24 }} spin />,
@@ -122,6 +126,9 @@ const AllStudents = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
+        styles={{
+          header: modalStyle,
+        }}
         width="80%"
         destroyOnClose
       >

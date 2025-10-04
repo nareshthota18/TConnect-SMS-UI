@@ -1,7 +1,7 @@
 // src/redux/actions/rolesActions.js
 import axios from "axios";
-import { ROLES_LIST } from "./RoleType";
-import { rolesUrl } from "../utils";
+import { ADD_ROLE, ROLES_LIST } from "./RoleType";
+import { addRolesUrl, rolesUrl } from "../utils";
 
 export const rolesStart = () => ({
   type: ROLES_LIST.ROLES_LIST_START,
@@ -34,5 +34,45 @@ export const fetchRolesApi = () => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(rolesFail(error.message));
+  }
+};
+
+
+
+// New Add Role Actions
+export const addRoleStart = () => ({
+  type: ADD_ROLE.ADD_ROLE_START,
+});
+
+export const addRoleSuccess = (data) => ({
+  type: ADD_ROLE.ADD_ROLE_SUCCESS,
+  payload: data,
+});
+
+export const addRoleFail = (payload) => ({
+  type: ADD_ROLE.ADD_ROLE_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "Failed to add role",
+});
+
+// Add Role API
+export const addRoleApi = (roleData) => async (dispatch) => {
+  dispatch(addRoleStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    const response = await axios.post(addRolesUrl, roleData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(addRoleSuccess(response.data));
+    console.log(response.data, "add role response");
+    return response.data;
+  } catch (error) {
+    dispatch(addRoleFail(error.message));
+    throw error;
   }
 };

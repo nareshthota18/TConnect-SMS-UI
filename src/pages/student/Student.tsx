@@ -56,6 +56,7 @@ const Student = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
+  const role = localStorage.getItem("userRole"); // get user role
 
   // Drawer State
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -90,13 +91,17 @@ const Student = () => {
             >
               Student
             </Title>
-            <Flex gap='middle'>
-            <Button type="primary" onClick={showDrawer} disabled={activeKey !== "1"}>
-              Add Student
-            </Button>
-            <Button type="primary" onClick={() => setOpenHealthDrawer(true)} disabled={activeKey !== "2"} >
-              Add Student Health
-            </Button>
+            <Flex gap="middle">
+              {(role === "SuperAdmin" || role === "Admin") && (
+                <>
+                  <Button type="primary" onClick={showDrawer} disabled={activeKey !== "1"}>
+                    Add Student
+                  </Button>
+                  <Button type="primary" onClick={() => setOpenHealthDrawer(true)} disabled={activeKey !== "2"}>
+                    Add Student Health
+                  </Button>
+                </>
+              )}
             </Flex>
           </Flex>
 

@@ -59,8 +59,8 @@ const AllRoles: React.FC = () => {
       columns={columns}
       dataSource={rolesData || []}
       loading={rolesDataLoading}
-      rowKey={(record) => record.id} // Use role id as unique key
-      pagination={{ pageSize: 5 }}
+      rowKey={(record) => record.id}
+      pagination={{ pageSize: 10, hideOnSinglePage: true }}
       bordered
       scroll={{ x: "max-content" }}
     />

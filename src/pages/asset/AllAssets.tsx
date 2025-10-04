@@ -7,11 +7,12 @@ import { AppDispatch, RootState } from "../../store/store";
 import { fetchAssetsApi } from "../../store/Assets/AssetsActions";
 
 interface Asset {
-  id: number;
-  name: string;
-  category: string;
-  purchaseDate: string;
-  status: "Active" | "Damaged" | "Theft";
+  id: string;
+  studentName: string;
+  itemName: string;
+  quantity: number;
+  issueDate: string;
+  remarks: string;
 }
 
 const AllAssets: React.FC = () => {
@@ -31,8 +32,10 @@ const AllAssets: React.FC = () => {
     dispatch(fetchAssetsApi());
   }, [dispatch]);
 
-  // 🔎 Column search for Asset Name
-  const getColumnSearchProps = (dataIndex: keyof Asset): ColumnType<Asset> => ({
+  // 🔎 Column search for Student / Item Name
+  const getColumnSearchProps = (
+    dataIndex: keyof Asset
+  ): ColumnType<Asset> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
@@ -59,68 +62,60 @@ const AllAssets: React.FC = () => {
         .includes((value as string).toLowerCase()),
   });
 
+  // 🟢 Columns to match your API response
   const columns: ColumnsType<Asset> = [
     {
-      title: "Asset ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
+      title: "Student Name",
+      dataIndex: "studentName",
+      key: "studentName",
+      ...getColumnSearchProps("studentName"),
     },
     {
-      title: "Asset Name",
-      dataIndex: "name",
-      key: "name",
-      ...getColumnSearchProps("name"),
+      title: "Item Name",
+      dataIndex: "itemName",
+      key: "itemName",
+      ...getColumnSearchProps("itemName"),
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      key: "category",
-      filters: [
-        { text: "Electronics", value: "Electronics" },
-        { text: "Furniture", value: "Furniture" },
-        { text: "Appliances", value: "Appliances" },
-      ],
-      onFilter: (value, record) => record.category === value,
+      title: "Quantity",
+      dataIndex: "quantity",
+      key: "quantity",
     },
     {
-      title: "Purchase Date",
-      dataIndex: "purchaseDate",
-      key: "purchaseDate",
+      title: "Issue Date",
+      dataIndex: "issueDate",
+      key: "issueDate",
+      render: (date) => new Date(date).toLocaleDateString(),
       sorter: (a, b) =>
-        new Date(a.purchaseDate).getTime() -
-        new Date(b.purchaseDate).getTime(),
+        new Date(a.issueDate).getTime() - new Date(b.issueDate).getTime(),
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      filters: [
-        { text: "Active", value: "Active" },
-        { text: "Damaged", value: "Damaged" },
-        { text: "Theft", value: "Theft" },
-      ],
-      onFilter: (value, record) => record.status === value,
-      render: (status: Asset["status"]) => {
-        let color = "blue";
-        if (status === "Active") color = "green";
-        else if (status === "Damaged") color = "orange";
-        else if (status === "Theft") color = "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
+      title: "Remarks",
+      dataIndex: "remarks",
+      key: "remarks",
     },
   ];
 
+  // ✅ Ensure data from API matches table
+  const tableData = (assetsData || []).map((item: any) => ({
+    id: item.id,
+    studentName: item.studentName || "N/A",
+    itemName: item.itemName || "N/A",
+    quantity: item.quantity,
+    issueDate: item.issueDate,
+    remarks: item.remarks,
+  }));
+
   return (
-      <Table<Asset>
-        columns={columns}
-        dataSource={assetsData || []} // ✅ API data here
-        rowKey="id"
-        pagination={{ pageSize: 5 }}
-        bordered
-        scroll={{ x: "max-content" }}
-        loading={assetsDataLoading}
-      />
+    <Table<Asset>
+      columns={columns}
+      dataSource={tableData}
+      rowKey="id"
+      pagination={{ pageSize: 5 }}
+      bordered
+      scroll={{ x: "max-content" }}
+      loading={assetsDataLoading}
+    />
   );
 };
 

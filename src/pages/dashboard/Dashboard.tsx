@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Layout,
   Grid,
@@ -25,10 +25,52 @@ import SideNav from "../../components/SideNav";
 import { Link } from "react-router-dom";
 import school from "../../assets/school.png";
 import SimpleBarChart from "./BarChart";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchSchoolsApi } from "../../store/Schools/SchoolsActions";
+import { fetchStudentsApi } from "../../store/Student/StudentActions";
+import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Text, Title } = Typography;
+
+interface School {
+  id: string;                 // id from API is string
+  name: string;
+  address: string;
+  phone: string;
+  status: "Active" | "Inactive";
+}
+
+interface Student {
+  id: string;
+  admissionNumber: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  categoryId: string;
+  rsHostelId: string;
+  gradeId: string;
+  status: string;
+  parentName: string;
+  parentContact: string;
+  healthInfo: string | null;
+  categoryName: string | null;
+  rsHostelName: string;
+  gradeName: string;
+}
+
+interface Inventory {
+  id: string;
+  itemCode: string;
+  name: string;
+  itemTypeId: string;
+  uom: string;
+  reorderLevel: number;
+  isActive: boolean;
+  itemTypeName: string;
+}
 
 const Dashboard = () => {
   const screens = useBreakpoint();
@@ -36,6 +78,47 @@ const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  const dispatch = useDispatch<AppDispatch>();
+
+  // ✅ Define the state interface for schools
+  interface SchoolsState {
+    schoolsData: any[];
+    schoolsDataLoading: boolean;
+    schoolsDataError: boolean;
+  }
+
+  interface StudentState {
+    studentData: Student[];
+    studentDataLoading: boolean;
+    studentDataError: boolean;
+  }
+
+  interface InventoryState {
+    inventoryData: Inventory[];
+    inventoryDataLoading: boolean;
+    inventoryDataError: boolean;
+  }
+
+  const { inventoryData, inventoryDataLoading } = useSelector(
+    (state: RootState) => state.inventory as InventoryState
+  );
+
+  const { studentData, studentDataLoading } = useSelector(
+    (state: RootState) => state.student as StudentState
+  );
+
+  // ✅ Extract data from Redux store
+  const { schoolsData, schoolsDataLoading } = useSelector(
+    (state: RootState) => state.schools as SchoolsState
+  );
+
+  // ✅ Fetch schools on component mount
+  useEffect(() => {
+    dispatch(fetchSchoolsApi());
+    dispatch(fetchStudentsApi());
+    dispatch(fetchInventoryApi());
+  }, [dispatch]);
 
   // Define different colors for each card
   const cardColors = [
@@ -140,7 +223,7 @@ const Dashboard = () => {
                 {[
                   {
                     name: "Total Schools",
-                    account: "230",
+                    account: schoolsData.length,
                     icon: (
                       <HomeOutlined
                         style={{ fontSize: 22, color: "#fff" }}
@@ -150,7 +233,7 @@ const Dashboard = () => {
                   },
                   {
                     name: "Total Students",
-                    account: "16,700",
+                    account: studentData.length,
                     icon: (
                       <UserOutlined
                         style={{ fontSize: 22, color: "#fff" }}
@@ -160,7 +243,7 @@ const Dashboard = () => {
                   },
                   {
                     name: "Inventory",
-                    account: "564",
+                    account: inventoryData.length,
                     icon: (
                       <AppstoreOutlined
                         style={{ fontSize: 22, color: "#fff" }}

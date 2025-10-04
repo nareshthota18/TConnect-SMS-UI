@@ -8,6 +8,8 @@ import { supplierReducer } from './Suppliers/SuppliersReducer';
 import { attendanceStudentReducer } from './Attendance/AttendanceReducer';
 import { userReducer } from './Users/UserReducer';
 import { rolesReducer } from './Roles/RoleReducer';
+import { schoolsReducer } from './Schools/SchoolsReducer';
+import { departmentsReducer } from './Dropdowns/DropdownReducer';
 
 // Create the store
 const store = configureStore({
@@ -21,6 +23,8 @@ const store = configureStore({
     attendanceStudent: attendanceStudentReducer,
     user: userReducer,
     roles: rolesReducer,
+    schools: schoolsReducer,
+    departments: departmentsReducer,
   },
 });
 

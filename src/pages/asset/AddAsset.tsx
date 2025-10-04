@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Form,
   Input,
@@ -8,19 +8,103 @@ import {
   Row,
   Col,
   Space,
+  message,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchStudentsApi } from "../../store/Student/StudentActions";
+import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
+import { addAssetApi, fetchAssetsApi } from "../../store/Assets/AssetsActions";
+import dayjs from "dayjs";
 
 const { Option } = Select;
 
+interface Student {
+  id: string;
+  firstName: string;
+  lastName: string;
+}
+
+interface Inventory {
+  id: string;
+  name: string;
+}
+
 const AddAsset: React.FC = () => {
   const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onFinish = (values: any) => {
-    console.log("Asset Data:", values);
-    // Reset form with one empty record after submit
-    form.resetFields();
-    form.setFieldsValue({ assets: [{}] });
+  interface StudentState { studentData: Student[]; studentDataLoading: boolean; studentDataError: boolean; } 
+  interface InventoryState { inventoryData: Inventory[]; inventoryDataLoading: boolean; inventoryDataError: boolean; }
+
+  const [studentOptions, setStudentOptions] = useState<{ label: string; value: string }[]>([]);
+  const [inventoryOptions, setInventoryOptions] = useState<{ label: string; value: string }[]>([]);
+
+  const { inventoryData, inventoryDataLoading } = useSelector( (state: RootState) => state.inventory as InventoryState ); 
+  const { studentData, studentDataLoading } = useSelector( (state: RootState) => state.student as StudentState );
+
+  // Fetch students and inventory on load
+  useEffect(() => {
+    dispatch(fetchStudentsApi());
+    dispatch(fetchInventoryApi());
+  }, [dispatch]);
+
+  // Map student options
+  useEffect(() => {
+    if (studentData?.length) {
+      const options = studentData.map((item: Student) => ({
+        label: `${item.firstName} ${item.lastName}`,
+        value: item.id,
+      }));
+      setStudentOptions(options);
+    }
+  }, [studentData]);
+
+  // Map inventory options
+  useEffect(() => {
+    if (inventoryData?.length) {
+      const options = inventoryData.map((item: Inventory) => ({
+        label: item.name,
+        value: item.id,
+      }));
+      setInventoryOptions(options);
+    }
+  }, [inventoryData]);
+
+  /**
+   * Form submission handler
+   */
+  const onFinish = async (values: any) => {
+    try {
+      // Transform form data to API payload
+      const payloadList = values.assets.map((asset: any) => ({
+        id: crypto.randomUUID(), // generate unique ID for new asset
+        studentId: asset.studentId,
+        itemId: asset.itemId,
+        quantity: Number(asset.assetValue), // mapping to quantity
+        issueDate: asset.purchaseDate
+          ? dayjs(asset.purchaseDate).toISOString()
+          : null,
+        remarks: asset.assignedTo || "",
+        studentName: studentOptions.find((s) => s.value === asset.studentId)?.label || "",
+        itemName: inventoryOptions.find((i) => i.value === asset.itemId)?.label || "",
+      }));
+
+      console.log("Submitting payload:", payloadList);
+
+      // Call API for each asset (or you can send all at once if backend supports it)
+      for (const payload of payloadList) {
+        await dispatch(addAssetApi(payload));
+      }
+
+      message.success("Assets added successfully!");
+      dispatch(fetchAssetsApi());
+      form.resetFields();
+      form.setFieldsValue({ assets: [{}] });
+    } catch (error: any) {
+      message.error(error?.message || "Failed to add asset(s)");
+    }
   };
 
   return (
@@ -46,15 +130,20 @@ const AddAsset: React.FC = () => {
                 }}
               >
                 <Row gutter={16}>
-                  {/* Asset Name */}
+                  {/* Student Name */}
                   <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                       {...restField}
-                      name={[name, "assetName"]}
-                      label="Asset Name"
-                      rules={[{ required: true, message: "Please enter asset name" }]}
+                      name={[name, "studentId"]}
+                      label="Student Name"
+                      rules={[{ required: true, message: "Please select student" }]}
                     >
-                      <Input placeholder="Enter asset name" />
+                      <Select
+                        placeholder="Select Student"
+                        loading={studentDataLoading}
+                        options={studentOptions}
+                        allowClear
+                      />
                     </Form.Item>
                   </Col>
 
@@ -62,67 +151,51 @@ const AddAsset: React.FC = () => {
                   <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                       {...restField}
-                      name={[name, "assetType"]}
+                      name={[name, "itemId"]}
                       label="Asset Type"
                       rules={[{ required: true, message: "Please select asset type" }]}
                     >
-                      <Select placeholder="Select asset type">
-                        <Option value="electronic">Electronic</Option>
-                        <Option value="furniture">Furniture</Option>
-                        <Option value="vehicle">Vehicle</Option>
-                        <Option value="other">Other</Option>
-                      </Select>
+                      <Select
+                        placeholder="Select Asset"
+                        loading={inventoryDataLoading}
+                        options={inventoryOptions}
+                        allowClear
+                      />
                     </Form.Item>
                   </Col>
 
-                  {/* Purchase Date */}
+                  {/* Issue Date */}
                   <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                       {...restField}
                       name={[name, "purchaseDate"]}
-                      label="Purchase Date"
-                      rules={[{ required: true, message: "Please select purchase date" }]}
+                      label="Issue Date"
+                      rules={[{ required: true, message: "Please select issue date" }]}
                     >
                       <DatePicker style={{ width: "100%" }} />
                     </Form.Item>
                   </Col>
 
-                  {/* Asset Value */}
+                  {/* Quantity */}
                   <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                       {...restField}
                       name={[name, "assetValue"]}
-                      label="Asset Value"
-                      rules={[{ required: true, message: "Please enter asset value" }]}
+                      label="Quantity"
+                      rules={[{ required: true, message: "Please enter quantity" }]}
                     >
-                      <Input type="number" placeholder="Enter asset value" />
+                      <Input type="number" placeholder="Enter quantity" />
                     </Form.Item>
                   </Col>
 
-                  {/* Assigned To */}
+                  {/* Remarks */}
                   <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                       {...restField}
                       name={[name, "assignedTo"]}
-                      label="Assigned To"
+                      label="Remarks"
                     >
-                      <Input placeholder="Enter person or department name" />
-                    </Form.Item>
-                  </Col>
-
-                  {/* Status */}
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "status"]}
-                      label="Status"
-                      rules={[{ required: true, message: "Please select status" }]}
-                    >
-                      <Select placeholder="Select status">
-                        <Option value="available">Available</Option>
-                        <Option value="allocated">Allocated</Option>
-                        <Option value="maintenance">Maintenance</Option>
-                      </Select>
+                      <Input placeholder="Enter remarks" />
                     </Form.Item>
                   </Col>
                 </Row>

@@ -1,11 +1,15 @@
 // src/redux/reducers/staffReducer.js
 import { produce } from "immer";
-import { STAFF_LIST } from "./StaffType";
+import { ADD_STAFF, STAFF_LIST } from "./StaffType";
 
 const initialState = {
   staffData: [],
   staffDataLoading: false,
   staffDataError: false,
+
+  addStaffData: [],
+  addStaffLoading: false,
+  addStaffError: false,
 };
 
 export const staffReducer = produce((draft, action) => {
@@ -25,6 +29,25 @@ export const staffReducer = produce((draft, action) => {
       draft.staffDataLoading = false;
       draft.staffData = [];
       draft.staffDataError = action.payload;
+      break;
+
+    // Add Staff Cases
+    // -----------------------
+    case ADD_STAFF.ADD_STAFF_START:
+      draft.addStaffLoading = true;
+      draft.addStaffError = false;
+      break;
+
+    case ADD_STAFF.ADD_STAFF_SUCCESS:
+      draft.addStaffLoading = false;
+      draft.addStaffData = action.payload;
+      draft.addStaffError = false;
+      break;
+
+    case ADD_STAFF.ADD_STAFF_FAIL:
+      draft.addStaffLoading = false;
+      draft.addStaffData = null;
+      draft.addStaffError = action.payload;
       break;
 
     default:

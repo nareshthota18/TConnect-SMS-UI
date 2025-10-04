@@ -1,7 +1,7 @@
 // src/redux/actions/userActions.js
 import axios from "axios";
-import { ADD_USER, USER_LIST } from "./UserType";
-import { addUsersUrl, usersUrl } from "../utils";
+import { ADD_USER, DELETE_USER, USER_LIST } from "./UserType";
+import { addUsersUrl, deleteUserUrl, usersUrl } from "../utils";
 
 export const userStart = () => ({
   type: USER_LIST.USER_LIST_START,
@@ -75,3 +75,40 @@ export const addUserStart = () => ({
       dispatch(addUserFail(error.message));
     }
   };
+
+
+  // ================= DELETE USER =================
+export const deleteUserStart = () => ({
+  type: DELETE_USER.DELETE_USER_START,
+});
+
+export const deleteUserSuccess = (data) => ({
+  type: DELETE_USER.DELETE_USER_SUCCESS,
+  payload: data,
+});
+
+export const deleteUserFail = (payload) => ({
+  type: DELETE_USER.DELETE_USER_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "An error occurred",
+});
+
+export const deleteUserApi = (id) => async (dispatch) => {
+  dispatch(deleteUserStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.delete(deleteUserUrl(id), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });    
+
+    dispatch(deleteUserSuccess(response.data));
+    console.log(response.data, "✅ user deleted successfully");
+    return response.data;
+  } catch (error) {
+    console.error("❌ Delete User API error:", error.response?.data || error.message);
+    dispatch(deleteUserFail(error.message));
+  }
+};
