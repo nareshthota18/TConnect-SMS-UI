@@ -30,6 +30,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { fetchSchoolsApi } from "../../store/Schools/SchoolsActions";
 import { fetchStudentsApi } from "../../store/Student/StudentActions";
 import { fetchInventoryApi } from "../../store/Inventory/InventoryActions";
+import { fetchStaffApi } from "../../store/Staff/StaffActions";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -76,9 +77,9 @@ const Dashboard = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
-
+  // const role = localStorage.getItem("userRole");
+  const role = (localStorage.getItem("userRole") || "").trim();
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
   const dispatch = useDispatch<AppDispatch>();
 
   // ✅ Define the state interface for schools
@@ -100,6 +101,16 @@ const Dashboard = () => {
     inventoryDataError: boolean;
   }
 
+  interface StaffState {
+    staffData: any[];
+    staffDataLoading: boolean;
+    staffDataError: boolean;
+  }
+
+  const { staffData, staffDataLoading } = useSelector(
+    (state: RootState) => state.staff as StaffState
+  );
+
   const { inventoryData, inventoryDataLoading } = useSelector(
     (state: RootState) => state.inventory as InventoryState
   );
@@ -118,6 +129,7 @@ const Dashboard = () => {
     dispatch(fetchSchoolsApi());
     dispatch(fetchStudentsApi());
     dispatch(fetchInventoryApi());
+    dispatch(fetchStaffApi());
   }, [dispatch]);
 
   // Define different colors for each card
@@ -186,7 +198,7 @@ const Dashboard = () => {
                       level={3}
                       style={{ color: "#fff", margin: 0, fontWeight: 700 }}
                     >
-                      Pratibha Vidya Academy
+                      {schoolsData?.[0]?.schoolName || "School Name"}
                     </Title>
                     <div style={{ marginTop: 12 }}>
                       <Space direction="vertical" size={4}>
@@ -230,6 +242,7 @@ const Dashboard = () => {
                       />
                     ),
                     link: "/schools",
+                    showFor: ["SuperAdmin"], 
                   },
                   {
                     name: "Total Students",
@@ -250,6 +263,7 @@ const Dashboard = () => {
                       />
                     ),
                     link: "/inventory",
+                    showFor: ["SuperAdmin", "Admin"],
                   },
                   {
                     name: "Grocery",
@@ -260,8 +274,32 @@ const Dashboard = () => {
                       />
                     ),
                     link: "/grocery",
+                    showFor: ["SuperAdmin", "Admin"],
+                  },
+                  {
+                    name: "Activities",
+                    account: "6",
+                    icon: (
+                      <ShoppingCartOutlined
+                        style={{ fontSize: 22, color: "#fff" }}
+                      />
+                    ),
+                    link: "/activities",
+                    showFor: ["Admin", "Staff"],
+                  },
+                  {
+                    name: "Attendance",
+                    account: `${85}%`,
+                    icon: (
+                      <ShoppingCartOutlined
+                        style={{ fontSize: 22, color: "#fff" }}
+                      />
+                    ),
+                    link: "/attendance",
+                    showFor: ["Staff"],
                   }
-                ].map((item, index) => (
+                ].filter(item => !item.showFor || item.showFor.includes(role))
+                .map((item, index) => (
                   <Col xs={24} sm={12} md={12} lg={6} key={index}>
                     <Card
                       style={cardStyle(index)}
@@ -353,7 +391,7 @@ const Dashboard = () => {
                   <Flex vertical>
                     <Text strong style={{ color: "#5a4a42" }}>Staff:</Text>
                     <Progress 
-                      percent={100} 
+                      percent={staffData.length} 
                       strokeColor={{
                         "0%": "#87d068",
                         "100%": "#87d068",

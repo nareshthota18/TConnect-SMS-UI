@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Table, Tag, Input } from "antd";
+import { Table, Tag, Input, Popconfirm, message } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchSchoolsApi } from "../../store/Schools/SchoolsActions";
+import { fetchSchoolsApi, deleteSchoolApi } from "../../store/Schools/SchoolsActions";
 
 interface School {
-  id: string;                 // id from API is string
+  id: string;
   name: string;
   address: string;
   phone: string;
@@ -19,29 +19,27 @@ const AllSchools: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  // ✅ Define the state interface for schools
   interface SchoolsState {
     schoolsData: any[];
     schoolsDataLoading: boolean;
     schoolsDataError: boolean;
   }
 
-  // ✅ Extract data from Redux store
   const { schoolsData, schoolsDataLoading } = useSelector(
     (state: RootState) => state.schools as SchoolsState
   );
 
-  // ✅ Fetch schools on component mount
+  // Fetch schools on mount
   useEffect(() => {
     dispatch(fetchSchoolsApi());
   }, [dispatch]);
 
-  // ✅ Map API response to table data
+  // Map API response to table data
   useEffect(() => {
     if (schoolsData && schoolsData.length > 0) {
       const mappedData: School[] = schoolsData.map((item: any) => ({
         id: item.id,
-        name: item.name,
+        name: item.schoolName,
         address: item.address,
         phone: item.phone,
         status: item.isActive ? "Active" : "Inactive",
@@ -50,7 +48,7 @@ const AllSchools: React.FC = () => {
     }
   }, [schoolsData]);
 
-  // 🔍 Search functionality
+  // Search functionality
   const getColumnSearchProps = (
     dataIndex: keyof School
   ): ColumnType<School> => ({
@@ -80,7 +78,18 @@ const AllSchools: React.FC = () => {
         .includes((value as string).toLowerCase()),
   });
 
-  // ✅ Table Columns
+  // Delete school handler
+  const handleDelete = async (schoolId: string) => {
+    try {
+      await dispatch(deleteSchoolApi(schoolId));
+      message.success("School deleted successfully");
+      dispatch(fetchSchoolsApi()); // refresh list after deletion
+    } catch (error) {
+      message.error("Failed to delete school");
+    }
+  };
+
+  // Table columns
   const columns: ColumnsType<School> = [
     {
       title: "School Name",
@@ -111,6 +120,22 @@ const AllSchools: React.FC = () => {
       onFilter: (value, record) => record.status === value,
       render: (status: School["status"]) => (
         <Tag color={status === "Active" ? "green" : "red"}>{status}</Tag>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_: any, record: School) => (
+        <Popconfirm
+          title="Are you sure to delete this school?"
+          onConfirm={() => handleDelete(record.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color="red" style={{ cursor: "pointer" }}>
+            Delete
+          </Tag>
+        </Popconfirm>
       ),
     },
   ];

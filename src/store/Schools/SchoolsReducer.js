@@ -1,6 +1,6 @@
 // src/redux/reducers/schoolsReducer.js
 import { produce } from "immer";
-import { ADD_SCHOOLS, SCHOOLS_LIST } from "./SchoolsType";
+import { ADD_SCHOOLS, DELETE_SCHOOLS, SCHOOLS_LIST } from "./SchoolsType";
 
 const initialState = {
   schoolsData: [],                
@@ -10,6 +10,10 @@ const initialState = {
   addSchoolData: [],             
   addSchoolDataLoading: false,
   addSchoolDataError: false,
+
+  deleteSchoolData: [],          // ✅ Added for delete school
+  deleteSchoolDataLoading: false,
+  deleteSchoolDataError: false,
 };
 
 export const schoolsReducer = produce((draft, action) => {
@@ -48,6 +52,24 @@ export const schoolsReducer = produce((draft, action) => {
       draft.addSchoolDataLoading = false;
       draft.addSchoolData = [];
       draft.addSchoolDataError = action.payload;
+      break;
+
+    /** 🗑️ Delete Schools */
+    case DELETE_SCHOOLS.DELETE_SCHOOLS_START:
+      draft.deleteSchoolDataLoading = true;
+      draft.deleteSchoolDataError = false;
+      break;
+
+    case DELETE_SCHOOLS.DELETE_SCHOOLS_SUCCESS:
+      draft.deleteSchoolDataLoading = false;
+      draft.deleteSchoolDataError = false;
+      draft.deleteSchoolData = action.payload; // store delete response
+      break;
+
+    case DELETE_SCHOOLS.DELETE_SCHOOLS_FAIL:
+      draft.deleteSchoolDataLoading = false;
+      draft.deleteSchoolData = [];
+      draft.deleteSchoolDataError = action.payload;
       break;
 
     default:

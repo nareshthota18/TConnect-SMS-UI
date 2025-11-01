@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
-import { Table, Tag, Button, Popconfirm, message } from "antd";
+import { Table, Tag, Popconfirm, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchRolesApi, deleteRoleApi } from "../../store/Roles/RoleActions";
-import { DeleteOutlined } from "@ant-design/icons";
 
 // Match API response shape
 interface Role {
@@ -66,18 +65,26 @@ const AllRoles: React.FC = () => {
     {
       title: "Action",
       key: "action",
-      render: (_: any, record: Role) => (
-        <Popconfirm
-          title="Are you sure to delete this role?"
-          onConfirm={() => handleDelete(record.id)}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Tag color={"red"} style={{ cursor: 'pointer'}}>
-          Delete
+      render: (_: any, record: Role) => {
+        const isSuperAdmin = record.name === "SuperAdmin";
+
+        return isSuperAdmin ? (
+          <Tag color="gray" style={{ cursor: "not-allowed", opacity: 0.6 }}>
+            Delete
           </Tag>
-        </Popconfirm>
-      ),
+        ) : (
+          <Popconfirm
+            title="Are you sure to delete this role?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Tag color="red" style={{ cursor: "pointer" }}>
+              Delete
+            </Tag>
+          </Popconfirm>
+        );
+      },
     },
   ];
 

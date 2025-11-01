@@ -118,7 +118,7 @@ const SideNav: React.FC<SideNavProps> = ({
       },
     ]
   : []),
-    ...(role === "SuperAdmin"
+  ...(role === "SuperAdmin" || role === "Admin"
   ? [
       {
         key: "/user",

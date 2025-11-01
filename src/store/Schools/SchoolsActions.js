@@ -1,6 +1,6 @@
 import axios from "axios";
-import { ADD_SCHOOLS, SCHOOLS_LIST } from "./SchoolsType";
-import { addSchoolsUrl, schoolsUrl } from "../utils";
+import { ADD_SCHOOLS, DELETE_SCHOOLS, SCHOOLS_LIST } from "./SchoolsType";
+import { addSchoolsUrl, deleteSchoolUrl, schoolsUrl } from "../utils";
 
 /*   SCHOOLS LIST ACTIONS  */
 export const schoolsStart = () => ({
@@ -30,8 +30,18 @@ export const fetchSchoolsApi = () => async (dispatch) => {
       },
     });
 
-    dispatch(schoolsSuccess(response.data));
-    console.log(response.data, "schools list response");
+    // dispatch(schoolsSuccess(response.data));
+    // console.log(response.data, "schools list response");
+    const schoolsData = response.data;
+    dispatch(schoolsSuccess(schoolsData));
+    console.log(schoolsData, "schools list response");
+
+    // ✅ Store the first school's schoolId in localStorage
+    if (Array.isArray(schoolsData) && schoolsData.length > 0) {
+      const firstSchoolId = schoolsData[0].schoolId;
+      localStorage.setItem("schoolId", firstSchoolId);
+      console.log("Saved schoolId to localStorage:", firstSchoolId);
+    }
     return response.data;
   } catch (error) {
     dispatch(schoolsFail(error.message));
@@ -72,5 +82,43 @@ export const addSchoolApi = (schoolData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addSchoolFail(error.message));
+  }
+};
+
+
+/*  DELETE SCHOOLS ACTIONS */
+export const deleteSchoolStart = () => ({
+  type: DELETE_SCHOOLS.DELETE_SCHOOLS_START,
+});
+
+export const deleteSchoolSuccess = (data) => ({
+  type: DELETE_SCHOOLS.DELETE_SCHOOLS_SUCCESS,
+  payload: data,
+});
+
+export const deleteSchoolFail = (payload) => ({
+  type: DELETE_SCHOOLS.DELETE_SCHOOLS_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "An error occurred",
+});
+
+/** 🗑️ Delete School API */
+export const deleteSchoolApi = (schoolId) => async (dispatch) => {
+  dispatch(deleteSchoolStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.delete(deleteSchoolUrl(schoolId), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(deleteSchoolSuccess(response.data));
+    console.log(response.data, "school deleted successfully");
+    return response.data; // ✅ return for awaiting in component
+  } catch (error) {
+    dispatch(deleteSchoolFail(error.response?.data?.message || error.message));
+    throw error; // ✅ re-throw to allow caller to handle
   }
 };

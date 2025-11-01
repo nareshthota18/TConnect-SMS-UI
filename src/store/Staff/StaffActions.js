@@ -25,9 +25,11 @@ export const fetchStaffApi = () => async (dispatch) => {
   try {
     // ✅ either use token from localStorage
     const token = localStorage.getItem("authToken");
+    const schoolId = localStorage.getItem("schoolId");
     const response = await axios.get(staffUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
+        RSHostelId: schoolId,
         Accept: "application/json",
         "Content-Type": "application/json",
       },

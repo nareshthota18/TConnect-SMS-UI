@@ -30,6 +30,7 @@ interface LoginPayload {
   clientId: string;
   username: string;
   password: string;
+  // schoolId: string;
 }
 
 const Login = () => {
@@ -47,6 +48,7 @@ const Login = () => {
         clientId: "client1",
         username: values.email,
         password: values.password,
+        // schoolId: "D1F90D34-37FB-4205-AD03-4F5A82E61DC8"
       };
 
       const response = await dispatch(loginApi(payload));

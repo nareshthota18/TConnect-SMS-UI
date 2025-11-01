@@ -56,6 +56,10 @@ const User: React.FC = () => {
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
   const [activeKey, setActiveKey] = useState("1");
+  const role = localStorage.getItem("userRole"); 
+  const filteredItems = role === "Admin"
+  ? items.filter(tab => tab.key !== "2")
+  : items;
 
   // Modal States
   const [openUserModal, setOpenUserModal] = useState(false);
@@ -106,19 +110,21 @@ const User: React.FC = () => {
               </Button>
 
               {/* Add Role Button */}
-              <Button
-                type="primary"
-                onClick={showRoleModal}
-                disabled={activeKey !== "2"}
-              >
-                Add Role
-              </Button>
+              {role !== "Admin" && (
+                <Button
+                  type="primary"
+                  onClick={showRoleModal}
+                  disabled={activeKey !== "2"}
+                >
+                  Add Role
+                </Button>
+              )}
             </Flex>
           </Flex>
 
           {/* Tabs */}
           <Tabs
-            items={items}
+            items={filteredItems}
             activeKey={activeKey}
             onChange={(key) => setActiveKey(key)}
           />

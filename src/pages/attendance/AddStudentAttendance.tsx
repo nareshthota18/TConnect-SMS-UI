@@ -3,6 +3,7 @@ import { Layout, Table, Radio, Select, Button, Row, Col } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchGradesApi } from "../../store/Dropdowns/DropdownActions";
+import { fetchStudentByGradeApi } from "../../store/Student/StudentActions";
 const { Content } = Layout;
 const { Option } = Select;
 
@@ -39,14 +40,31 @@ const AddStudentAttendance = () => {
     gradesDataError: boolean;
   }
 
+  interface StudentByGradeState {
+    studentByGradeData: any[]; 
+    studentByGradeDataLoading: boolean;
+    studentByGradeDataError: boolean;
+  }
+
   const { gradesData, gradesDataLoading } = useSelector(
     (state: RootState) => state.departments as GradesState
   );
-
+  
+  const { studentByGradeData, studentByGradeDataLoading } = useSelector(
+    (state: RootState) => state.student as StudentByGradeState
+  );
+  
   // ✅ Fetch grades on component mount
   useEffect(() => {
     dispatch(fetchGradesApi());
   }, [dispatch]);
+
+  // Handle grade selection
+const handleGradeChange = (value: string) => {
+  setSelectedClass(value); // Save grade ID
+  dispatch(fetchStudentByGradeApi(value)); // Fetch students dynamically
+};
+
 
   useEffect(() => {
     if (gradesData?.length) {
@@ -112,7 +130,7 @@ const AddStudentAttendance = () => {
       options={gradesOptions}
       allowClear
       style={{ width: 200, marginBottom: 16 }}
-      onChange={(value) => setSelectedClass(value)}
+      onChange={handleGradeChange}
     />
   </Col>
 

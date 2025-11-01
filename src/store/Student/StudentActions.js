@@ -1,7 +1,7 @@
 // src/redux/actions/studentActions.js
 import axios from "axios";
-import { deleteStudentUrl, studenturl } from "../utils";
-import { ADD_STUDENT, DELETE_STUDENT, STUDENT_LIST } from "./StudentTypes";
+import { deleteStudentUrl, getStudentByGrade, studenturl } from "../utils";
+import { ADD_STUDENT, DELETE_STUDENT, GET_STUDENT_BY_GRADE, STUDENT_LIST } from "./StudentTypes";
 
 export const studentStart = () => ({
   type: STUDENT_LIST.STUDENT_LIST_START,
@@ -109,5 +109,39 @@ export const deleteStudentApi = (studentId) => async (dispatch) => {
   } catch (error) {
     dispatch(deleteStudentFail(error.message));
     throw error;
+  }
+};
+
+
+export const studentByGradeStart = () => ({
+  type: GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_START,
+});
+
+export const studentByGradeSuccess = (data) => ({
+  type: GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_SUCCESS,
+  payload: data,
+});
+
+export const studentByGradeFail = (payload) => ({
+  type: GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_FAIL,
+  payload: typeof payload === "string" ? payload : payload.message || "An error occurred",
+});
+
+export const fetchStudentByGradeApi = (id) => async (dispatch) => {
+  dispatch(studentByGradeStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.get(getStudentByGrade(id), {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(studentByGradeSuccess(response.data));
+    return response.data;
+  } catch (error) {
+    dispatch(studentByGradeFail(error.message));
   }
 };

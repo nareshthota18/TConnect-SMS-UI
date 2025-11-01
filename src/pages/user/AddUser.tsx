@@ -13,6 +13,7 @@ const AddUser = () => {
   const [staffOptions, setStaffOptions] = useState<{ label: string; value: string }[]>([]);
   const [rollOptions, setRollOptions] = useState<{ label: string; value: string }[]>([]);
   const dispatch = useDispatch<AppDispatch>();
+  const role = localStorage.getItem("userRole"); 
 
 interface StaffState {
   staffData: any;
@@ -59,15 +60,26 @@ useEffect(() => {
   }
 }, [staffData]);
 
+// Role dropdown - filter based on logged-in role
 useEffect(() => {
   if (rolesData?.length) {
-    const options = rolesData.map((item: { id: string; name: string }) => ({
+    let filteredRoles: any[] = rolesData;
+
+    if (role === "SuperAdmin") {
+      filteredRoles = rolesData.filter(
+        (r: { name: string }) => r.name === "Admin" || r.name === "Staff"
+      );
+    } else if (role === "Admin") {
+      filteredRoles = rolesData.filter((r: { name: string }) => r.name === "Staff");
+    }
+
+    const options = filteredRoles.map((item: { id: string; name: string }) => ({
       label: item.name,
       value: item.id,
     }));
     setRollOptions(options);
   }
-}, [rolesData]);
+}, [rolesData, role]);
 
 const handleSubmit = async (values: any) => {
   const payload = {

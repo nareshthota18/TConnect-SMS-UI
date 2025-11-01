@@ -1,6 +1,6 @@
 // src/redux/reducers/studentReducer.js
 import { produce } from "immer";
-import { ADD_STUDENT, DELETE_STUDENT, STUDENT_LIST } from "./StudentTypes";
+import { ADD_STUDENT, DELETE_STUDENT, GET_STUDENT_BY_GRADE, STUDENT_LIST } from "./StudentTypes";
 
 const initialState = {
   studentData: [],
@@ -14,6 +14,10 @@ const initialState = {
   deletestudentData: [],
   deletestudentDataLoading: false,
   deletestudentDataError: false,
+
+  studentByGradeData: [],
+  studentByGradeLoading: false,
+  studentByGradeError: false,
 };
 
 export const studentReducer = produce((draft, action) => {
@@ -71,6 +75,24 @@ export const studentReducer = produce((draft, action) => {
       draft.deletestudentData = null;
       draft.deletestudentDataError = action.payload;
       break;
+
+      case GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_START:
+  draft.studentByGradeLoading = true;
+  draft.studentByGradeError = false;
+  break;
+
+case GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_SUCCESS:
+  draft.studentByGradeLoading = false;
+  draft.studentByGradeData = action.payload;
+  draft.studentByGradeError = false;
+  break;
+
+case GET_STUDENT_BY_GRADE.GET_STUDENT_BY_GRADE_FAIL:
+  draft.studentByGradeLoading = false;
+  draft.studentByGradeData = [];
+  draft.studentByGradeError = action.payload;
+  break;
+
 
     default:
       return draft;

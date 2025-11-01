@@ -40,11 +40,11 @@ const AppRoutes = () => {
         <Route path="/grocery" element={<Grocery />} />
         <Route path="/inventory" element={<Inventory />} />
         <Route path="/suppliers" element={<Suppliers />} />
+        <Route path="/user" element={<User />} />
       </Route>
 
       {/* SuperAdmin-only routes */}
       <Route element={<ProtectedRoute allowedRoles={["SuperAdmin"]} />}>
-        <Route path="/user" element={<User />} />
         <Route path="/schools" element={<Schools />} />
       </Route>
     </Routes>

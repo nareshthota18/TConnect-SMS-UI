@@ -25,5 +25,7 @@ export const deleteAssetUrl = (id) => `${base_url}/Assets/${id}`;
 export const deleteStaffUrl = (id) => `${base_url}/Staff/${id}`;
 export const deleteSupplierUrl = (id) => `${base_url}/Suppliers/${id}`;
 export const deleteRoleUrl = (id) => `${base_url}/Roles/Delete/${id}`;
-export const deleteStudentUrl = (id) => `${base_url}/Students/${id}`;
+export const deleteStudentUrl = (id) => `${base_url}/Students/Delete/${id}`;
 export const deleteInventoryUrl = (id) => `${base_url}/Inventory/Delete/${id}`;
+export const deleteSchoolUrl = (id) => `${base_url}/School/Delete/${id}`;
+export const getStudentByGrade = (id) => `/Students/StudentsByGrade/${id}`;

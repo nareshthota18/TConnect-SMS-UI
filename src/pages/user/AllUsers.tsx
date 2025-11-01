@@ -110,6 +110,7 @@ const AllUsers: React.FC = () => {
             try {
               await dispatch(deleteUserApi(record.id)); // Use username or ID as key
               message.success("User deleted successfully");
+              dispatch(fetchUserApi());
             } catch (err) {
               message.error("Failed to delete user");
             }

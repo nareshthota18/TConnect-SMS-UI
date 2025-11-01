@@ -39,6 +39,7 @@ const Activities: React.FC = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
+  const role = localStorage.getItem("userRole"); // get user role
 
   // Drawer states
   const [openAddDrawer, setOpenAddDrawer] = useState(false);
@@ -68,9 +69,11 @@ const Activities: React.FC = () => {
               Activities
             </Title>
             <Flex gap="8px">
-              <Button type="primary" onClick={() => setOpenAddDrawer(true)}>
+            {(role === "SuperAdmin" || role === "Admin") && (
+                <Button type="primary" onClick={() => setOpenAddDrawer(true)}>
                 Add Activity
               </Button>
+              )}
             </Flex>
           </Flex>
 

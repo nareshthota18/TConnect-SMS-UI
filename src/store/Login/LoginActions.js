@@ -23,6 +23,7 @@ export const logout = () => (dispatch) => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("userRole");
     localStorage.removeItem("tokenExpires");
+    localStorage.removeItem("schoolId");
   
     // Dispatch reducer action
     dispatch({ type: LOGIN.LOGOUT });
