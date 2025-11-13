@@ -1,7 +1,7 @@
 // src/redux/actions/departmentsActions.js
 import axios from "axios";
-import { departmentsUrl, designationsUrl, gradesUrl } from "../utils";
-import { DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
+import { categoriesUrl, departmentsUrl, designationsUrl, gradesUrl } from "../utils";
+import { CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
 
 // Action creators
 export const departmentsStart = () => ({
@@ -116,3 +116,44 @@ export const gradesStart = () => ({
       dispatch(gradesFail(error.message));
     }
   };
+
+
+  // ======================
+// ✅ Categories Actions
+// ======================
+export const categoriesStart = () => ({
+  type: CATEGORIES_LIST.CATEGORIES_LIST_START,
+});
+
+export const categoriesSuccess = (data) => ({
+  type: CATEGORIES_LIST.CATEGORIES_LIST_SUCCESS,
+  payload: data,
+});
+
+export const categoriesFail = (payload) => ({
+  type: CATEGORIES_LIST.CATEGORIES_LIST_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload.message || "An error occurred",
+});
+
+export const fetchCategoriesApi = () => async (dispatch) => {
+  dispatch(categoriesStart());
+  try {
+    const token = localStorage.getItem("authToken");
+    const response = await axios.get(categoriesUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(categoriesSuccess(response.data));
+    console.log(response.data, "categories response");
+    return response.data;
+  } catch (error) {
+    dispatch(categoriesFail(error.message));
+  }
+};

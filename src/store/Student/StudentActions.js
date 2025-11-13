@@ -22,9 +22,11 @@ export const fetchStudentsApi = () => async (dispatch) => {
   try {
     // const response = await axios.get(studenturl);
     const token = localStorage.getItem("authToken");
+    const schoolId = localStorage.getItem("schoolId");
     const response = await axios.get(studenturl, {
       headers: {
         Authorization: `Bearer ${token}`,
+        RSHostelId: schoolId,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
@@ -59,9 +61,11 @@ export const addStudentApi = (studentData) => async (dispatch) => {
   dispatch(addStudentStart());
   try {
     const token = localStorage.getItem("authToken");
+    const schoolId = localStorage.getItem("schoolId");
     const response = await axios.post(studenturl, studentData, {
       headers: {
         Authorization: `Bearer ${token}`,
+        RSHostelId: schoolId,
         Accept: "application/json",
         "Content-Type": "application/json",
       },

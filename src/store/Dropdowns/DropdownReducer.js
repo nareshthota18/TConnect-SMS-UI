@@ -1,6 +1,6 @@
 // src/redux/reducers/departmentsReducer.js
 import { produce } from "immer";
-import { DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
+import { CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
 
 const initialState = {
   departmentsData: [],
@@ -14,6 +14,11 @@ const initialState = {
   gradesData: [],
   gradesDataLoading: false,
   gradesDataError: false,
+
+  // ✅ Added Categories
+  categoriesData: [],
+  categoriesDataLoading: false,
+  categoriesDataError: false,
 };
 
 export const departmentsReducer = produce((draft, action) => {
@@ -69,6 +74,24 @@ export const departmentsReducer = produce((draft, action) => {
       draft.gradesDataLoading = false;
       draft.gradesData = [];
       draft.gradesDataError = action.payload;
+      break;
+
+    // ✅ Categories Cases
+    case CATEGORIES_LIST.CATEGORIES_LIST_START:
+      draft.categoriesDataLoading = true;
+      draft.categoriesDataError = false;
+      break;
+
+    case CATEGORIES_LIST.CATEGORIES_LIST_SUCCESS:
+      draft.categoriesDataLoading = false;
+      draft.categoriesData = action.payload;
+      draft.categoriesDataError = false;
+      break;
+
+    case CATEGORIES_LIST.CATEGORIES_LIST_FAIL:
+      draft.categoriesDataLoading = false;
+      draft.categoriesData = [];
+      draft.categoriesDataError = action.payload;
       break;
 
     default:

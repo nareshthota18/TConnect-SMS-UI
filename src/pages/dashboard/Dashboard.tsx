@@ -119,18 +119,22 @@ const Dashboard = () => {
     (state: RootState) => state.student as StudentState
   );
 
-  // ✅ Extract data from Redux store
   const { schoolsData, schoolsDataLoading } = useSelector(
     (state: RootState) => state.schools as SchoolsState
   );
 
-  // ✅ Fetch schools on component mount
   useEffect(() => {
     dispatch(fetchSchoolsApi());
-    dispatch(fetchStudentsApi());
-    dispatch(fetchInventoryApi());
-    dispatch(fetchStaffApi());
   }, [dispatch]);
+  
+  useEffect(() => {
+    const schoolId = localStorage.getItem("schoolId");
+    if (schoolId) {
+      dispatch(fetchInventoryApi());
+      dispatch(fetchStudentsApi());
+      dispatch(fetchStaffApi());
+    }
+  }, [dispatch, localStorage.getItem("schoolId")]);
 
   // Define different colors for each card
   const cardColors = [

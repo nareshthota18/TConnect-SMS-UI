@@ -25,9 +25,11 @@ export const fetchInventoryApi = () => async (dispatch) => {
   try {
     // ✅ include token like staff API
     const token = localStorage.getItem("authToken");
+    const schoolId = localStorage.getItem("schoolId");
     const response = await axios.get(inventoryUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
+        RSHostelId: schoolId,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
