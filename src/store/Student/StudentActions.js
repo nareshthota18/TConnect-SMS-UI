@@ -99,9 +99,11 @@ export const deleteStudentApi = (studentId) => async (dispatch) => {
   dispatch(deleteStudentStart());
   try {
     const token = localStorage.getItem("authToken");
+    const schoolId = localStorage.getItem("schoolId");
     const response = await axios.delete(deleteStudentUrl(studentId), {
       headers: {
         Authorization: `Bearer ${token}`,
+        RSHostelId: schoolId,
         Accept: "application/json",
         "Content-Type": "application/json",
       },

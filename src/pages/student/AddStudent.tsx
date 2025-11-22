@@ -12,7 +12,7 @@ import {
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import dayjs from "dayjs";
-import { addStudentApi } from "../../store/Student/StudentActions";
+import { addStudentApi, fetchStudentsApi } from "../../store/Student/StudentActions";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchCategoriesApi, fetchGradesApi } from "../../store/Dropdowns/DropdownActions";
 
@@ -87,7 +87,6 @@ const AddStudent = () => {
 
       // Map form values to API payload
       const payload = {
-        student: {
           admissionNumber: values.admissionNumber || "",
           firstName: values.firstname || "",
           lastName: values.lastname || "",
@@ -102,7 +101,6 @@ const AddStudent = () => {
           rsHostelName: values.rsHostelName || "",
           gradeName: gradesOptions.find(opt => opt.value === values.gradeId)?.label || "",
           categoryName: categoriesOptions.find(opt => opt.value === values.categoryId)?.label || "",
-        },
       };
 
       const response = await dispatch(addStudentApi(payload));
@@ -110,6 +108,7 @@ const AddStudent = () => {
       if (response) {
         message.success("Student added successfully!");
         form.resetFields();
+        dispatch(fetchStudentsApi());
       }
     } catch (error: any) {
       message.error("Failed to add student. " + (error.message || ""));
@@ -253,7 +252,6 @@ const AddStudent = () => {
             <Form.Item
               name="healthinfo"
               label="HealthInfo"
-              rules={[{ type: "email", message: "Please enter a valid email" }]}
             >
               <Input placeholder="Enter email" />
             </Form.Item>

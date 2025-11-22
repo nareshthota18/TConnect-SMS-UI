@@ -76,13 +76,21 @@ const StudentAttendance: React.FC = () => {
     return filters;
   };
 
+   // ⭐⭐ MAP API RESPONSE → TABLE FORMAT ⭐⭐
+   const mappedAttendance: Attendance[] = attendanceStudentData?.map((item: any) => ({
+    id: item.studentId, // student identifier
+    name: item.studentName || "N/A",
+    date: item.attendanceDate?.split("T")[0], // extract "2025-11-16"
+    status: item.status,
+  })) || [];
+
   const columns: ColumnsType<Attendance> = [
-    {
-      title: "Student ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
-    },
+    // {
+    //   title: "Student ID",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   sorter: (a, b) => a.id - b.id,
+    // },
     {
       title: "Student Name",
       dataIndex: "name",
@@ -133,9 +141,13 @@ const StudentAttendance: React.FC = () => {
   return (
     <Table<Attendance>
       columns={columns}
-      dataSource={attendanceStudentData}
+      dataSource={mappedAttendance}
       rowKey="id"
-      pagination={{ pageSize: 5 }}
+      pagination={
+        mappedAttendance.length > 10
+          ? { pageSize: 10 }
+          : false
+      }
       bordered
       scroll={{ x: "max-content" }}
     />

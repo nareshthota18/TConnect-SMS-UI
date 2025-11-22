@@ -38,11 +38,11 @@ const AllSchools: React.FC = () => {
   useEffect(() => {
     if (schoolsData && schoolsData.length > 0) {
       const mappedData: School[] = schoolsData.map((item: any) => ({
-        id: item.id,
+        id: item.schoolId,
         name: item.schoolName,
         address: item.address,
         phone: item.phone,
-        status: item.isActive ? "Active" : "Inactive",
+        status: item.isActive ? "Active" : "Active",
       }));
       setData(mappedData);
     }

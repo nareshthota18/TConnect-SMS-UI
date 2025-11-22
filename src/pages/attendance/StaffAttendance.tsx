@@ -14,12 +14,22 @@ interface StaffAttendanceType {
   status: "Present" | "Absent" | "Late";
 }
 
+interface ApiAttendanceResponse {
+  staffAttendanceId: string;
+  staffId: string;
+  staffName: string;
+  attendanceDate: string;
+  status: string;
+  remarks: string;
+}
+
+
 const StaffAttendance: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   // Redux state type
   interface AttendanceStaffState {
-    attendanceStaffData: StaffAttendanceType[];
+    attendanceStaffData: ApiAttendanceResponse[];
     attendanceStaffDataLoading: boolean;
     attendanceStaffDataError: boolean;
   }
@@ -64,13 +74,19 @@ const StaffAttendance: React.FC = () => {
       record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
   });
 
+  const mappedAttendance: StaffAttendanceType[] = attendanceStaffData
+  ? attendanceStaffData.map((item, index) => ({
+      id: index + 1,
+      name: item.staffName,
+      department: "N/A",
+      date: item.attendanceDate?.split("T")[0],
+      status: item.status as "Present" | "Absent" | "Late",
+    }))
+  : [];
+
+
+  
   const columns: ColumnsType<StaffAttendanceType> = [
-    {
-      title: "Staff ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
-    },
     {
       title: "Staff Name",
       dataIndex: "name",
@@ -131,9 +147,9 @@ const StaffAttendance: React.FC = () => {
   return (
     <Table<StaffAttendanceType>
       columns={columns}
-      dataSource={attendanceStaffData}
+      dataSource={mappedAttendance || []}
       rowKey="id"
-      pagination={{ pageSize: 5 }}
+      pagination={mappedAttendance.length > 10 ? { pageSize: 10 } : false}
       bordered
       scroll={{ x: "max-content" }}
     />

@@ -16,6 +16,8 @@ import Schools from "./pages/schools/Schools";
 import Suppliers from "./pages/suppliers/Suppliers";
 import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./NotFound";
+import LookUp from "./pages/lookup/LookUp";
+import Holidays from "./pages/holidays/Holidays";
 
 const AppRoutes = () => {
   return (
@@ -31,6 +33,7 @@ const AppRoutes = () => {
       <Route path="/student" element={<Student />} />
       <Route path="/activities" element={<Activities />} />
       <Route path="/attendance" element={<Attendance />} />
+      <Route path="/holidays" element={<Holidays />} />
 
       {/* Admin & SuperAdmin only */}
       <Route element={<ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]} />}>
@@ -46,6 +49,7 @@ const AppRoutes = () => {
       {/* SuperAdmin-only routes */}
       <Route element={<ProtectedRoute allowedRoles={["SuperAdmin"]} />}>
         <Route path="/schools" element={<Schools />} />
+        <Route path="/lookup" element={<LookUp />} />
       </Route>
     </Routes>
   );

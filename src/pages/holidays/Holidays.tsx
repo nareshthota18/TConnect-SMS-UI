@@ -10,26 +10,29 @@ import {
 } from "antd";
 import SideNav from "../../components/SideNav";
 import { CloseOutlined } from "@ant-design/icons";
-import AllActivities from "./AllActivities";
-import ActivitiesDashboard from "./ActivitiesDashboard";
-import CurrentActivities from "./CurrentActivities";
-import UpcomingActivities from "./UpcomingActivities";
-import AddActivity from "./AddActivity";
+import AllHolidays from "./AllHolidays";
+import AddHolidays from "./AddHolidays";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
+// Tabs for Holidays
 const items = [
-  { label: "Activity Dashboard", key: "1", children: <ActivitiesDashboard /> },
-  { label: "All Activities", key: "2", children: <AllActivities /> },
-  { label: "Current Activities", key: "3", children: <CurrentActivities /> },
-  { label: "Upcoming Activities", key: "4", children: <UpcomingActivities /> },
+  {
+    label: "All Holidays",
+    key: "1",
+    children: <AllHolidays />,
+  },
+  {
+    label: "Holiday Calendar",
+    key: "2",
+    children: "Holiday Calendar view will go here.",
+  },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-// 🎨 Modal Header Styles (same as Holidays)
 const modalStyles = {
   header: {
     backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
@@ -38,18 +41,19 @@ const modalStyles = {
   title: {
     color: isDarkMode ? "#ffffff" : "#000000",
     margin: 0,
-    fontWeight: 700,
-    fontSize: "18px",
   },
 };
 
-const Activities: React.FC = () => {
+const Holidays = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
   const [collapsed] = useState(false);
-  const role = localStorage.getItem("userRole");
 
+  // Modal State
   const [openModal, setOpenModal] = useState(false);
+
+  const showModal = () => setOpenModal(true);
+  const onCloseModal = () => setOpenModal(false);
 
   return (
     <Layout>
@@ -70,37 +74,29 @@ const Activities: React.FC = () => {
           }}
         >
           <Flex justify="space-between">
-            <Title
-              level={3}
-              style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
-            >
-              Activities
+            <Title level={3} style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}>
+              Holidays
             </Title>
-
-            {(role === "SuperAdmin" || role === "Admin") && (
-              <Button type="primary" onClick={() => setOpenModal(true)}>
-                Add Activity
-              </Button>
-            )}
+            <Button type="primary" onClick={showModal}>
+              Add Holiday
+            </Button>
           </Flex>
 
+          {/* Tabs Section */}
           <Tabs items={items} />
 
-          {/* Modal Section (Same Styling as Holidays) */}
+          {/* Modal Section */}
           <Modal
-            title={<div style={modalStyles.title}>Add New Activity</div>}
+            title={<div style={modalStyles.title}>Add New Holiday</div>}
             open={openModal}
-            onCancel={() => setOpenModal(false)}
+            onCancel={onCloseModal}
             footer={null}
-            centered
-            destroyOnClose
             width={isMobile ? "100%" : "60%"}
-
-            // Same header style
             closeIcon={<CloseOutlined style={{ color: "#000", fontSize: 18 }} />}
             styles={{ header: modalStyles.header }}
           >
-            <AddActivity closeModal={() => setOpenModal(false)} />
+            {/* Replace this with your AddHoliday form component */}
+           <AddHolidays />
           </Modal>
         </Content>
       </Layout>
@@ -108,4 +104,4 @@ const Activities: React.FC = () => {
   );
 };
 
-export default Activities;
+export default Holidays;

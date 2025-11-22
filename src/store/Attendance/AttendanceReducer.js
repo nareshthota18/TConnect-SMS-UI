@@ -2,6 +2,7 @@
 import { produce } from "immer";
 import {
   ADD_STAFF_ATTENDANCE,
+  ADD_STUDENT_ATTENDANCE,
   ATTENDANCE_STAFF_LIST,
   ATTENDANCE_STUDENT_LIST,
 } from "./AttendanceType";
@@ -18,6 +19,11 @@ const initialState = {
   addStaffAttendanceData: [],
   addStaffAttendanceDataLoading: false,
   addStaffAttendanceDataError: false,
+
+  addStudentAttendanceData: [],
+  addStudentAttendanceDataLoading: false,
+  addStudentAttendanceDataError: false,
+
 };
 
 export const attendanceStudentReducer = produce((draft, action) => {
@@ -72,6 +78,24 @@ export const attendanceStudentReducer = produce((draft, action) => {
       draft.addStaffAttendanceData = [];
       draft.addStaffAttendanceDataError = action.payload;
       break;
+
+      case ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_START:
+        draft.addStudentAttendanceDataLoading = true;
+        draft.addStudentAttendanceDataError = false;
+        break;
+      
+      case ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_SUCCESS:
+        draft.addStudentAttendanceDataLoading = false;
+        draft.addStudentAttendanceData = action.payload;
+        draft.addStudentAttendanceDataError = false;
+        break;
+      
+      case ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_FAIL:
+        draft.addStudentAttendanceDataLoading = false;
+        draft.addStudentAttendanceData = [];
+        draft.addStudentAttendanceDataError = action.payload;
+        break;
+      
 
     default:
       return draft;

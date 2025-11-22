@@ -39,7 +39,9 @@ export const fetchSchoolsApi = () => async (dispatch) => {
     // ✅ Store the first school's schoolId in localStorage
     if (Array.isArray(schoolsData) && schoolsData.length > 0) {
       const firstSchoolId = schoolsData[0].schoolId;
+      const firstSchoolName = schoolsData[0].schoolName;
       localStorage.setItem("schoolId", firstSchoolId);
+      localStorage.setItem("schoolName", firstSchoolName);
       console.log("Saved schoolId to localStorage:", firstSchoolId);
     }
     return response.data;
@@ -104,21 +106,28 @@ export const deleteSchoolFail = (payload) => ({
 /** 🗑️ Delete School API */
 export const deleteSchoolApi = (schoolId) => async (dispatch) => {
   dispatch(deleteSchoolStart());
+
   try {
     const token = localStorage.getItem("authToken");
-    const response = await axios.delete(deleteSchoolUrl(schoolId), {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    });
+
+    // 🔥 FIXED: use schoolId passed from component (do NOT override)
+    const response = await axios.delete(
+      deleteSchoolUrl(schoolId),  // Correct ID is used here
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     dispatch(deleteSchoolSuccess(response.data));
-    console.log(response.data, "school deleted successfully");
-    return response.data; // ✅ return for awaiting in component
+    console.log("School deleted successfully:", response.data);
+
+    return response.data; // allow awaiting
   } catch (error) {
     dispatch(deleteSchoolFail(error.response?.data?.message || error.message));
-    throw error; // ✅ re-throw to allow caller to handle
+    throw error; // so UI catches failure
   }
 };

@@ -1,6 +1,6 @@
 // src/redux/reducers/departmentsReducer.js
 import { produce } from "immer";
-import { CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
+import { ADD_ATTENDANCE_TYPES, ADD_CATEGORIES, ADD_DEPARTMENTS, ADD_DESIGNATIONS, ADD_GRADES, ATTENDANCE_TYPES_LIST, CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
 
 const initialState = {
   departmentsData: [],
@@ -15,10 +15,34 @@ const initialState = {
   gradesDataLoading: false,
   gradesDataError: false,
 
-  // ✅ Added Categories
   categoriesData: [],
   categoriesDataLoading: false,
   categoriesDataError: false,
+
+  attendanceTypesData: [],
+  attendanceTypesDataLoading: false,
+  attendanceTypesDataError: false,
+
+  addDepartmentsData: [],
+  addDepartmentsDataLoading: false,
+  addDepartmentsDataError: false,
+
+  addDesignationsData: [],
+  addDesignationsDataLoading: false,
+  addDesignationsDataError: false,
+
+  addGradesData: [],
+  addGradesDataLoading: false,
+  addGradesDataError: false,
+
+  addCategoriesData: [],
+  addCategoriesDataLoading: false,
+  addCategoriesDataError: false,
+
+  addAttendanceTypesData: [],
+  addAttendanceTypesDataLoading: false,
+  addAttendanceTypesDataError: false,
+
 };
 
 export const departmentsReducer = produce((draft, action) => {
@@ -93,6 +117,120 @@ export const departmentsReducer = produce((draft, action) => {
       draft.categoriesData = [];
       draft.categoriesDataError = action.payload;
       break;
+    
+    // Attendance Types Cases
+    case ATTENDANCE_TYPES_LIST.ATTENDANCE_TYPES_LIST_START:
+      draft.attendanceTypesDataLoading = true;
+      draft.attendanceTypesDataError = false;
+      break;
+
+    case ATTENDANCE_TYPES_LIST.ATTENDANCE_TYPES_LIST_SUCCESS:
+      draft.attendanceTypesDataLoading = false;
+      draft.attendanceTypesData = action.payload;
+      draft.attendanceTypesDataError = false;
+      break;
+
+    case ATTENDANCE_TYPES_LIST.ATTENDANCE_TYPES_LIST_FAIL:
+      draft.attendanceTypesDataLoading = false;
+      draft.attendanceTypesData = [];
+      draft.attendanceTypesDataError = action.payload;
+      break;
+
+      /** Add Departments */
+    case ADD_DEPARTMENTS.ADD_DEPARTMENTS_START:
+      draft.addDepartmentsDataLoading = true;
+      draft.addDepartmentsDataError = false;
+      break;
+
+    case ADD_DEPARTMENTS.ADD_DEPARTMENTS_SUCCESS:
+      draft.addDepartmentsDataLoading = false;
+      draft.addDepartmentsDataError = false;
+      draft.addDepartmentsData = action.payload;
+      break;
+
+    case ADD_DEPARTMENTS.ADD_DEPARTMENTS_FAIL:
+      draft.addDepartmentsDataLoading = false;
+      draft.addDepartmentsData = [];
+      draft.addDepartmentsDataError = action.payload;
+      break;
+
+      /** Add Designations */
+case ADD_DESIGNATIONS.ADD_DESIGNATIONS_START:
+  draft.addDesignationsDataLoading = true;
+  draft.addDesignationsDataError = false;
+  break;
+
+case ADD_DESIGNATIONS.ADD_DESIGNATIONS_SUCCESS:
+  draft.addDesignationsDataLoading = false;
+  draft.addDesignationsDataError = false;
+  draft.addDesignationsData = action.payload;
+  break;
+
+case ADD_DESIGNATIONS.ADD_DESIGNATIONS_FAIL:
+  draft.addDesignationsDataLoading = false;
+  draft.addDesignationsData = [];
+  draft.addDesignationsDataError = action.payload;
+  break;
+
+
+  /** Add Grades */
+case ADD_GRADES.ADD_GRADES_START:
+  draft.addGradesDataLoading = true;
+  draft.addGradesDataError = false;
+  break;
+
+case ADD_GRADES.ADD_GRADES_SUCCESS:
+  draft.addGradesDataLoading = false;
+  draft.addGradesDataError = false;
+  draft.addGradesData = action.payload;
+  break;
+
+case ADD_GRADES.ADD_GRADES_FAIL:
+  draft.addGradesDataLoading = false;
+  draft.addGradesData = [];
+  draft.addGradesDataError = action.payload;
+  break;
+
+
+  /** Add Categories */
+case ADD_CATEGORIES.ADD_CATEGORIES_START:
+  draft.addCategoriesDataLoading = true;
+  draft.addCategoriesDataError = false;
+  break;
+
+case ADD_CATEGORIES.ADD_CATEGORIES_SUCCESS:
+  draft.addCategoriesDataLoading = false;
+  draft.addCategoriesDataError = false;
+  draft.addCategoriesData = action.payload;
+  break;
+
+case ADD_CATEGORIES.ADD_CATEGORIES_FAIL:
+  draft.addCategoriesDataLoading = false;
+  draft.addCategoriesData = [];
+  draft.addCategoriesDataError = action.payload;
+  break;
+
+
+  /** Add Attendance Types */
+case ADD_ATTENDANCE_TYPES.ADD_ATTENDANCE_TYPES_START:
+  draft.addAttendanceTypesDataLoading = true;
+  draft.addAttendanceTypesDataError = false;
+  break;
+
+case ADD_ATTENDANCE_TYPES.ADD_ATTENDANCE_TYPES_SUCCESS:
+  draft.addAttendanceTypesDataLoading = false;
+  draft.addAttendanceTypesDataError = false;
+  draft.addAttendanceTypesData = action.payload;
+  break;
+
+case ADD_ATTENDANCE_TYPES.ADD_ATTENDANCE_TYPES_FAIL:
+  draft.addAttendanceTypesDataLoading = false;
+  draft.addAttendanceTypesData = [];
+  draft.addAttendanceTypesDataError = action.payload;
+  break;
+
+
+
 
     default:
       return draft;

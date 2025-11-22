@@ -10,6 +10,8 @@ import { userReducer } from './Users/UserReducer';
 import { rolesReducer } from './Roles/RoleReducer';
 import { schoolsReducer } from './Schools/SchoolsReducer';
 import { departmentsReducer } from './Dropdowns/DropdownReducer';
+import { holidayReducer } from './Holidays/HolidaysReducer';
+import { activityReducer } from './Activities/ActivitiesReducer';
 
 // Create the store
 const store = configureStore({
@@ -25,6 +27,8 @@ const store = configureStore({
     roles: rolesReducer,
     schools: schoolsReducer,
     departments: departmentsReducer,
+    holidays: holidayReducer,
+    activity: activityReducer,
   },
 });
 

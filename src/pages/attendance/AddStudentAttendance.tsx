@@ -1,110 +1,112 @@
 import React, { useState, useEffect } from "react";
-import { Layout, Table, Radio, Select, Button, Row, Col } from "antd";
+import { Layout, Table, Radio, Select, Button, Row, Col, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchGradesApi } from "../../store/Dropdowns/DropdownActions";
 import { fetchStudentByGradeApi } from "../../store/Student/StudentActions";
+import { addStudentAttendanceApi, fetchAttendanceStudentApi } from "../../store/Attendance/AttendanceActions";
+
 const { Content } = Layout;
-const { Option } = Select;
-
-interface Student {
-  id: number;
-  firstName: string;
-  lastName: string;
-  class: string;
-}
-
-const allStudents: Student[] = [
-  { id: 1, firstName: "John", lastName: "Doe", class: "10th" },
-  { id: 2, firstName: "Jane", lastName: "Smith", class: "10th" },
-  { id: 3, firstName: "Sam", lastName: "Wilson", class: "9th" },
-  { id: 4, firstName: "Alice", lastName: "Brown", class: "10th" },
-  { id: 5, firstName: "Chris", lastName: "Evans", class: "9th" },
-  { id: 6, firstName: "Emma", lastName: "Watson", class: "10th" },
-];
 
 const AddStudentAttendance = () => {
   const [selectedClass, setSelectedClass] = useState<string>("");
-  const [students, setStudents] = useState<Student[]>([]);
   const [studentStatus, setStudentStatus] = useState<
-    Record<number, "Present" | "Absent">
+    Record<string, "Present" | "Absent">
   >({});
+
   const dispatch = useDispatch<AppDispatch>();
-  const [gradesOptions, setgradesOptions] = useState<
+
+  const [gradesOptions, setGradesOptions] = useState<
     { label: string; value: string }[]
   >([]);
 
   interface GradesState {
-    gradesData: [];
+    gradesData: any[];
     gradesDataLoading: boolean;
-    gradesDataError: boolean;
   }
 
   interface StudentByGradeState {
-    studentByGradeData: any[]; 
+    studentByGradeData: any[];
     studentByGradeDataLoading: boolean;
-    studentByGradeDataError: boolean;
   }
 
   const { gradesData, gradesDataLoading } = useSelector(
     (state: RootState) => state.departments as GradesState
   );
-  
+
   const { studentByGradeData, studentByGradeDataLoading } = useSelector(
     (state: RootState) => state.student as StudentByGradeState
   );
-  
-  // ✅ Fetch grades on component mount
+
+  // Fetch grades
   useEffect(() => {
     dispatch(fetchGradesApi());
   }, [dispatch]);
 
-  // Handle grade selection
-const handleGradeChange = (value: string) => {
-  setSelectedClass(value); // Save grade ID
-  dispatch(fetchStudentByGradeApi(value)); // Fetch students dynamically
-};
-
-
+  // Convert grades to dropdown options
   useEffect(() => {
     if (gradesData?.length) {
-      const options = gradesData.map(
-        (item: { key: string; value: string }) => ({
-          label: item.value,
-          value: item.key,
-        })
-      );
-      setgradesOptions(options);
+      const options = gradesData.map((item: { key: string; value: string }) => ({
+        label: item.value,
+        value: item.key,
+      }));
+      setGradesOptions(options);
     }
   }, [gradesData]);
 
-  useEffect(() => {
-    if (selectedClass) {
-      const filtered = allStudents.filter((s) => s.class === selectedClass);
-      setStudents(filtered);
-
-      const initialStatus: Record<number, "Present" | "Absent"> = {};
-      filtered.forEach((s) => (initialStatus[s.id] = "Present"));
-      setStudentStatus(initialStatus);
-    }
-  }, [selectedClass]);
-
-  const handleSubmit = () => {
-    console.log("Student Attendance:", studentStatus);
+  // When grade is selected → fetch students
+  const handleGradeChange = (value: string) => {
+    setSelectedClass(value);
+    dispatch(fetchStudentByGradeApi(value));
   };
 
+  // Set default attendance = Present
+  useEffect(() => {
+    if (studentByGradeData?.length) {
+      const initialStatus: Record<string, "Present" | "Absent"> = {};
+      studentByGradeData.forEach((s: any) => {
+        initialStatus[s.id] = "Present";
+      });
+      setStudentStatus(initialStatus);
+    }
+  }, [studentByGradeData]);
+
+  const handleSubmit = () => {
+    if (!studentByGradeData?.length) return;
+  
+    const attendancePayload = studentByGradeData.map((student: any) => ({
+      id: student.id, // or "" if backend generates
+      studentId: student.id,
+      attendanceDate: new Date().toISOString(),
+      session: "Morning", // or dynamic
+      status: studentStatus[student.id],
+      remarks: "",
+      studentName: `${student.firstName} ${student.lastName}`,
+      admissionNumber: student.admissionNumber,
+    }));
+  
+    console.log("Final Payload:", attendancePayload);
+  
+    dispatch(addStudentAttendanceApi(attendancePayload));
+    message.success("Attendance submitted successfully!");
+    dispatch(fetchAttendanceStudentApi());
+  };
+  
+
   const studentColumns = [
-    { title: "Roll No", dataIndex: "id", key: "id" },
+    { title: "Roll No", dataIndex: "admissionNumber", key: "admissionNumber" },
+
     {
       title: "Student Name",
       key: "studentName",
-      render: (_: any, record: Student) =>
+      render: (_: any, record: any) =>
         `${record.firstName} ${record.lastName}`,
     },
+
     {
       title: "Status",
       key: "status",
-      render: (_: any, record: Student) => (
+      render: (_: any, record: any) => (
         <Radio.Group
           value={studentStatus[record.id]}
           onChange={(e) =>
@@ -123,38 +125,38 @@ const handleGradeChange = (value: string) => {
 
   return (
     <Row gutter={[16, 16]}>
-  <Col span={24}>
-    <Select
-      placeholder="Select Class"
-      loading={gradesDataLoading}
-      options={gradesOptions}
-      allowClear
-      style={{ width: 200, marginBottom: 16 }}
-      onChange={handleGradeChange}
-    />
-  </Col>
+      <Col span={24}>
+        <Select
+          placeholder="Select Grade"
+          loading={gradesDataLoading}
+          options={gradesOptions}
+          allowClear
+          style={{ width: 250 }}
+          onChange={handleGradeChange}
+        />
+      </Col>
 
-  {students.length > 0 && (
-    <Col span={24}>
-      <Table
-        rowKey="id"
-        bordered
-        columns={studentColumns}
-        dataSource={students}
-        pagination={false}
-      />
-    </Col>
-  )}
+      {studentByGradeData?.length > 0 && (
+        <Col span={24}>
+          <Table
+            rowKey="id"
+            bordered
+            loading={studentByGradeDataLoading}
+            columns={studentColumns}
+            dataSource={studentByGradeData}
+            pagination={false}
+          />
+        </Col>
+      )}
 
-  {students.length > 0 && (
-    <Col span={24}>
-      <Button type="primary" style={{ marginTop: 16 }} onClick={handleSubmit}>
-        Submit Attendance
-      </Button>
-    </Col>
-  )}
-</Row>
-
+      {studentByGradeData?.length > 0 && (
+        <Col span={24}>
+          <Button type="primary" onClick={handleSubmit}>
+            Submit Attendance
+          </Button>
+        </Col>
+      )}
+    </Row>
   );
 };
 

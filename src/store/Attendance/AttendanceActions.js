@@ -1,7 +1,7 @@
 // src/redux/actions/attendanceActions.js
 import axios from "axios";
-import { ADD_STAFF_ATTENDANCE, ATTENDANCE_STAFF_LIST, ATTENDANCE_STUDENT_LIST } from "./AttendanceType";
-import { attendanceStaffUrl, attendanceStudentUrl } from "../utils";
+import { ADD_STAFF_ATTENDANCE, ADD_STUDENT_ATTENDANCE, ATTENDANCE_STAFF_LIST, ATTENDANCE_STUDENT_LIST } from "./AttendanceType";
+import { attendanceStaffGetUrl, attendanceStaffUrl, attendanceStudentAddUrl, attendanceStudentUrl } from "../utils";
 
 export const attendanceStudentStart = () => ({
   type: ATTENDANCE_STUDENT_LIST.ATTENDANCE_STUDENT_LIST_START,
@@ -57,7 +57,7 @@ export const attendanceStaffStart = () => ({
     dispatch(attendanceStaffStart());
     try {
       const token = localStorage.getItem("authToken");
-      const response = await axios.get(attendanceStaffUrl, {
+      const response = await axios.get(attendanceStaffGetUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -106,5 +106,45 @@ export const addStaffAttendanceApi = (attendanceData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addStaffAttendanceFail(error.message));
+  }
+};
+
+// ---------- Add Student Attendance Actions ----------
+export const addStudentAttendanceStart = () => ({
+  type: ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_START,
+});
+
+export const addStudentAttendanceSuccess = (data) => ({
+  type: ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_SUCCESS,
+  payload: data,
+});
+
+export const addStudentAttendanceFail = (payload) => ({
+  type: ADD_STUDENT_ATTENDANCE.ADD_STUDENT_ATTENDANCE_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload?.message || "An error occurred",
+});
+
+export const addStudentAttendanceApi = (attendanceData) => async (dispatch) => {
+  dispatch(addStudentAttendanceStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    const response = await axios.post(attendanceStudentAddUrl, attendanceData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(addStudentAttendanceSuccess(response.data));
+    console.log(response.data, "add student attendance response");
+    return response.data;
+
+  } catch (error) {
+    dispatch(addStudentAttendanceFail(error.message));
   }
 };

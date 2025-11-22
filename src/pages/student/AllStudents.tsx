@@ -28,6 +28,7 @@ const AllStudents = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const role = localStorage.getItem("userRole"); // get user role
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -120,9 +121,11 @@ const AllStudents = () => {
             okText="Yes"
             cancelText="No"
           >
+            {(role === "SuperAdmin" || role === "Admin") && (
             <Tag color={"red"} style={{ cursor: 'pointer'}}>
           Delete
           </Tag>
+            )}
           </Popconfirm>
         </>
       ),

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import { fetchStaffApi } from "../../store/Staff/StaffActions";
 import { addStaffAttendanceApi } from "../../store/Attendance/AttendanceActions";
+import { fetchAttendanceTypesApi } from "../../store/Dropdowns/DropdownActions";
 
 const { Content } = Layout;
 
@@ -23,12 +24,25 @@ const AddStaffAttendance = () => {
     staffDataError: boolean;
   }
 
+  interface AttendanceTypesState {
+    attendanceTypesData: [];
+    attendanceTypesDataLoading: boolean;
+    attendanceTypesDataError: boolean;
+  }
+
   const { staffData, staffDataLoading } = useSelector(
     (state: RootState) => state.staff as StaffState
   );
 
+  const { attendanceTypesData, attendanceTypesDataLoading } = useSelector(
+    (state: RootState) => state.departments as AttendanceTypesState
+  );
+
+  console.log("attendanceTypesData",attendanceTypesData)
+
   useEffect(() => {
     dispatch(fetchStaffApi());
+    dispatch(fetchAttendanceTypesApi());
   }, [dispatch]);
 
   const formattedStaffData: Staff[] =
@@ -58,7 +72,7 @@ const AddStaffAttendance = () => {
     }));
 
     try {
-      await dispatch(addStaffAttendanceApi({ att: attendanceArray }));
+      await dispatch(addStaffAttendanceApi( attendanceArray ));
       message.success("Staff attendance submitted successfully!");
     } catch (error) {
       console.error(error);

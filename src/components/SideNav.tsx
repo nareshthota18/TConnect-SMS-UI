@@ -14,6 +14,8 @@ import {
   CalendarOutlined,
   BankOutlined,
   ApartmentOutlined,
+  DatabaseOutlined,
+  GiftOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Drawer, Button } from "antd";
 import type { MenuProps } from "antd";
@@ -59,6 +61,11 @@ const SideNav: React.FC<SideNavProps> = ({
         icon: <BankOutlined />,
         label: <Link to="/schools">Schools</Link>,
       },
+      {
+        key: "/lookup",
+        icon: <DatabaseOutlined />,
+        label: <Link to="/lookup">LookUp</Link>,
+      },
     ]
   : []),
     {
@@ -71,17 +78,13 @@ const SideNav: React.FC<SideNavProps> = ({
       icon: <CalendarOutlined />,
       label: <Link to="/activities">Activities</Link>,
     },
-    ...(role === "Admin"
+    ...(role === "SuperAdmin" || role === "Admin"
     ? [
         {
           key: "/staff",
           icon: <TeamOutlined />,
           label: <Link to="/staff">Staff</Link>,
         },
-      ]
-    : []),
-    ...(role === "SuperAdmin" || role === "Admin"
-    ? [
         {
           key: "/inventory",
           icon: <AppstoreOutlined />,
@@ -128,6 +131,11 @@ const SideNav: React.FC<SideNavProps> = ({
     ]
   : []),
     {
+      key: "/holidays",
+      icon: <GiftOutlined />,
+      label: <Link to="/holidays">Holidays</Link>,
+    },
+    {
       key: "logout",
       icon: <LogoutOutlined />,
       label: "Logout",
@@ -166,7 +174,7 @@ const SideNav: React.FC<SideNavProps> = ({
       <Menu
         mode="inline"
         selectedKeys={[location.pathname]}
-        style={{ height: "100%", borderInlineEnd: 0 }}
+        style={{ height: "100%", borderInlineEnd: 0, overflowY: "auto" }}
         items={items}
       />
     </Sider>
