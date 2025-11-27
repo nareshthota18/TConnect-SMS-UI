@@ -1,5 +1,5 @@
-export const base_url = 'http://15.206.123.114:5059/api';
-// export const base_url = 'https://localhost:7242/api';
+// export const base_url = 'http://15.206.123.114:5059/api';
+export const base_url = 'https://localhost:7242/api';
 
 export const loginUrl = `${base_url}/Token`;
 export const studenturl = `${base_url}/Students`;
@@ -13,6 +13,7 @@ export const attendanceStaffUrl = `${base_url}/Attendance/staffList`;
 export const attendanceStudentAddUrl = `${base_url}/Attendance/studentList`;
 export const itemTypeUrl = `${base_url}/Item/GetItemTypes`;
 export const addInventoryItemUrl = `${base_url}/Item/Create`;
+export const getItemsUrl = `${base_url}/Item/GetAll`;
 export const usersUrl = `${base_url}/Users/GetAll`;
 export const addUsersUrl = `${base_url}/Users/Create`;
 export const deleteUserUrl = (id) => `${base_url}/Users/Delete/${id}`;
@@ -24,6 +25,7 @@ export const addAssetUrl = `${base_url}/Assets`;
 export const departmentsUrl = `${base_url}/Lookup/departments`;
 export const designationsUrl = `${base_url}/Lookup/designations`;
 export const gradesUrl = `${base_url}/Lookup/grades`;
+export const itemtypesUrl = `${base_url}/Lookup/itemtypes`;
 export const categoriesUrl = `${base_url}/Lookup/categories`;
 export const deleteAssetUrl = (id) => `${base_url}/Assets/${id}`;
 export const deleteStaffUrl = (id) => `${base_url}/Staff/${id}`;
@@ -38,3 +40,7 @@ export const holidayUrl = (hostelId) => `${base_url}/SchoolHoliday/${hostelId}`;
 export const addHolidayUrl = `${base_url}/SchoolHoliday`;
 export const activityUrl = (hostelId) => `${base_url}/SchoolActivities/hostel/${hostelId}`;
 export const addActivityUrl = `${base_url}/SchoolActivities`;
+export const groceryConsumptionListUrl = (rsHostelId) => `${base_url}/Consumption/${rsHostelId}`;
+export const addGroceryConsumptionUrl = `${base_url}/Consumption`;
+export const deleteGroceryConsumptionUrl = (id) => `${base_url}/Consumption/${id}`;
+

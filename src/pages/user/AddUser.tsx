@@ -5,12 +5,13 @@ import { AppDispatch, RootState } from "../../store/store";
 import { fetchStaffApi } from "../../store/Staff/StaffActions";
 import { fetchRolesApi } from "../../store/Roles/RoleActions";
 import { addUserApi, fetchUserApi } from "../../store/Users/UserActions";
+import { fetchSchoolsApi } from "../../store/Schools/SchoolsActions";
 
 const { Option } = Select;
 
 const AddUser = () => {
   const [form] = Form.useForm();
-  const [staffOptions, setStaffOptions] = useState<{ label: string; value: string }[]>([]);
+  const [schoolOptions, setSchoolOptions] = useState<{ label: string; value: string }[]>([]);
   const [rollOptions, setRollOptions] = useState<{ label: string; value: string }[]>([]);
   const dispatch = useDispatch<AppDispatch>();
   const role = localStorage.getItem("userRole"); 
@@ -33,6 +34,12 @@ interface UserState {
   addUserError: false,
 }
 
+interface SchoolsState {
+  schoolsData: any[];
+  schoolsDataLoading: boolean;
+  schoolsDataError: boolean;
+}
+
 const { addUserData, addUserLoading } = useSelector(
   (state: RootState) => state.user as UserState
 );
@@ -45,20 +52,25 @@ const { staffData, staffDataLoading } = useSelector(
   (state: RootState) => state.staff as StaffState
 );
 
+const { schoolsData, schoolsDataLoading } = useSelector(
+  (state: RootState) => state.schools as SchoolsState
+);
+
 useEffect(() => {
   dispatch(fetchStaffApi());
   dispatch(fetchRolesApi());
+  dispatch(fetchSchoolsApi());
 }, [dispatch]);
 
 useEffect(() => {
-  if (staffData?.length) {
-    const options = staffData.map((item: { id: string; fullName: string }) => ({
-      label: item.fullName,
-      value: item.id,
+  if (schoolsData?.length) {
+    const options = schoolsData.map((item: { schoolId: string; schoolName: string }) => ({
+      label: item.schoolName,
+      value: item.schoolId,
     }));
-    setStaffOptions(options);
+    setSchoolOptions(options);
   }
-}, [staffData]);
+}, [schoolsData]);
 
 // Role dropdown - filter based on logged-in role
 useEffect(() => {
@@ -86,8 +98,8 @@ const handleSubmit = async (values: any) => {
     username: values.username,
     email: values.email,
     phone: values.phone,
-    staffId: values.staff,
     roleId: values.role,
+    rsHostelId: values.school,
     externalId: values.externalId || "",
     isActive: values.isActive ?? true,
   };
@@ -159,14 +171,14 @@ const handleSubmit = async (values: any) => {
 
         <Col xs={24} sm={12} md={12} lg={8} >
           <Form.Item
-            label="Staff"
-            name="staff"
+            label="Select School"
+            name="school"
             rules={[{ required: true, message: "Please select Staff" }]}
           >
              <Select
                         placeholder="Select Item Type"
-                        loading={staffDataLoading}
-                        options={staffOptions}
+                        loading={schoolsDataLoading}
+                        options={schoolOptions}
                         allowClear
                       />
           </Form.Item>

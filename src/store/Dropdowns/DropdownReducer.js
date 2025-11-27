@@ -1,6 +1,6 @@
 // src/redux/reducers/departmentsReducer.js
 import { produce } from "immer";
-import { ADD_ATTENDANCE_TYPES, ADD_CATEGORIES, ADD_DEPARTMENTS, ADD_DESIGNATIONS, ADD_GRADES, ATTENDANCE_TYPES_LIST, CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
+import { ADD_ATTENDANCE_TYPES, ADD_CATEGORIES, ADD_DEPARTMENTS, ADD_DESIGNATIONS, ADD_GRADES, ADD_ITEM_TYPES, ATTENDANCE_TYPES_LIST, CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST, ITEM_TYPES_LIST } from "./DropdownType";
 
 const initialState = {
   departmentsData: [],
@@ -42,6 +42,14 @@ const initialState = {
   addAttendanceTypesData: [],
   addAttendanceTypesDataLoading: false,
   addAttendanceTypesDataError: false,
+
+  itemTypesData: [], 
+  itemTypesDataLoading: false,
+  itemTypesDataError: false, 
+
+  addItemTypesData: [],           
+  addItemTypesDataLoading: false, 
+  addItemTypesDataError: false,
 
 };
 
@@ -230,6 +238,37 @@ case ADD_ATTENDANCE_TYPES.ADD_ATTENDANCE_TYPES_FAIL:
   break;
 
 
+  case ITEM_TYPES_LIST.ITEM_TYPES_LIST_START:
+      draft.itemTypesDataLoading = true;
+      draft.itemTypesDataError = false;
+      break;
+    case ITEM_TYPES_LIST.ITEM_TYPES_LIST_SUCCESS:
+      draft.itemTypesDataLoading = false;
+      draft.itemTypesData = action.payload;
+      draft.itemTypesDataError = false;
+      break;
+    case ITEM_TYPES_LIST.ITEM_TYPES_LIST_FAIL:
+      draft.itemTypesDataLoading = false;
+      draft.itemTypesData = [];
+      draft.itemTypesDataError = action.payload;
+      break;
+
+
+        /** ✅ Add Item Types */
+    case ADD_ITEM_TYPES.ADD_ITEM_TYPES_START:
+      draft.addItemTypesDataLoading = true;
+      draft.addItemTypesDataError = false;
+      break;
+    case ADD_ITEM_TYPES.ADD_ITEM_TYPES_SUCCESS:
+      draft.addItemTypesDataLoading = false;
+      draft.addItemTypesData = action.payload;
+      draft.addItemTypesDataError = false;
+      break;
+    case ADD_ITEM_TYPES.ADD_ITEM_TYPES_FAIL:
+      draft.addItemTypesDataLoading = false;
+      draft.addItemTypesData = [];
+      draft.addItemTypesDataError = action.payload;
+      break;
 
 
     default:

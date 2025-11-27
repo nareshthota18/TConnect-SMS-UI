@@ -1,222 +1,191 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   Input,
   Button,
   Row,
   Col,
-  Select,
   InputNumber,
-  Space,
+  Select,
 } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { fetchItemTypeApi, addInventoryItemApi } from "../../store/Inventory/InventoryActions";
+
+import {
+  fetchItemsListApi,
+  addInventoryItemDetailsApi,
+} from "../../store/Inventory/InventoryActions";
 
 const { Option } = Select;
 
 const AddInventory: React.FC = () => {
   const [form] = Form.useForm();
-  const [itemOptions, setItemOptions] = useState<{ label: string; value: string }[]>([]);
   const dispatch = useDispatch<AppDispatch>();
+  const schoolId = localStorage.getItem("schoolId");
 
-  interface ItemTypeState {
-    itemTypeData: any;
-    itemTypeDataLoading: boolean;
-    itemTypeDataError: boolean;
+  interface Item {
+    id: string;
+    itemCode: string;
+    name: string;
+    itemTypeName: string;
+    uom: string;
+    reorderLevel: number;
+    isActive: boolean;
   }
 
-  interface AddInventoryState {
-    addInventoryItemData: any;
-    addInventoryItemLoading: boolean;
-    addInventoryItemError: boolean;
+  interface ItemState {
+    getItemsListData: Item[];
+    getItemsListLoading: boolean;
   }
 
-  const { itemTypeData, itemTypeDataLoading } = useSelector(
-    (state: RootState) => state.inventory as ItemTypeState
+  interface AddInventoryDetailsState {
+    addInventoryItemDetailsLoading: boolean;
+  }
+
+  // Redux State
+  const { getItemsListData, getItemsListLoading } = useSelector(
+    (state: RootState) => state.inventory as ItemState
   );
 
-  const { addInventoryItemLoading } = useSelector(
-    (state: RootState) => state.inventory as AddInventoryState
+  const { addInventoryItemDetailsLoading } = useSelector(
+    (state: RootState) => state.inventory as AddInventoryDetailsState
   );
 
-  // Fetch Item Types
+  // Fetch Items for dropdown
   useEffect(() => {
-    dispatch(fetchItemTypeApi());
+    dispatch(fetchItemsListApi());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (itemTypeData?.length) {
-      const options = itemTypeData.map((item: { id: string; name: string }) => ({
-        label: item.name,
-        value: item.id,
-      }));
-      setItemOptions(options);
-    }
-  }, [itemTypeData]);
-
-  // Form Submit
+  // Submit
   const onFinish = async (values: any) => {
-    try {
-      for (const item of values.inventories) {
-        const payload = {
-          itemCode: item.itemCode,
-          name: item.itemName, // must match schema
-          itemTypeId: item.category,
-          uom: item.uom?.toString(), // convert number to string
-          reorderLevel: item.reorderlevel,
-          isActive: item.status === "available", // map status to boolean
-          itemTypeName: itemTypeData.find((i: any) => i.id === item.category)?.name || ""
-        };
-  
-        await dispatch(addInventoryItemApi(payload));
-      }
-  
-      form.resetFields();
-      form.setFieldsValue({ inventories: [{}] });
-    } catch (error) {
-      console.error("Error adding inventory item:", error);
-    }
+    const payload = {
+      rsHostelId: schoolId,
+      itemId: values.itemId,
+      openingBalance: values.openingBalance,
+      quantityReceived: values.quantityReceived,
+      quantityIssued: values.quantityIssued,
+      quantityInHand: values.quantityInHand,
+    };
+
+    console.log("Final Payload →", payload);
+
+    await dispatch(addInventoryItemDetailsApi(payload));
+
+    form.resetFields();
   };
-  
-  
 
   return (
     <Form
-      form={form}
       layout="vertical"
+      form={form}
       onFinish={onFinish}
       style={{ padding: 24 }}
-      initialValues={{ inventories: [{}] }}
     >
-      <Form.List name="inventories">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <div
-                key={key}
-                style={{
-                  border: "1px solid #f0f0f0",
-                  borderRadius: 8,
-                  padding: 16,
-                  marginBottom: 16,
-                  background: "#fafafa",
-                }}
-              >
-                <Row gutter={16}>
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "itemCode"]}
-                      label="Item Code"
-                      rules={[{ required: true, message: "Please enter item code" }]}
-                    >
-                      <Input placeholder="Enter inventory item code" />
-                    </Form.Item>
-                  </Col>
+      <Row gutter={16}>
+        {/* HOSTEL ID */}
+        {/* <Col xs={24} sm={12}>
+          <Form.Item
+            name="rsHostelId"
+            label="Hostel ID"
+            rules={[{ required: true, message: "Please enter Hostel ID" }]}
+          >
+            <Input placeholder="Enter Hostel ID" />
+          </Form.Item>
+        </Col> */}
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "itemName"]}
-                      label="Item Name"
-                      rules={[{ required: true, message: "Please enter item name" }]}
-                    >
-                      <Input placeholder="Enter inventory item name" />
-                    </Form.Item>
-                  </Col>
+        {/* ITEM ID DROPDOWN */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="itemId"
+            label="Item"
+            rules={[{ required: true, message: "Please select item" }]}
+          >
+            <Select
+              placeholder="Select Item"
+              loading={getItemsListLoading}
+              allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
+              options={getItemsListData.map((item) => ({
+                label: `${item.itemCode} - ${item.name}`,
+                value: item.id,
+              }))}
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "category"]}
-                      label="Category"
-                      rules={[{ required: true, message: "Please select category" }]}
-                    >
-                      <Select
-                        placeholder="Select Item Type"
-                        loading={itemTypeDataLoading}
-                        options={itemOptions}
-                        allowClear
-                      />
-                    </Form.Item>
-                  </Col>
+        {/* OPENING BALANCE */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="openingBalance"
+            label="Opening Balance"
+            rules={[{ required: true, message: "Enter Opening Balance" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Opening Balance"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "uom"]}
-                      label="UOM"
-                      rules={[{ required: true, message: "Please enter UOM" }]}
-                    >
-                      <InputNumber min={1} style={{ width: "100%" }} placeholder="Enter UOM" />
-                    </Form.Item>
-                  </Col>
+        {/* QUANTITY RECEIVED */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityReceived"
+            label="Quantity Received"
+            rules={[{ required: true, message: "Enter Quantity Received" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity Received"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "reorderlevel"]}
-                      label="Reorder Level"
-                      rules={[{ required: true, message: "Please enter Reorder Level" }]}
-                    >
-                      <InputNumber
-                        min={0}
-                        style={{ width: "100%" }}
-                        placeholder="Enter Reorder Level"
-                      />
-                    </Form.Item>
-                  </Col>
+        {/* QUANTITY ISSUED */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityIssued"
+            label="Quantity Issued"
+            rules={[{ required: true, message: "Enter Quantity Issued" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity Issued"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "status"]}
-                      label="Status"
-                      rules={[{ required: true, message: "Please select status" }]}
-                    >
-                      <Select placeholder="Select status">
-                        <Option value="available">Available</Option>
-                        <Option value="in-use">In Use</Option>
-                        <Option value="damaged">Damaged</Option>
-                        <Option value="discarded">Discarded</Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
-                </Row>
+        {/* QUANTITY IN HAND */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityInHand"
+            label="Quantity In Hand"
+            rules={[{ required: true, message: "Enter Quantity In Hand" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity In Hand"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-                {fields.length > 1 && (
-                  <Space style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <Button
-                      type="text"
-                      danger
-                      icon={<MinusCircleOutlined />}
-                      onClick={() => remove(name)}
-                    >
-                      Remove Item
-                    </Button>
-                  </Space>
-                )}
-              </div>
-            ))}
-
-            {/* Buttons Row */}
-            <Row justify="end" gutter={8}>
-              <Col>
-                <Button onClick={() => add()} icon={<PlusOutlined />}>
-                  Add Item
-                </Button>
-              </Col>
-              <Col>
-                <Button type="primary" htmlType="submit" loading={addInventoryItemLoading}>
-                  Submit All Inventory
-                </Button>
-              </Col>
-            </Row>
-          </>
-        )}
-      </Form.List>
+      <Row justify="end">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={addInventoryItemDetailsLoading}
+        >
+          Submit Inventory Details
+        </Button>
+      </Row>
     </Form>
   );
 };

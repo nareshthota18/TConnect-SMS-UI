@@ -6,54 +6,48 @@ import {
   Typography,
   Button,
   Flex,
-  Drawer,
+  Modal,
 } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
 import SideNav from "../../components/SideNav";
 import AddGrocery from "./AddGrocery";
 import AllGrocery from "./AllGrocery";
 import GroceriesDashboard from "./GroceriesDashboard";
 import GroceryConsumptionConfig from "./GroceryConsumptionConfig";
+import AddConfigItem from "./AddConfigItem";
+// 👉 If you have a component for Config Item Form, import it here
+// import AddConfigItem from "./AddConfigItem";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
-// Tabs for Grocery
 const items = [
   {
     label: "Groceries Dashboard",
     key: "1",
-    children: <GroceriesDashboard />
+    children: <GroceriesDashboard />,
   },
   {
     label: "All Groceries",
     key: "2",
-    children: <AllGrocery />
-  },
-  {
-    label: "Stock Management",
-    key: "3",
-    children: "Stock management details will go here.",
-  },
-  {
-    label: "Suppliers",
-    key: "4",
-    children: "Supplier details will go here.",
+    children: <AllGrocery />,
   },
   {
     label: "Grocery Consumption Config",
     key: "5",
-    children: <GroceryConsumptionConfig />
+    children: <GroceryConsumptionConfig />,
   },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const drawerHeaderStyle = {
+const headerStyle = {
   backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
   color: isDarkMode ? "#fff" : "#000",
-  fontWeight: 700,
+  padding: "12px 20px",
+  fontSize: 16,
+  // fontWeight: 700,
+  margin: 0,
 };
 
 const Grocery = () => {
@@ -61,16 +55,11 @@ const Grocery = () => {
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
 
-  // Drawer State
-  const [openDrawer, setOpenDrawer] = useState(false);
+  // Grocery Modal
+  const [openModal, setOpenModal] = useState(false);
 
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
-
-  const onCloseDrawer = () => {
-    setOpenDrawer(false);
-  };
+  // Config Modal
+  const [openConfigModal, setOpenConfigModal] = useState(false);
 
   return (
     <Layout>
@@ -82,8 +71,14 @@ const Grocery = () => {
           open={false}
         />
       )}
+
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: isMobile ? "12px" : "18px 24px", minHeight: 360 }}>
+        <Content
+          style={{
+            padding: isMobile ? "12px" : "18px 24px",
+            minHeight: 360,
+          }}
+        >
           <Flex justify="space-between">
             <Title
               level={3}
@@ -91,27 +86,64 @@ const Grocery = () => {
             >
               Grocery
             </Title>
-            <Button type="primary" onClick={showDrawer}>
-              Add Grocery
-            </Button>
+
+            <Flex gap={10}>
+              <Button type="primary" onClick={() => setOpenModal(true)}>
+                Add Grocery
+              </Button>
+
+              {/* NEW BUTTON */}
+              <Button type="default" onClick={() => setOpenConfigModal(true)}>
+                Add Config Item
+              </Button>
+            </Flex>
           </Flex>
 
           <Tabs items={items} />
 
-          {/* Drawer Component */}
-          <Drawer
-            title="Add New Grocery Item"
-            width= {isMobile ? '100%' : '80%' }
-            onClose={onCloseDrawer}
-            open={openDrawer}
-            bodyStyle={{ paddingBottom: 80 }}
-            headerStyle={drawerHeaderStyle}
-            maskClosable={false}
-            keyboard={false}
-            closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
+          {/* Grocery Add Modal */}
+          <Modal
+            open={openModal}
+            onCancel={() => setOpenModal(false)}
+            footer={null}
+            width={isMobile ? "100%" : "70%"}
+            style={{ top: isMobile ? 0 : 40 }}
+            bodyStyle={{ padding: 0, borderRadius: 12 }}
+            styles={{
+              content: {
+                borderRadius: 12,
+                overflow: "hidden",
+              },
+            }}
+            destroyOnClose
           >
-           <AddGrocery />
-          </Drawer>
+            <div style={headerStyle}>Add New Grocery Item</div>
+            <div style={{ padding: 24 }}>
+              <AddGrocery closeModal={() => setOpenModal(false)} />
+            </div>
+          </Modal>
+
+          {/* NEW CONFIG ITEM MODAL */}
+          <Modal
+            open={openConfigModal}
+            onCancel={() => setOpenConfigModal(false)}
+            footer={null}
+            width={isMobile ? "100%" : "60%"}
+            style={{ top: isMobile ? 0 : 40 }}
+            bodyStyle={{ padding: 0, borderRadius: 12 }}
+            styles={{
+              content: { borderRadius: 12, overflow: "hidden" },
+            }}
+            destroyOnClose
+          >
+            <div style={headerStyle}>Add Config Item</div>
+
+            <div style={{ padding: 24 }}>
+              {/* Replace this with your actual form */}
+              {/* Example: <AddConfigItem close={() => setOpenConfigModal(false)} /> */}
+              <AddConfigItem />
+            </div>
+          </Modal>
         </Content>
       </Layout>
     </Layout>

@@ -227,7 +227,7 @@ const Dashboard = () => {
                     <img
                       src={school}
                       alt="logo"
-                      style={{ width: 100, height: 100, borderRadius: "50%" }}
+                      style={{ width: 115, height: 115, borderRadius: "50%" }}
                     />
                   </Col>
                 </Row>

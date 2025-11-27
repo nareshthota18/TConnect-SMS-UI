@@ -1,7 +1,7 @@
 // src/redux/actions/departmentsActions.js
 import axios from "axios";
-import { attendanceTypesUrl, categoriesUrl, departmentsUrl, designationsUrl, gradesUrl } from "../utils";
-import { ADD_ATTENDANCE_TYPES, ADD_CATEGORIES, ADD_DEPARTMENTS, ADD_DESIGNATIONS, ADD_GRADES, ATTENDANCE_TYPES_LIST, CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST } from "./DropdownType";
+import { attendanceTypesUrl, categoriesUrl, departmentsUrl, designationsUrl, gradesUrl, itemtypesUrl } from "../utils";
+import { ADD_ATTENDANCE_TYPES, ADD_CATEGORIES, ADD_DEPARTMENTS, ADD_DESIGNATIONS, ADD_GRADES, ADD_ITEM_TYPES, ATTENDANCE_TYPES_LIST, CATEGORIES_LIST, DEPARTMENTS_LIST, DESIGNATIONS_LIST, GRADES_LIST, ITEM_TYPES_LIST } from "./DropdownType";
 
 // Action creators
 export const departmentsStart = () => ({
@@ -410,5 +410,96 @@ export const addAttendanceTypesApi = (postData) => async (dispatch) => {
     return response.data;
   } catch (error) {
     dispatch(addAttendanceTypesFail(error.message));
+  }
+};
+
+
+
+// ======================
+// ✅ Item Types List Actions
+// ======================
+
+export const itemTypesStart = () => ({
+  type: ITEM_TYPES_LIST.ITEM_TYPES_LIST_START,
+});
+
+export const itemTypesSuccess = (data) => ({
+  type: ITEM_TYPES_LIST.ITEM_TYPES_LIST_SUCCESS,
+  payload: data,
+});
+
+export const itemTypesFail = (payload) => ({
+  type: ITEM_TYPES_LIST.ITEM_TYPES_LIST_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload?.message || "An error occurred",
+});
+
+// Thunk to fetch item types
+export const fetchItemTypesApi = () => async (dispatch) => {
+  dispatch(itemTypesStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    const response = await axios.get(itemtypesUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(itemTypesSuccess(response.data));
+    console.log(response.data, "item types response");
+    return response.data;
+  } catch (error) {
+    dispatch(itemTypesFail(error.message));
+    return null;
+  }
+};
+
+
+
+// ======================
+// ✅ Add Item Types Actions
+// ======================
+
+export const addItemTypesStart = () => ({
+  type: ADD_ITEM_TYPES.ADD_ITEM_TYPES_START,
+});
+
+export const addItemTypesSuccess = (data) => ({
+  type: ADD_ITEM_TYPES.ADD_ITEM_TYPES_SUCCESS,
+  payload: data,
+});
+
+export const addItemTypesFail = (payload) => ({
+  type: ADD_ITEM_TYPES.ADD_ITEM_TYPES_FAIL,
+  payload:
+    typeof payload === "string"
+      ? payload
+      : payload?.message || "An error occurred",
+});
+
+// Thunk for POST
+export const addItemTypesApi = (postData) => async (dispatch) => {
+  dispatch(addItemTypesStart());
+  try {
+    const token = localStorage.getItem("authToken");
+
+    const response = await axios.post(itemtypesUrl, postData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    });
+
+    dispatch(addItemTypesSuccess(response.data));
+    console.log(response.data, "add item types response");
+    return response.data;
+  } catch (error) {
+    dispatch(addItemTypesFail(error.message));
   }
 };

@@ -6,53 +6,47 @@ import {
   Typography,
   Button,
   Flex,
-  Drawer,
+  Modal,
 } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import SideNav from "../../components/SideNav";
 import AddInventory from "./AddInventory";
 import AllInventory from "./AllInventory";
 import InventoryDashboard from "./InventoryDashboard";
+import AddItem from "./AddItem";
+import AllItems from "./AllItems";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
-// Tabs for Inventory
+// Tabs
 const items = [
   {
     label: "Inventory Dashboard",
     key: "1",
-    children: <InventoryDashboard  />
+    children: <InventoryDashboard />,
   },
   {
     label: "All Inventory",
     key: "2",
-    children: <AllInventory />
+    children: <AllInventory />,
   },
   {
-    label: "Inventory Reports",
+    label: "All Items",
     key: "3",
-    children: "Inventory reports will go here.",
-  },
-  {
-    label: "Categories",
-    key: "4",
-    children: "Inventory categories will go here.",
-  },
-  {
-    label: "Suppliers",
-    key: "5",
-    children: "Inventory suppliers will go here.",
-  },
+    children: <AllItems />,
+  }
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const drawerHeaderStyle = {
+// Reusable modal header style (same as User page)
+const modalStyle = {
   backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
   color: isDarkMode ? "#fff" : "#000",
   fontWeight: 700,
+  padding: "16px 24px",
 };
 
 const Inventory = () => {
@@ -60,16 +54,16 @@ const Inventory = () => {
   const isMobile = !screens.md;
   const [collapsed, setCollapsed] = useState(false);
 
-  // Drawer State
-  const [openDrawer, setOpenDrawer] = useState(false);
+  // Modal States
+  const [openAddItemModal, setOpenAddItemModal] = useState(false);
+  const [openAddInventoryModal, setOpenAddInventoryModal] = useState(false);
 
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
+  // Modal handlers
+  const showAddItemModal = () => setOpenAddItemModal(true);
+  const closeAddItemModal = () => setOpenAddItemModal(false);
 
-  const onCloseDrawer = () => {
-    setOpenDrawer(false);
-  };
+  const showAddInventoryModal = () => setOpenAddInventoryModal(true);
+  const closeAddInventoryModal = () => setOpenAddInventoryModal(false);
 
   return (
     <Layout>
@@ -81,36 +75,79 @@ const Inventory = () => {
           open={false}
         />
       )}
+
       <Layout style={{ padding: "2px" }}>
-        <Content style={{ padding: isMobile ? "12px" : "18px 24px" , minHeight: 360 }}>
-          <Flex justify="space-between">
+        <Content
+          style={{
+            padding: isMobile ? "12px" : "18px 24px",
+            minHeight: 360,
+          }}
+        >
+          {/* Header */}
+          <Flex
+            justify="space-between"
+            align={isMobile ? "start" : "center"}
+            vertical={isMobile}
+            gap="small"
+          >
             <Title
               level={3}
-              style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
+              style={{
+                fontWeight: 700,
+                margin: 0,
+                color: "#1F2937",
+              }}
             >
               Inventory
             </Title>
-            <Button type="primary" onClick={showDrawer}>
-              Add Inventory
-            </Button>
+
+            <Flex gap="middle">
+              <Button type="primary" onClick={showAddItemModal}>
+                Add Item
+              </Button>
+
+              <Button type="primary" onClick={showAddInventoryModal}>
+                Add Inventory
+              </Button>
+            </Flex>
           </Flex>
 
+          {/* Tabs */}
           <Tabs items={items} />
 
-          {/* Drawer Component */}
-          <Drawer
-            title="Add New Inventory Item"
-            width= {isMobile ? '100%' : '80%' }
-            onClose={onCloseDrawer}
-            open={openDrawer}
-            bodyStyle={{ paddingBottom: 80 }}
-            headerStyle={drawerHeaderStyle}
+          {/* Add Item Modal */}
+          <Modal
+            title="Add New Item"
+            open={openAddItemModal}
+            onCancel={closeAddItemModal}
+            footer={null}
+            width={isMobile ? "95%" : "60%"}
+            styles={{
+              header: modalStyle,
+            }}
+            bodyStyle={{ padding: 0 }}
+            closeIcon={<CloseOutlined />}
             maskClosable={false}
-            keyboard={false}
-            closeIcon={<CloseOutlined style={{ color: "#000", fontSize: "18px" }} />}
+          >
+            <AddItem />
+          </Modal>
+
+          {/* Add Inventory Modal */}
+          <Modal
+            title="Add New Inventory"
+            open={openAddInventoryModal}
+            onCancel={closeAddInventoryModal}
+            footer={null}
+            width={isMobile ? "95%" : "60%"}
+            styles={{
+              header: modalStyle,
+            }}
+            bodyStyle={{ padding: 0 }}
+            closeIcon={<CloseOutlined />}
+            maskClosable={false}
           >
             <AddInventory />
-          </Drawer>
+          </Modal>
         </Content>
       </Layout>
     </Layout>

@@ -20,6 +20,8 @@ import DepartmentsList from "./DepartmentsList";
 import GradesList from "./GradesList";
 import DesignationsList from "./DesignationsList";
 import AttendanceTypesList from "./AttendanceTypesList";
+import Itemtypes from "./Itemtypes";
+import ItemtypesList from "./ItemtypesList";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
@@ -32,6 +34,7 @@ const items = [
   { label: "Grades", key: "3", children: <GradesList /> },
   { label: "Designations", key: "4", children: <DesignationsList /> },
   { label: "Attendance Types", key: "5", children: <AttendanceTypesList /> },
+  { label: "Item Types", key: "6", children: <ItemtypesList /> },
 ];
 
 // Dynamic button name map
@@ -41,6 +44,7 @@ const buttonLabels: Record<string, string> = {
     "3": "Add Grade",
     "4": "Add Designation",
     "5": "Add Attendance Type",
+    "6": "Add Item Type",
   };  
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -78,6 +82,8 @@ const LookUp: React.FC = () => {
         return <Designations />;
       case "5":
         return <AttendanceTypes />;
+      case "6":
+      return <Itemtypes />;
       default:
         return <p>No form available.</p>;
     }

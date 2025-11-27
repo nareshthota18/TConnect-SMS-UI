@@ -8,14 +8,13 @@ import { fetchInventoryApi, deleteInventoryItemApi } from "../../store/Inventory
 
 interface Inventory {
   id: string;
-  itemCode: string;
-  name: string;
-  itemTypeId: string;
-  uom: string;
-  reorderLevel: number;
-  isActive: boolean;
-  itemTypeName: string;
+  itemId: string;
+  openingBalance: number;
+  quantityReceived: number;
+  quantityIssued: number;
+  quantityInHand: number;
 }
+
 
 const AllInventory: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -78,48 +77,34 @@ const AllInventory: React.FC = () => {
   // ✅ Match API fields
   const columns: ColumnsType<Inventory> = [
     {
-      title: "Item Code",
-      dataIndex: "itemCode",
-      key: "itemCode",
-      ...getColumnSearchProps("itemCode"),
+      title: "Item ID",
+      dataIndex: "itemId",
+      key: "itemId",
+      ...getColumnSearchProps("itemId"),
     },
     {
-      title: "Item Name",
-      dataIndex: "name",
-      key: "name",
-      ...getColumnSearchProps("name"),
+      title: "Opening Balance",
+      dataIndex: "openingBalance",
+      key: "openingBalance",
+      sorter: (a, b) => a.openingBalance - b.openingBalance,
     },
     {
-      title: "Category",
-      dataIndex: "itemTypeName",
-      key: "itemTypeName",
-      filters: Array.from(
-        new Set(inventoryData?.map((item) => item.itemTypeName))
-      ).map((cat) => ({ text: cat, value: cat })),
-      onFilter: (value, record) => record.itemTypeName === value,
+      title: "Quantity Received",
+      dataIndex: "quantityReceived",
+      key: "quantityReceived",
+      sorter: (a, b) => a.quantityReceived - b.quantityReceived,
     },
     {
-      title: "UOM",
-      dataIndex: "uom",
-      key: "uom",
+      title: "Quantity Issued",
+      dataIndex: "quantityIssued",
+      key: "quantityIssued",
+      sorter: (a, b) => a.quantityIssued - b.quantityIssued,
     },
     {
-      title: "Reorder Level",
-      dataIndex: "reorderLevel",
-      key: "reorderLevel",
-      sorter: (a, b) => a.reorderLevel - b.reorderLevel,
-    },
-    {
-      title: "Status",
-      dataIndex: "isActive",
-      key: "isActive",
-      filters: [
-        { text: "Active", value: true },
-        { text: "Inactive", value: false },
-      ],
-      onFilter: (value, record) => record.isActive === value,
-      render: (isActive: boolean) =>
-        isActive ? <Tag color="green">Active</Tag> : <Tag color="red">Inactive</Tag>,
+      title: "Quantity In Hand",
+      dataIndex: "quantityInHand",
+      key: "quantityInHand",
+      sorter: (a, b) => a.quantityInHand - b.quantityInHand,
     },
     {
       title: "Action",
@@ -131,13 +116,14 @@ const AllInventory: React.FC = () => {
           okText="Yes"
           cancelText="No"
         >
-           <Tag color={"red"} style={{ cursor: 'pointer'}}>
-          Delete
+          <Tag color="red" style={{ cursor: "pointer" }}>
+            Delete
           </Tag>
         </Popconfirm>
       ),
     },
   ];
+  
 
   return (
     <Table<Inventory>

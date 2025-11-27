@@ -16,7 +16,6 @@ interface Attendance {
 const StudentAttendance: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  // Redux state type
   interface AttendanceState {
     attendanceStudentData: Attendance[];
     attendanceStudentDataLoading: boolean;
@@ -31,12 +30,11 @@ const StudentAttendance: React.FC = () => {
     (state: RootState) => state.attendanceStudent as AttendanceState
   );
 
-  // Fetch attendance list on component mount
   useEffect(() => {
     dispatch(fetchAttendanceStudentApi());
   }, [dispatch]);
 
-  // Search for Student Name
+  // ⭐ Search for Student Name
   const getColumnSearchProps = (
     dataIndex: keyof Attendance
   ): ColumnType<Attendance> => ({
@@ -60,37 +58,24 @@ const StudentAttendance: React.FC = () => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
   });
 
-  // Generate last 7 days filters
-  const getLast7DaysFilters = () => {
-    const filters = [];
-    const today = new Date();
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() - i);
-      const formattedDate = date.toISOString().split("T")[0]; // YYYY-MM-DD
-      filters.push({ text: formattedDate, value: formattedDate });
-    }
-    return filters;
-  };
-
-   // ⭐⭐ MAP API RESPONSE → TABLE FORMAT ⭐⭐
-   const mappedAttendance: Attendance[] = attendanceStudentData?.map((item: any) => ({
-    id: item.studentId, // student identifier
+  // ⭐ Map API response into table format
+  const mappedAttendance: Attendance[] =
+  attendanceStudentData?.map((item: any) => ({
+    id: item.id, // <-- FIXED (unique per record)
     name: item.studentName || "N/A",
-    date: item.attendanceDate?.split("T")[0], // extract "2025-11-16"
+    date: item.attendanceDate?.split("T")[0],
     status: item.status,
   })) || [];
 
+
+  // ⭐ Table Columns (NO 7 DAYS FILTER)
   const columns: ColumnsType<Attendance> = [
-    // {
-    //   title: "Student ID",
-    //   dataIndex: "id",
-    //   key: "id",
-    //   sorter: (a, b) => a.id - b.id,
-    // },
     {
       title: "Student Name",
       dataIndex: "name",
@@ -101,9 +86,8 @@ const StudentAttendance: React.FC = () => {
       title: "Date",
       dataIndex: "date",
       key: "date",
-      sorter: (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
-      filters: getLast7DaysFilters(),
-      onFilter: (value, record) => record.date === value,
+      sorter: (a, b) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime(),
     },
     {
       title: "Status",
@@ -143,11 +127,7 @@ const StudentAttendance: React.FC = () => {
       columns={columns}
       dataSource={mappedAttendance}
       rowKey="id"
-      pagination={
-        mappedAttendance.length > 10
-          ? { pageSize: 10 }
-          : false
-      }
+      pagination={{ pageSize: 10 }}
       bordered
       scroll={{ x: "max-content" }}
     />

@@ -1,164 +1,195 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Form,
   Input,
   Button,
   Row,
   Col,
-  Select,
   InputNumber,
-  Space,
-  DatePicker,
+  Select,
 } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+
+import {
+  fetchItemsListApi,
+  addInventoryItemDetailsApi,
+} from "../../store/Inventory/InventoryActions";
 
 const { Option } = Select;
 
-const AddGrocery: React.FC = () => {
-  const [form] = Form.useForm();
+interface AddGroceryProps {
+  closeModal: () => void;
+}
 
-  const onFinish = (values: any) => {
-    console.log("Grocery Data:", values);
-    // Reset form with one empty record after submit
+const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
+  const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>();
+  const schoolId = localStorage.getItem("schoolId");
+
+  interface Item {
+    id: string;
+    itemCode: string;
+    name: string;
+    itemTypeName: string;
+    uom: string;
+    reorderLevel: number;
+    isActive: boolean;
+  }
+
+  interface ItemState {
+    getItemsListData: Item[];
+    getItemsListLoading: boolean;
+  }
+
+  interface AddInventoryDetailsState {
+    addInventoryItemDetailsLoading: boolean;
+  }
+
+  // Redux State
+  const { getItemsListData, getItemsListLoading } = useSelector(
+    (state: RootState) => state.inventory as ItemState
+  );
+
+  const { addInventoryItemDetailsLoading } = useSelector(
+    (state: RootState) => state.inventory as AddInventoryDetailsState
+  );
+
+  // Fetch Items for dropdown
+  useEffect(() => {
+    dispatch(fetchItemsListApi());
+  }, [dispatch]);
+
+  // Submit
+  const onFinish = async (values: any) => {
+    const payload = {
+      rsHostelId: schoolId,
+      itemId: values.itemId,
+      openingBalance: values.openingBalance,
+      quantityReceived: values.quantityReceived,
+      quantityIssued: values.quantityIssued,
+      quantityInHand: values.quantityInHand,
+    };
+
+    console.log("Final Payload →", payload);
+
+    await dispatch(addInventoryItemDetailsApi(payload));
+
     form.resetFields();
-    form.setFieldsValue({ groceries: [{}] });
   };
 
   return (
     <Form
-      form={form}
       layout="vertical"
+      form={form}
       onFinish={onFinish}
-      style={{ padding: 24 }}
-      initialValues={{ groceries: [{}] }}
+      // style={{ padding: 24 }}
     >
-      <Form.List name="groceries">
-        {(fields, { add, remove }) => (
-          <>
-            {fields.map(({ key, name, ...restField }) => (
-              <div
-                key={key}
-                style={{
-                  border: "1px solid #f0f0f0",
-                  borderRadius: 8,
-                  padding: 16,
-                  marginBottom: 16,
-                  background: "#fafafa",
-                }}
-              >
-                <Row gutter={16}>
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "itemName"]}
-                      label="Item Name"
-                      rules={[{ required: true, message: "Please enter item name" }]}
-                    >
-                      <Input placeholder="Enter grocery item name" />
-                    </Form.Item>
-                  </Col>
+      <Row gutter={16}>
+        {/* HOSTEL ID */}
+        {/* <Col xs={24} sm={12}>
+          <Form.Item
+            name="rsHostelId"
+            label="Hostel ID"
+            rules={[{ required: true, message: "Please enter Hostel ID" }]}
+          >
+            <Input placeholder="Enter Hostel ID" />
+          </Form.Item>
+        </Col> */}
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "category"]}
-                      label="Category"
-                      rules={[{ required: true, message: "Please select category" }]}
-                    >
-                      <Select placeholder="Select category">
-                        <Option value="vegetable">Vegetable</Option>
-                        <Option value="fruit">Fruit</Option>
-                        <Option value="dairy">Dairy</Option>
-                        <Option value="beverage">Beverage</Option>
-                      </Select>
-                    </Form.Item>
-                  </Col>
+        {/* ITEM ID DROPDOWN */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="itemId"
+            label="Item"
+            rules={[{ required: true, message: "Please select item" }]}
+          >
+            <Select
+              placeholder="Select Item"
+              loading={getItemsListLoading}
+              allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? "").toLowerCase().includes(input.toLowerCase())
+              }
+              options={getItemsListData.map((item) => ({
+                label: `${item.itemCode} - ${item.name}`,
+                value: item.id,
+              }))}
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "quantity"]}
-                      label="Quantity"
-                      rules={[{ required: true, message: "Please enter quantity" }]}
-                    >
-                      <InputNumber
-                        min={1}
-                        style={{ width: "100%" }}
-                        placeholder="Enter quantity"
-                      />
-                    </Form.Item>
-                  </Col>
+        {/* OPENING BALANCE */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="openingBalance"
+            label="Opening Balance"
+            rules={[{ required: true, message: "Enter Opening Balance" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Opening Balance"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "price"]}
-                      label="Price"
-                      rules={[{ required: true, message: "Please enter price" }]}
-                    >
-                      <InputNumber
-                        min={0}
-                        style={{ width: "100%" }}
-                        placeholder="Enter price"
-                        prefix="₹"
-                      />
-                    </Form.Item>
-                  </Col>
+        {/* QUANTITY RECEIVED */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityReceived"
+            label="Quantity Received"
+            rules={[{ required: true, message: "Enter Quantity Received" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity Received"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "supplier"]}
-                      label="Supplier"
-                      rules={[{ required: true, message: "Please enter supplier name" }]}
-                    >
-                      <Input placeholder="Enter supplier name" />
-                    </Form.Item>
-                  </Col>
+        {/* QUANTITY ISSUED */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityIssued"
+            label="Quantity Issued"
+            rules={[{ required: true, message: "Enter Quantity Issued" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity Issued"
+            />
+          </Form.Item>
+        </Col>
 
-                  <Col xs={24} sm={12} md={12} lg={8}>
-                    <Form.Item
-                      {...restField}
-                      name={[name, "expiryDate"]}
-                      label="Expiry Date"
-                      rules={[{ required: true, message: "Please select expiry date" }]}
-                    >
-                      <DatePicker style={{ width: '100%'}} />
-                    </Form.Item>
-                  </Col>
-                </Row>
+        {/* QUANTITY IN HAND */}
+        <Col xs={24} sm={12}>
+          <Form.Item
+            name="quantityInHand"
+            label="Quantity In Hand"
+            rules={[{ required: true, message: "Enter Quantity In Hand" }]}
+          >
+            <InputNumber
+              min={0}
+              style={{ width: "100%" }}
+              placeholder="Quantity In Hand"
+            />
+          </Form.Item>
+        </Col>
+      </Row>
 
-                {fields.length > 1 && (
-                  <Space style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <Button
-                      type="text"
-                      danger
-                      icon={<MinusCircleOutlined />}
-                      onClick={() => remove(name)}
-                    >
-                      Remove Item
-                    </Button>
-                  </Space>
-                )}
-              </div>
-            ))}
-
-            {/* Buttons row */}
-            <Row justify="end" gutter={8}>
-              <Col>
-                <Button onClick={() => add()} icon={<PlusOutlined />}>
-                  Add Item
-                </Button>
-              </Col>
-              <Col>
-                <Button type="primary" htmlType="submit">
-                  Submit All Groceries
-                </Button>
-              </Col>
-            </Row>
-          </>
-        )}
-      </Form.List>
+      <Row justify="end">
+        <Button
+          type="primary"
+          htmlType="submit"
+          loading={addInventoryItemDetailsLoading}
+        >
+          Submit Inventory Details
+        </Button>
+      </Row>
     </Form>
   );
 };

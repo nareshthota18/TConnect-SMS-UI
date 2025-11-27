@@ -1,69 +1,68 @@
-import React, { useState, useEffect } from "react";
-import { Table, Button, Modal, Form, Input, Space, Popconfirm } from "antd";
+import React, { useEffect } from "react";
+import { Table, Popconfirm, message } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import type { ColumnsType } from "antd/es/table";
+import { fetchGroceryConsumptionListApi, deleteGroceryConsumptionApi } from "../../store/Grocery/GroceryActions";
+import { AppDispatch, RootState } from "../../store/store";
+import { DeleteOutlined } from "@ant-design/icons";
 
 interface Consumption {
-  item: string;
+  id: string;
+  itemName: string;
   quantity: string;
+  frequency: string;
+  gradeName: string;
+  hostelName: string;
 }
 
 const GroceryConsumptionConfig: React.FC = () => {
-  const [data, setData] = useState<Consumption[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [editingItem, setEditingItem] = useState<Consumption | null>(null);
-  const [form] = Form.useForm();
+  const dispatch = useDispatch<AppDispatch>();
+  const schoolId = localStorage.getItem("schoolId");
+
+  interface groceryConsumptionListState {
+    groceryConsumptionListData: any[];
+    groceryConsumptionListLoading: boolean;
+  }
+
+  const { groceryConsumptionListData, groceryConsumptionListLoading } =
+    useSelector((state: RootState) => state.grocery as groceryConsumptionListState);
 
   useEffect(() => {
-    const consumptionData: Consumption[] = [
-      { item: "Rice", quantity: "200g" },
-      { item: "Dal", quantity: "50g" },
-      { item: "Vegetables", quantity: "100g" },
-      { item: "Oil", quantity: "10ml" },
-    ];
-    setData(consumptionData);
-  }, []);
+    dispatch(fetchGroceryConsumptionListApi(schoolId));
+  }, [dispatch]);
 
-  // Show modal for Add/Edit
-  const showModal = (record?: Consumption) => {
-    if (record) {
-      setEditingItem(record);
-      form.setFieldsValue(record);
-    } else {
-      setEditingItem(null);
-      form.resetFields();
+
+  // 👉 Transform API data before passing to table
+  const mappedConsumption = groceryConsumptionListData?.map((item: any) => ({
+    id: item.id,
+    itemName: item.itemName || "N/A",
+    quantity: item.quantity,
+    frequency: item.frequency,
+    gradeName: item.gradeName || item.gradeId,
+    hostelName: item.hostelName || item.rsHostelId,
+  }));
+
+
+  // 👉 Delete handler
+  const handleDelete = async (id: string) => {
+    try {
+      const res = await dispatch(deleteGroceryConsumptionApi(id));
+
+      if (res) {
+        message.success("Deleted successfully");
+        dispatch(fetchGroceryConsumptionListApi(schoolId)); // refresh list
+      }
+    } catch (error) {
+      message.error("Failed to delete consumption");
     }
-    setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        if (editingItem) {
-          // Update existing record
-          setData((prev) =>
-            prev.map((item) =>
-              item.item === editingItem.item ? { ...item, ...values } : item
-            )
-          );
-        } else {
-          // Add new record
-          setData((prev) => [...prev, values]);
-        }
-        setIsModalVisible(false);
-      })
-      .catch((info) => console.log("Validate Failed:", info));
-  };
-
-  const handleDelete = (item: string) => {
-    setData((prev) => prev.filter((record) => record.item !== item));
-  };
 
   const columns: ColumnsType<Consumption> = [
     {
       title: "Item",
-      dataIndex: "item",
-      key: "item",
+      dataIndex: "itemName",
+      key: "itemName",
     },
     {
       title: "Quantity Per Student Per Day",
@@ -71,68 +70,48 @@ const GroceryConsumptionConfig: React.FC = () => {
       key: "quantity",
     },
     {
+      title: "Frequency",
+      dataIndex: "frequency",
+      key: "frequency",
+    },
+    {
+      title: "Grade",
+      dataIndex: "gradeName",
+      key: "gradeName",
+    },
+    {
+      title: "Hostel",
+      dataIndex: "hostelName",
+      key: "hostelName",
+    },
+    {
       title: "Actions",
       key: "actions",
+      width: 80,
       render: (_, record) => (
-        <Space>
-          <Button type="link" onClick={() => showModal(record)}>
-            Edit
-          </Button>
-          <Popconfirm
-            title="Are you sure to delete this item?"
-            onConfirm={() => handleDelete(record.item)}
-            okText="Yes"
-            cancelText="No"
-          >
-            <Button type="link" danger>
-              Delete
-            </Button>
-          </Popconfirm>
-        </Space>
+        <Popconfirm
+          title="Are you sure to delete this item?"
+          okText="Yes"
+          cancelText="No"
+          onConfirm={() => handleDelete(record.id)}
+        >
+          <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+        </Popconfirm>
       ),
     },
   ];
 
   return (
     <>
-      <Button type="primary" style={{ marginBottom: 16 }} onClick={() => showModal()}>
-        Add New Item
-      </Button>
-
       <Table<Consumption>
         columns={columns}
-        dataSource={data}
-        rowKey="item"
-        pagination={false}
+        dataSource={mappedConsumption}
+        loading={groceryConsumptionListLoading}
+        rowKey="id"
         bordered
+        pagination={false}
         scroll={{ x: "max-content" }}
       />
-
-      {/* Modal for Add/Edit */}
-      <Modal
-        title={editingItem ? "Edit Item" : "Add New Item"}
-        open={isModalVisible}
-        onOk={handleOk}
-        onCancel={() => setIsModalVisible(false)}
-        okText={editingItem ? "Update" : "Add"}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item
-            name="item"
-            label="Item"
-            rules={[{ required: true, message: "Please enter item name" }]}
-          >
-            <Input disabled={!!editingItem} />
-          </Form.Item>
-          <Form.Item
-            name="quantity"
-            label="Quantity Per Student Per Day"
-            rules={[{ required: true, message: "Please enter quantity" }]}
-          >
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
     </>
   );
 };
