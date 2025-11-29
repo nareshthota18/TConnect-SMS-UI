@@ -6,59 +6,56 @@ import {
   Typography,
   Button,
   Flex,
-  Drawer,
+  Modal,
 } from "antd";
 import SideNav from "../../components/SideNav";
-import { CloseOutlined } from "@ant-design/icons";
-import AllSuppliers from "./AllSuppliers";
-import AddSuppliers from "./AddSuppliers";
+import AllExams from "./AllExams";
+import AddExam from "./AddExam";
 
 const { useBreakpoint } = Grid;
 const { Content } = Layout;
 const { Title } = Typography;
 
+// Tabs for Exams
 const items = [
   {
-    label: "All Suppliers",
+    label: "All Exams",
     key: "1",
-    children: <AllSuppliers />,
+    children: <AllExams />,
   },
-  // {
-  //   label: "Supplier Assets",
-  //   key: "2",
-  //   children: "Supplier assets list will go here.",
-  // },
-  // {
-  //   label: "Profile",
-  //   key: "3",
-  //   children: "Supplier profile information will go here.",
-  // },
+  {
+    label: "Exam Categories",
+    key: "2",
+    children: "Exam category management section.",
+  },
+  {
+    label: "Schedules",
+    key: "3",
+    children: "Exam schedules will go here.",
+  },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-const drawerHeaderStyle = {
+const modalStyle = {
   backgroundColor: isDarkMode ? "#1F2937" : "#ffbe91",
   color: isDarkMode ? "#fff" : "#000",
   fontWeight: 700,
+  padding: "16px 24px",
 };
 
-const Suppliers: React.FC = () => {
+const Exams: React.FC = () => {
   const screens = useBreakpoint();
   const isMobile = !screens.md;
-  const [collapsed, setCollapsed] = useState(false);
 
-  // Drawer state
-  const [openDrawer, setOpenDrawer] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const [activeKey, setActiveKey] = useState("1");
 
-  const showDrawer = () => {
-    setOpenDrawer(true);
-  };
+  // Modal State
+  const [openExamModal, setOpenExamModal] = useState(false);
 
-  const onCloseDrawer = () => {
-    setOpenDrawer(false);
-  };
+  const showExamModal = () => setOpenExamModal(true);
+  const closeExamModal = () => setOpenExamModal(false);
 
   return (
     <Layout>
@@ -70,6 +67,7 @@ const Suppliers: React.FC = () => {
           open={false}
         />
       )}
+
       <Layout style={{ padding: "2px" }}>
         <Content
           style={{
@@ -77,50 +75,57 @@ const Suppliers: React.FC = () => {
             minHeight: 360,
           }}
         >
-          <Flex justify="space-between">
+          {/* Header */}
+          <Flex
+            justify="space-between"
+            align={isMobile ? "start" : "center"}
+            vertical={isMobile}
+            gap="small"
+          >
             <Title
               level={3}
               style={{ fontWeight: 700, margin: 0, color: "#1F2937" }}
             >
-              Suppliers
+              Exams Management
             </Title>
+
             <Flex gap="middle">
               <Button
                 type="primary"
-                onClick={showDrawer}
+                onClick={showExamModal}
                 disabled={activeKey !== "1"}
               >
-                Add Supplier
+                Add Exam
               </Button>
             </Flex>
           </Flex>
 
+          {/* Tabs */}
           <Tabs
             items={items}
             activeKey={activeKey}
             onChange={(key) => setActiveKey(key)}
           />
 
-          {/* Drawer: Add Supplier */}
-          <Drawer
-            title="Add New Supplier"
-            width={isMobile ? "100%" : "80%"}
-            onClose={onCloseDrawer}
-            open={openDrawer}
-            bodyStyle={{ paddingBottom: 80 }}
-            headerStyle={drawerHeaderStyle}
+          {/* Add Exam Modal */}
+          <Modal
+            title="Add New Exam"
+            open={openExamModal}
+            onCancel={closeExamModal}
+            footer={null}
+            width={isMobile ? "95%" : "60%"}
+            styles={{
+              header: modalStyle,
+            }}
             maskClosable={false}
-            keyboard={false}
-            closeIcon={
-              <CloseOutlined style={{ color: "#000", fontSize: "18px" }} />
-            }
+            bodyStyle={{ padding: 0 }}
           >
-            <AddSuppliers />
-          </Drawer>
+            <AddExam />
+          </Modal>
         </Content>
       </Layout>
     </Layout>
   );
 };
 
-export default Suppliers;
+export default Exams;

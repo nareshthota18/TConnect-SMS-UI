@@ -9,6 +9,8 @@ import { fetchInventoryApi, deleteInventoryItemApi } from "../../store/Inventory
 interface Inventory {
   id: string;
   itemId: string;
+  itemName: string,
+  itemTypeName: string,
   openingBalance: number;
   quantityReceived: number;
   quantityIssued: number;
@@ -77,10 +79,16 @@ const AllInventory: React.FC = () => {
   // ✅ Match API fields
   const columns: ColumnsType<Inventory> = [
     {
-      title: "Item ID",
-      dataIndex: "itemId",
-      key: "itemId",
-      ...getColumnSearchProps("itemId"),
+      title: "Item Name",
+      dataIndex: "itemName",
+      key: "itemName",
+      ...getColumnSearchProps("itemName"),
+    },
+    {
+      title: "Item Type",
+      dataIndex: "itemTypeName",
+      key: "itemTypeName",
+      ...getColumnSearchProps("itemTypeName"),
     },
     {
       title: "Opening Balance",
@@ -130,7 +138,7 @@ const AllInventory: React.FC = () => {
       columns={columns}
       dataSource={inventoryData || []} 
       rowKey="id"
-      pagination={{ pageSize: 5 }}
+      pagination={{ pageSize: 10 }}
       bordered
       loading={inventoryDataLoading}
       scroll={{ x: "max-content" }}

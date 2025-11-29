@@ -1,55 +1,78 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Table, Tag, Input } from "antd";
 import type { ColumnsType, ColumnType } from "antd/es/table";
 import { SearchOutlined } from "@ant-design/icons";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchGroceryListApi } from "../../store/Grocery/GroceryActions";
 
+// ⬅️ Interface for each Grocery item
 interface Grocery {
   id: number;
   name: string;
   category: string;
   price: number;
-  status: "Available" | "Out of Stock" | "Limited Stock";
+  status: string;
 }
 
 const AllGrocery: React.FC = () => {
-  const [data, setData] = useState<Grocery[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const rsHostelId = localStorage.getItem("rsHostelId");
 
+  interface groceryListState {
+    groceryListData: any[];
+    groceryListLoading: boolean;
+  }
+
+  const { groceryListData, groceryListLoading } = useSelector(
+    (state: RootState) => state.grocery as groceryListState
+  );
+
+  // 👉 Fetch grocery list on mount
   useEffect(() => {
-    const groceryData: Grocery[] = [
-      { id: 1, name: "Rice", category: "Grains", price: 45, status: "Available" },
-      { id: 2, name: "Sugar", category: "Grocery", price: 40, status: "Limited Stock" },
-      { id: 3, name: "Milk", category: "Dairy", price: 30, status: "Out of Stock" },
-      { id: 4, name: "Bread", category: "Bakery", price: 25, status: "Limited Stock" },
-      { id: 5, name: "Salt", category: "Grocery", price: 20, status: "Available" },
-    ];
-    setData(groceryData);
-  }, []);
+    dispatch(fetchGroceryListApi());
+  }, [dispatch]);
 
-  // Search functionality
+
+  // 👉 Transform API data before passing to table
+  const mappedGrocery = groceryListData?.map((item: any) => ({
+    id: item.id,
+    name: item.name || item.itemName || "N/A",
+    category: item.category || "N/A",
+    price: item.price || 0,
+    status: item.status || "Available",
+  }));
+
+
+  // 🔎 Search logic (same functional behavior)
   const getColumnSearchProps = (dataIndex: keyof Grocery): ColumnType<Grocery> => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input.Search
           placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
           autoFocus
+          value={selectedKeys[0]}
           onChange={(e) => {
             const value = e.target.value;
             setSelectedKeys(value ? [value] : []);
             confirm({ closeDropdown: false });
           }}
           onSearch={() => confirm()}
-          style={{ display: "block" }}
         />
       </div>
     ),
-    filterIcon: (filtered: boolean) => (
+    filterIcon: (filtered) => (
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex].toString().toLowerCase().includes((value as string).toLowerCase()),
+      record[dataIndex]
+        ?.toString()
+        ?.toLowerCase()
+        ?.includes((value as string).toLowerCase()),
   });
 
+
+  // 👉 Table Columns (same format style)
   const columns: ColumnsType<Grocery> = [
     {
       title: "Item ID",
@@ -80,7 +103,7 @@ const AllGrocery: React.FC = () => {
       dataIndex: "price",
       key: "price",
       sorter: (a, b) => a.price - b.price,
-      render: (price: number) => `₹${price}`,
+      render: (price) => `₹${price}`,
     },
     {
       title: "Status",
@@ -92,25 +115,31 @@ const AllGrocery: React.FC = () => {
         { text: "Out of Stock", value: "Out of Stock" },
       ],
       onFilter: (value, record) => record.status === value,
-      render: (status: Grocery["status"]) => {
-        let color = "blue";
-        if (status === "Available") color = "green";
-        else if (status === "Limited Stock") color = "orange";
-        else if (status === "Out of Stock") color = "red";
+      render: (status) => {
+        let color =
+          status === "Available"
+            ? "green"
+            : status === "Limited Stock"
+            ? "orange"
+            : "red";
         return <Tag color={color}>{status}</Tag>;
       },
     },
   ];
 
+
   return (
-    <Table<Grocery>
-      columns={columns}
-      dataSource={data}
-      rowKey="id"
-      pagination={{ pageSize: 5 }}
-      bordered
-      scroll={{ x: "max-content" }}
-    />
+    <>
+      <Table<Grocery>
+        columns={columns}
+        dataSource={mappedGrocery}
+        loading={groceryListLoading}
+        rowKey="id"
+        bordered
+        pagination={{ pageSize: 10 }}
+        scroll={{ x: "max-content" }}
+      />
+    </>
   );
 };
 

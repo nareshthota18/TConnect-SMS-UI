@@ -16,6 +16,8 @@ import {
   ApartmentOutlined,
   DatabaseOutlined,
   GiftOutlined,
+  ReadOutlined,
+  TrophyOutlined,
 } from "@ant-design/icons";
 import { Layout, Menu, theme, Drawer, Button } from "antd";
 import type { MenuProps } from "antd";
@@ -134,6 +136,16 @@ const SideNav: React.FC<SideNavProps> = ({
       key: "/holidays",
       icon: <GiftOutlined />,
       label: <Link to="/holidays">Holidays</Link>,
+    },
+    {
+      key: "/exams",
+      icon: <ReadOutlined />,
+      label: <Link to="/exams">Exams</Link>,
+    },
+    {
+      key: "/results",
+      icon: <TrophyOutlined />,
+      label: <Link to="/results">Results</Link>,
     },
     {
       key: "logout",

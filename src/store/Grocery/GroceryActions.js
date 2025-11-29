@@ -1,7 +1,7 @@
 // src/redux/actions/groceryConsumptionActions.js
 import axios from "axios";
-import { ADD_GROCERY_CONSUMPTION, DELETE_GROCERY_CONSUMPTION, GROCERY_CONSUMPTION_LIST } from "./GroceryType";
-import { addGroceryConsumptionUrl, deleteGroceryConsumptionUrl, groceryConsumptionListUrl } from "../utils";
+import { ADD_GROCERY_CONSUMPTION, DELETE_GROCERY_CONSUMPTION, GROCERY_CONSUMPTION_LIST, GROCERY_LIST } from "./GroceryType";
+import { addGroceryConsumptionUrl, deleteGroceryConsumptionUrl, groceryConsumptionListUrl, groceryListUrl } from "../utils";
 
 
 // ------------------------------------------------------
@@ -146,3 +146,51 @@ export const deleteGroceryConsumptionApi = (id) => async (dispatch) => {
     dispatch(deleteGroceryConsumptionFail(error.message));
   }
 };
+
+
+
+// ------------------------------------------------------
+// ✅ GET Grocery List
+// ------------------------------------------------------
+export const groceryListStart = () => ({
+    type: GROCERY_LIST.GROCERY_LIST_START,
+  });
+  
+  export const groceryListSuccess = (data) => ({
+    type: GROCERY_LIST.GROCERY_LIST_SUCCESS,
+    payload: data,
+  });
+  
+  export const groceryListFail = (payload) => ({
+    type: GROCERY_LIST.GROCERY_LIST_FAIL,
+    payload:
+      typeof payload === "string"
+        ? payload
+        : payload.message || "An error occurred",
+  });
+  
+  export const fetchGroceryListApi = () => async (dispatch) => {
+    dispatch(groceryListStart());
+  
+    try {
+      const token = localStorage.getItem("authToken");
+      const schoolId = localStorage.getItem("schoolId");
+
+      const response = await axios.get(groceryListUrl(), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          RSHostelId: schoolId,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+  
+      dispatch(groceryListSuccess(response.data));
+      console.log("📌 Grocery list:", response.data);
+      return response.data;
+    } catch (error) {
+      dispatch(groceryListFail(error.message));
+      console.error("❌ Grocery List API error:", error.response?.data || error.message);
+    }
+  };
+  

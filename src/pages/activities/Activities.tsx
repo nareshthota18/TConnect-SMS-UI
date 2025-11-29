@@ -23,8 +23,8 @@ const { Title } = Typography;
 const items = [
   { label: "Activity Dashboard", key: "1", children: <ActivitiesDashboard /> },
   { label: "All Activities", key: "2", children: <AllActivities /> },
-  { label: "Current Activities", key: "3", children: <CurrentActivities /> },
-  { label: "Upcoming Activities", key: "4", children: <UpcomingActivities /> },
+  // { label: "Current Activities", key: "3", children: <CurrentActivities /> },
+  // { label: "Upcoming Activities", key: "4", children: <UpcomingActivities /> },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

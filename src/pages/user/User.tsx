@@ -35,11 +35,11 @@ const items = [
     key: "3",
     children: "Permissions management will go here.",
   },
-  {
-    label: "Activity Logs",
-    key: "4",
-    children: "User activity logs will go here.",
-  },
+  // {
+  //   label: "Activity Logs",
+  //   key: "4",
+  //   children: "User activity logs will go here.",
+  // },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

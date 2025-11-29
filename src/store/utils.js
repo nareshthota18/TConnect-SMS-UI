@@ -43,4 +43,4 @@ export const addActivityUrl = `${base_url}/SchoolActivities`;
 export const groceryConsumptionListUrl = (rsHostelId) => `${base_url}/Consumption/${rsHostelId}`;
 export const addGroceryConsumptionUrl = `${base_url}/Consumption`;
 export const deleteGroceryConsumptionUrl = (id) => `${base_url}/Consumption/${id}`;
-
+export const groceryListUrl =() => `${base_url}/Inventory/GetAGroceryAsync`;

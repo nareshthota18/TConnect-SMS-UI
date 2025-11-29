@@ -32,16 +32,16 @@ const items = [
     key: "2",
     children: <StudentHealth />,
   },
-  {
-    label: "Profile",
-    key: "3",
-    children: "Profile information will go here.",
-  },
-  {
-    label: "Student Assets",
-    key: "4",
-    children: "Student Assets will go here.",
-  },
+  // {
+  //   label: "Profile",
+  //   key: "3",
+  //   children: "Profile information will go here.",
+  // },
+  // {
+  //   label: "Student Assets",
+  //   key: "4",
+  //   children: "Student Assets will go here.",
+  // },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

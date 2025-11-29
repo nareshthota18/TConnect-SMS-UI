@@ -27,8 +27,8 @@ interface Student {
 }
 
 interface Inventory {
-  id: string;
-  name: string;
+  itemId: string;
+  itemName: string;
 }
 
 const AddAsset: React.FC = () => {
@@ -65,8 +65,8 @@ const AddAsset: React.FC = () => {
   useEffect(() => {
     if (inventoryData?.length) {
       const options = inventoryData.map((item: Inventory) => ({
-        label: item.name,
-        value: item.id,
+        label: item.itemName,
+        value: item.itemId,
       }));
       setInventoryOptions(options);
     }

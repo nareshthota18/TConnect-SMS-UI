@@ -23,16 +23,16 @@ const items = [
     key: "1",
     children: <AllSchools />,
   },
-  {
-    label: "School Assets",
-    key: "2",
-    children: "",
-  },
-  {
-    label: "Profile",
-    key: "3",
-    children: "School profile information will go here.",
-  },
+  // {
+  //   label: "School Assets",
+  //   key: "2",
+  //   children: "",
+  // },
+  // {
+  //   label: "Profile",
+  //   key: "3",
+  //   children: "School profile information will go here.",
+  // },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

@@ -20,11 +20,11 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const items = [
-  { label: "Assets Dashboard", key: "1", children: <AssetsDashboard /> },
+  // { label: "Assets Dashboard", key: "1", children: <AssetsDashboard /> },
   { label: "All Assets", key: "2", children: <AllAssets /> },
-  { label: "Asset History", key: "3", children: "" },
-  { label: "Profile", key: "4", children: "Asset profile information will go here." },
-  { label: "Asset Allocation", key: "5", children: "Asset allocation details will go here." },
+  // { label: "Asset History", key: "3", children: "" },
+  // { label: "Profile", key: "4", children: "Asset profile information will go here." },
+  // { label: "Asset Allocation", key: "5", children: "Asset allocation details will go here." },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

@@ -24,16 +24,16 @@ const items = [
     key: "1",
     children: <AllStaff />,
   },
-  {
-    label: "Profile",
-    key: "2",
-    children: "Profile information will go here.",
-  },
-  {
-    label: "Staff Assets",
-    key: "3",
-    children: "Staff assets will go here.",
-  },
+  // {
+  //   label: "Profile",
+  //   key: "2",
+  //   children: "Profile information will go here.",
+  // },
+  // {
+  //   label: "Staff Assets",
+  //   key: "3",
+  //   children: "Staff assets will go here.",
+  // },
 ];
 
 const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;

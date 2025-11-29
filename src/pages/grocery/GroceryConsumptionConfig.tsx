@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Table, Popconfirm, message } from "antd";
+import { Table, Popconfirm, message, Tag } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import type { ColumnsType } from "antd/es/table";
 import { fetchGroceryConsumptionListApi, deleteGroceryConsumptionApi } from "../../store/Grocery/GroceryActions";
@@ -38,7 +38,7 @@ const GroceryConsumptionConfig: React.FC = () => {
     itemName: item.itemName || "N/A",
     quantity: item.quantity,
     frequency: item.frequency,
-    gradeName: item.gradeName || item.gradeId,
+    gradeName: item.gradeName || item.gradeName,
     hostelName: item.hostelName || item.rsHostelId,
   }));
 
@@ -79,11 +79,11 @@ const GroceryConsumptionConfig: React.FC = () => {
       dataIndex: "gradeName",
       key: "gradeName",
     },
-    {
-      title: "Hostel",
-      dataIndex: "hostelName",
-      key: "hostelName",
-    },
+    // {
+    //   title: "Hostel",
+    //   dataIndex: "hostelName",
+    //   key: "hostelName",
+    // },
     {
       title: "Actions",
       key: "actions",
@@ -95,7 +95,10 @@ const GroceryConsumptionConfig: React.FC = () => {
           cancelText="No"
           onConfirm={() => handleDelete(record.id)}
         >
-          <DeleteOutlined style={{ color: "red", cursor: "pointer" }} />
+          {/* <DeleteOutlined style={{ color: "red", cursor: "pointer" }} /> */}
+          <Tag color={"red"} style={{ cursor: 'pointer'}}>
+          Delete
+          </Tag>
         </Popconfirm>
       ),
     },
@@ -109,7 +112,7 @@ const GroceryConsumptionConfig: React.FC = () => {
         loading={groceryConsumptionListLoading}
         rowKey="id"
         bordered
-        pagination={false}
+        pagination={{ pageSize: 10 }}
         scroll={{ x: "max-content" }}
       />
     </>

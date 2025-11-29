@@ -106,7 +106,7 @@ const Grocery = () => {
             open={openModal}
             onCancel={() => setOpenModal(false)}
             footer={null}
-            width={isMobile ? "100%" : "70%"}
+            width={isMobile ? "100%" : "60%"}
             style={{ top: isMobile ? 0 : 40 }}
             bodyStyle={{ padding: 0, borderRadius: 12 }}
             styles={{

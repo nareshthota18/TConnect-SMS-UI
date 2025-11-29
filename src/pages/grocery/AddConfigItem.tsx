@@ -127,7 +127,7 @@ useEffect(() => {
       <Row gutter={16}>
 
         {/* gradeId */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Grade"
             name="gradeId"
@@ -143,7 +143,7 @@ useEffect(() => {
         </Col>
 
         {/* itemId */}
-        <Col span={12}>
+        <Col span={8}>
         <Form.Item
             name="itemId"
             label="Item"
@@ -166,7 +166,7 @@ useEffect(() => {
         </Col>
 
         {/* quantity */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Quantity"
             name="quantity"
@@ -177,7 +177,7 @@ useEffect(() => {
         </Col>
 
         {/* frequency */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Frequency"
             name="frequency"
@@ -188,7 +188,7 @@ useEffect(() => {
         </Col>
 
         {/* effectiveFrom */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Effective From"
             name="effectiveFrom"
@@ -199,7 +199,7 @@ useEffect(() => {
         </Col>
 
         {/* effectiveTo */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Effective To"
             name="effectiveTo"
@@ -210,7 +210,7 @@ useEffect(() => {
         </Col>
 
         {/* isActive */}
-        <Col span={12}>
+        <Col span={8}>
           <Form.Item
             label="Active Status"
             name="isActive"

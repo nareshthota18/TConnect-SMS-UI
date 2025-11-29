@@ -98,7 +98,7 @@ const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
         </Col> */}
 
         {/* ITEM ID DROPDOWN */}
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={8}>
           <Form.Item
             name="itemId"
             label="Item"
@@ -121,7 +121,7 @@ const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
         </Col>
 
         {/* OPENING BALANCE */}
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={8}>
           <Form.Item
             name="openingBalance"
             label="Opening Balance"
@@ -136,7 +136,7 @@ const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
         </Col>
 
         {/* QUANTITY RECEIVED */}
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={8}>
           <Form.Item
             name="quantityReceived"
             label="Quantity Received"
@@ -151,7 +151,7 @@ const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
         </Col>
 
         {/* QUANTITY ISSUED */}
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={8}>
           <Form.Item
             name="quantityIssued"
             label="Quantity Issued"
@@ -166,7 +166,7 @@ const AddGrocery: React.FC<AddGroceryProps> = ({ closeModal }) => {
         </Col>
 
         {/* QUANTITY IN HAND */}
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={8}>
           <Form.Item
             name="quantityInHand"
             label="Quantity In Hand"

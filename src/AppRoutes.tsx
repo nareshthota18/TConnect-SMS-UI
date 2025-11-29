@@ -18,6 +18,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import NotFound from "./NotFound";
 import LookUp from "./pages/lookup/LookUp";
 import Holidays from "./pages/holidays/Holidays";
+import Exams from "./pages/exams/Exams";
+import Results from "./pages/results/Results";
 
 const AppRoutes = () => {
   return (
@@ -34,6 +36,8 @@ const AppRoutes = () => {
       <Route path="/activities" element={<Activities />} />
       <Route path="/attendance" element={<Attendance />} />
       <Route path="/holidays" element={<Holidays />} />
+      <Route path="/exams" element={<Exams />} />
+      <Route path="/results" element={<Results />} />
 
       {/* Admin & SuperAdmin only */}
       <Route element={<ProtectedRoute allowedRoles={["Admin", "SuperAdmin"]} />}>

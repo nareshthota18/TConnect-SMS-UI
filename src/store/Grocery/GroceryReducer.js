@@ -1,6 +1,6 @@
 // src/redux/reducers/groceryConsumptionReducer.js
 import { produce } from "immer";
-import { ADD_GROCERY_CONSUMPTION, DELETE_GROCERY_CONSUMPTION, GROCERY_CONSUMPTION_LIST } from "./GroceryType";
+import { ADD_GROCERY_CONSUMPTION, DELETE_GROCERY_CONSUMPTION, GROCERY_CONSUMPTION_LIST, GROCERY_LIST } from "./GroceryType";
 
 const initialState = {
   groceryConsumptionListData: [],
@@ -14,6 +14,11 @@ const initialState = {
   deleteGroceryConsumptionData: [],
   deleteGroceryConsumptionLoading: false,
   deleteGroceryConsumptionError: false,
+
+  groceryListData: [],
+groceryListLoading: false,
+groceryListError: false,
+
 };
 
 export const groceryConsumptionReducer = produce((draft, action) => {
@@ -74,6 +79,26 @@ export const groceryConsumptionReducer = produce((draft, action) => {
       draft.deleteGroceryConsumptionData = null;
       draft.deleteGroceryConsumptionError = action.payload;
       break;
+
+
+      // 🔹 GET Grocery List
+case GROCERY_LIST.GROCERY_LIST_START:
+    draft.groceryListLoading = true;
+    draft.groceryListError = false;
+    break;
+  
+  case GROCERY_LIST.GROCERY_LIST_SUCCESS:
+    draft.groceryListLoading = false;
+    draft.groceryListData = action.payload;
+    draft.groceryListError = false;
+    break;
+  
+  case GROCERY_LIST.GROCERY_LIST_FAIL:
+    draft.groceryListLoading = false;
+    draft.groceryListData = [];
+    draft.groceryListError = action.payload;
+    break;
+  
 
 
     default:
