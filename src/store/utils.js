@@ -1,5 +1,5 @@
-// export const base_url = 'http://15.206.123.114:5059/api';
-export const base_url = 'https://localhost:7242/api';
+export const base_url = 'http://15.206.123.114:5059/api';
+// export const base_url = 'https://localhost:7242/api';
 
 export const loginUrl = `${base_url}/Token`;
 export const studenturl = `${base_url}/Students`;
