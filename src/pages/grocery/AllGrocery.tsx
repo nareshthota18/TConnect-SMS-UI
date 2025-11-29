@@ -37,11 +37,17 @@ const AllGrocery: React.FC = () => {
   // 👉 Transform API data before passing to table
   const mappedGrocery = groceryListData?.map((item: any) => ({
     id: item.id,
-    name: item.name || item.itemName || "N/A",
-    category: item.category || "N/A",
-    price: item.price || 0,
-    status: item.status || "Available",
+    name: item.itemName || "N/A",
+    category: item.itemTypeName || "N/A",
+    price: item.quantityInHand,
+    status:
+      item.quantityInHand > 50
+        ? "Available"
+        : item.quantityInHand > 0
+        ? "Limited Stock"
+        : "Out of Stock",
   }));
+  
 
 
   // 🔎 Search logic (same functional behavior)
@@ -75,12 +81,6 @@ const AllGrocery: React.FC = () => {
   // 👉 Table Columns (same format style)
   const columns: ColumnsType<Grocery> = [
     {
-      title: "Item ID",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id,
-    },
-    {
       title: "Item Name",
       dataIndex: "name",
       key: "name",
@@ -99,46 +99,30 @@ const AllGrocery: React.FC = () => {
       onFilter: (value, record) => record.category === value,
     },
     {
-      title: "Price (₹)",
+      title: "Quantity In Hand (₹)",
       dataIndex: "price",
       key: "price",
       sorter: (a, b) => a.price - b.price,
-      render: (price) => `₹${price}`,
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      filters: [
-        { text: "Available", value: "Available" },
-        { text: "Limited Stock", value: "Limited Stock" },
-        { text: "Out of Stock", value: "Out of Stock" },
-      ],
-      onFilter: (value, record) => record.status === value,
-      render: (status) => {
-        let color =
-          status === "Available"
-            ? "green"
-            : status === "Limited Stock"
-            ? "orange"
-            : "red";
-        return <Tag color={color}>{status}</Tag>;
-      },
-    },
+      render: (price) => `${price}`,
+    }
   ];
 
 
   return (
     <>
       <Table<Grocery>
-        columns={columns}
-        dataSource={mappedGrocery}
-        loading={groceryListLoading}
-        rowKey="id"
-        bordered
-        pagination={{ pageSize: 10 }}
-        scroll={{ x: "max-content" }}
-      />
+  columns={columns}
+  dataSource={mappedGrocery}
+  loading={groceryListLoading}
+  rowKey="id"
+  bordered
+  pagination={
+    mappedGrocery.length > 10
+      ? { pageSize: 10 }
+      : false
+  }
+  scroll={{ x: "max-content" }}
+/>
     </>
   );
 };
