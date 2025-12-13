@@ -13,6 +13,7 @@ import { departmentsReducer } from './Dropdowns/DropdownReducer';
 import { holidayReducer } from './Holidays/HolidaysReducer';
 import { activityReducer } from './Activities/ActivitiesReducer';
 import { groceryConsumptionReducer } from './Grocery/GroceryReducer';
+import { notificationReducer } from './Notifications/NotificationsReducer';
 
 // Create the store
 const store = configureStore({
@@ -31,6 +32,7 @@ const store = configureStore({
     holidays: holidayReducer,
     activity: activityReducer,
     grocery: groceryConsumptionReducer,
+    notification: notificationReducer,
   },
 });
 

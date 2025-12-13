@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Layout, Grid, Badge, Avatar, Flex, Typography } from "antd";
+import React, { useEffect, useState } from "react";
+import { Button, Layout, Grid, Badge, Avatar, Flex, Typography, Popover } from "antd";
 import {
   BellOutlined,
   MoonOutlined,
@@ -9,6 +9,10 @@ import {
 import logo from "../assets/logo-hms.png";
 import { useNavigate } from "react-router-dom";
 import SideNav from "./SideNav";
+import NotificationsPopover from "./NotificationsPopover";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { fetchNotificationsApi } from "../store/Notifications/NotificationsActions";
 
 const { Header } = Layout;
 const { useBreakpoint } = Grid;
@@ -22,9 +26,30 @@ type HeaderProps = {
 const HeaderComponent = ({ darkMode, toggleTheme }: HeaderProps) => {
   const navigate = useNavigate();
   const screens = useBreakpoint();
+  const dispatch = useDispatch<AppDispatch>();
   const isMobile = !screens.md;
   const role = localStorage.getItem("userRole");
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+    /* 🔔 Notifications state */
+    interface NotificationsState {
+      notificationsData: any[];
+      notificationsDataLoading: boolean;
+      notificationsDataError: boolean;
+    }
+  
+    const { notificationsData } = useSelector(
+      (state: RootState) => state.notification as NotificationsState
+    );
+  
+    const unreadCount =
+      notificationsData?.filter((n) => !n.isRead).length || 0;
+
+      // 🔹 Fetch notifications on component mount
+  useEffect(() => {
+    dispatch(fetchNotificationsApi());
+  }, [dispatch]);
 
   return (
     <>
@@ -38,9 +63,18 @@ const HeaderComponent = ({ darkMode, toggleTheme }: HeaderProps) => {
           />
 
           <Flex align="center" gap="middle">
-            <Badge count={5} style={{ fontSize: 10 }} size="small">
-              <BellOutlined style={{ color: "white" }} />
+          <Popover
+      content={<NotificationsPopover />}
+      trigger="click"
+      open={open}
+      onOpenChange={setOpen}
+      placement="bottomRight"
+      overlayStyle={{ width: '30%' }}
+    >
+            <Badge count={unreadCount} style={{ fontSize: 10, cursor: 'pointer' }} size="small">
+              <BellOutlined style={{ color: "white", cursor: 'pointer' }} />
             </Badge>
+            </Popover>
             <Button
               type="text"
               icon={

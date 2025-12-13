@@ -1,5 +1,5 @@
-export const base_url = 'http://15.206.123.114:5059/api';
-// export const base_url = 'https://localhost:7242/api';
+// export const base_url = 'http://15.206.123.114:5059/api';
+export const base_url = 'https://localhost:7242/api';
 
 export const loginUrl = `${base_url}/Token`;
 export const studenturl = `${base_url}/Students`;
@@ -44,3 +44,4 @@ export const groceryConsumptionListUrl = (rsHostelId) => `${base_url}/Consumptio
 export const addGroceryConsumptionUrl = `${base_url}/Consumption`;
 export const deleteGroceryConsumptionUrl = (id) => `${base_url}/Consumption/${id}`;
 export const groceryListUrl =() => `${base_url}/Inventory/GetAGroceryAsync`;
+export const notificationsUrl = `${base_url}/Users/GetNotifications`;
